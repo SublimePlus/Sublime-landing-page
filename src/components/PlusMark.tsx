@@ -32,7 +32,7 @@ export function Logo({
   variant?: "dark" | "light";
   className?: string;
 }) {
-  const textColor = variant === "light" ? "text-white" : "text-pine";
+  const textColor = variant === "light" ? "text-white" : "text-pine dark:text-white";
   return (
     <span className={`inline-flex items-center font-script text-4xl leading-none ${textColor} ${className}`}>
       Sublime

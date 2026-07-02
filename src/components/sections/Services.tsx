@@ -49,7 +49,7 @@ export function Services() {
         <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal">
           What we do
         </p>
-        <h2 className="text-3xl font-bold text-pine sm:text-4xl">
+        <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
           Everything your content needs, minus the headcount.
         </h2>
       </Reveal>
@@ -59,15 +59,15 @@ export function Services() {
             <motion.div
               whileHover={{ y: -6, rotate: -0.5 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="h-full rounded-2xl border border-pine/10 bg-white p-7 shadow-sm"
+              className="h-full rounded-2xl border border-pine/10 bg-white p-7 shadow-sm dark:border-white/10 dark:bg-night/40"
             >
               <span className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-full bg-teal text-white">
                 <service.icon className="h-5 w-5" />
               </span>
-              <h3 className="text-lg font-semibold text-pine">
+              <h3 className="text-lg font-semibold text-pine dark:text-white">
                 {service.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-stone">
+              <p className="mt-2 text-sm leading-relaxed text-stone dark:text-white/60">
                 {service.description}
               </p>
             </motion.div>

@@ -26,13 +26,13 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="bg-pine/[0.03] py-28">
+    <section id="how-it-works" className="bg-pine/[0.03] py-28 dark:bg-white/[0.03]">
       <div className="mx-auto max-w-5xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal">
             How it works
           </p>
-          <h2 className="text-3xl font-bold text-pine sm:text-4xl">
+          <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
             Three steps to content that runs itself.
           </h2>
         </Reveal>
@@ -43,7 +43,7 @@ export function HowItWorks() {
               <div className="relative flex h-12 w-full items-center justify-center">
                 {i < steps.length - 1 && (
                   <>
-                    <div className="absolute left-[calc(50%+24px)] top-1/2 hidden h-[1.5px] w-[calc(100%+8px)] -translate-y-1/2 bg-pine/10 sm:block" />
+                    <div className="absolute left-[calc(50%+24px)] top-1/2 hidden h-[1.5px] w-[calc(100%+8px)] -translate-y-1/2 bg-pine/10 sm:block dark:bg-white/10" />
                     <motion.div
                       className="absolute left-[calc(50%+24px)] top-1/2 hidden h-[1.5px] w-[calc(100%+8px)] origin-left -translate-y-1/2 bg-teal sm:block"
                       initial={{ scaleX: 0 }}
@@ -57,10 +57,10 @@ export function HowItWorks() {
                   {s.step}
                 </div>
               </div>
-              <h3 className="mt-5 text-lg font-semibold text-pine">
+              <h3 className="mt-5 text-lg font-semibold text-pine dark:text-white">
                 {s.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-stone">
+              <p className="mt-2 text-sm leading-relaxed text-stone dark:text-white/60">
                 {s.description}
               </p>
             </Reveal>

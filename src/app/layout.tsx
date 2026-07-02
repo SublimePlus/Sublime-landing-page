@@ -5,6 +5,17 @@ import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { BookingModalProvider } from "@/components/booking/BookingModalContext";
+import { ThemeProvider } from "@/components/theme/ThemeContext";
+
+const THEME_INIT_SCRIPT = `
+(function () {
+  try {
+    var stored = localStorage.getItem("sublime-theme");
+    var isDark = stored ? stored === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (isDark) document.documentElement.classList.add("dark");
+  } catch (e) {}
+})();
+`;
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -33,14 +44,20 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${poppins.variable} ${yellowtail.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className="min-h-full flex flex-col">
-        <BookingModalProvider>
-          <ScrollProgress />
-          <Nav />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </BookingModalProvider>
+        <ThemeProvider>
+          <BookingModalProvider>
+            <ScrollProgress />
+            <Nav />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </BookingModalProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

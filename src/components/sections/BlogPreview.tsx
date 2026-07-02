@@ -13,13 +13,13 @@ export function BlogPreview() {
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal">
             From the blog
           </p>
-          <h2 className="text-3xl font-bold text-pine sm:text-4xl">
+          <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
             Notes on content that works.
           </h2>
         </div>
         <Link
           href="/blog"
-          className="whitespace-nowrap text-sm font-semibold text-teal hover:text-pine"
+          className="whitespace-nowrap text-sm font-semibold text-teal hover:text-pine dark:hover:text-lime"
         >
           View all posts →
         </Link>
