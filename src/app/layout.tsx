@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins, Caveat } from "next/font/google";
+import { Poppins, Yellowtail } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
@@ -11,10 +11,10 @@ const poppins = Poppins({
   weight: ["300", "400", "500", "600", "700"],
 });
 
-const caveat = Caveat({
-  variable: "--font-caveat",
+const yellowtail = Yellowtail({
+  variable: "--font-script",
   subsets: ["latin"],
-  weight: ["600", "700"],
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -31,7 +31,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${poppins.variable} ${caveat.variable} h-full antialiased`}
+      className={`${poppins.variable} ${yellowtail.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <ScrollProgress />

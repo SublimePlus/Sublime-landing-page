@@ -1,5 +1,3 @@
-import { AppIcon } from "./AppIcon";
-
 export function PlusMark({
   className,
   strokeWidth = 2.5,
@@ -36,9 +34,9 @@ export function Logo({
 }) {
   const textColor = variant === "light" ? "text-white" : "text-pine";
   return (
-    <span className={`inline-flex items-center gap-2 font-sans font-bold text-xl ${textColor} ${className}`}>
-      <AppIcon size={28} />
-      Sublime<span className="text-lime">+</span>
+    <span className={`inline-flex items-center font-script text-4xl leading-none ${textColor} ${className}`}>
+      Sublime
+      <PlusMark className="ml-0.5 h-4 w-4 self-start" strokeWidth={3.5} />
     </span>
   );
 }
