@@ -40,12 +40,12 @@ export function HowItWorks() {
         <div className="mt-20 grid gap-14 sm:grid-cols-3">
           {steps.map((s, i) => (
             <Reveal key={s.step} delay={i * 0.15} className="text-center sm:text-left">
-              <div className="relative mx-auto flex h-12 w-12 items-center justify-center sm:mx-0 sm:w-full sm:justify-start">
+              <div className="relative flex h-12 w-full items-center justify-center">
                 {i < steps.length - 1 && (
                   <>
-                    <div className="absolute left-12 right-[-56px] top-1/2 hidden h-[1.5px] -translate-y-1/2 bg-pine/10 sm:block" />
+                    <div className="absolute left-[calc(50%+24px)] top-1/2 hidden h-[1.5px] w-[calc(100%+8px)] -translate-y-1/2 bg-pine/10 sm:block" />
                     <motion.div
-                      className="absolute left-12 right-[-56px] top-1/2 hidden h-[1.5px] origin-left -translate-y-1/2 bg-teal sm:block"
+                      className="absolute left-[calc(50%+24px)] top-1/2 hidden h-[1.5px] w-[calc(100%+8px)] origin-left -translate-y-1/2 bg-teal sm:block"
                       initial={{ scaleX: 0 }}
                       whileInView={{ scaleX: 1 }}
                       viewport={{ once: true, margin: "-80px" }}
