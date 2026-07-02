@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Logo } from "./PlusMark";
 import { BookMeetingButton } from "./booking/BookMeetingButton";
+import { ThemeToggle } from "./theme/ThemeToggle";
 
 const links = [
   { href: "/#services", label: "Services" },
@@ -26,7 +27,9 @@ export function Nav() {
   return (
     <header
       className={`fixed top-0 z-40 w-full transition-colors duration-300 ${
-        scrolled ? "bg-white/85 backdrop-blur-md shadow-sm" : "bg-transparent"
+        scrolled
+          ? "bg-white/85 backdrop-blur-md shadow-sm dark:bg-night/85"
+          : "bg-transparent"
       }`}
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
@@ -39,16 +42,19 @@ export function Nav() {
               key={link.href}
               href={link.href}
               className={`text-sm font-medium transition-colors hover:text-lime ${
-                scrolled ? "text-pine/80" : "text-white/85"
+                scrolled ? "text-pine/80 dark:text-white/80" : "text-white/85"
               }`}
             >
               {link.label}
             </Link>
           ))}
         </div>
-        <BookMeetingButton className="rounded-full bg-pine px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-teal">
-          Book a Call
-        </BookMeetingButton>
+        <div className="flex items-center gap-3">
+          <ThemeToggle scrolled={scrolled} />
+          <BookMeetingButton className="rounded-full bg-pine px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-teal dark:bg-teal dark:hover:bg-teal-dark">
+            Book a Call
+          </BookMeetingButton>
+        </div>
       </nav>
     </header>
   );

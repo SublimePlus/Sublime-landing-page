@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --background: #ffffff;
@@ -11,6 +12,13 @@
   --color-pine: #1b3a2f;
   --color-lime: #c9f24e;
   --color-stone: #5c6b65;
+  --color-night: #0e1f19;
+}
+
+.dark {
+  --background: #0e1f19;
+  --foreground: #f2f5f3;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -21,6 +29,7 @@
   --color-pine: var(--color-pine);
   --color-lime: var(--color-lime);
   --color-stone: var(--color-stone);
+  --color-night: var(--color-night);
   --font-sans: var(--font-poppins);
   --font-script: var(--font-script);
 }
@@ -29,6 +38,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-poppins), Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 ::selection {

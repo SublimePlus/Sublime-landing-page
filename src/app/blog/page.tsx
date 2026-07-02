@@ -16,7 +16,7 @@ export default function BlogIndex() {
         <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal">
           Sublime+ Blog
         </p>
-        <h1 className="text-4xl font-bold text-pine">
+        <h1 className="text-4xl font-bold text-pine dark:text-white">
           Notes on content that works.
         </h1>
       </Reveal>

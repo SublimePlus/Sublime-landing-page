@@ -80,21 +80,21 @@ export function BookingModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 16 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl"
+            className="relative z-10 w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-night"
           >
-            <div className="flex items-center justify-between border-b border-pine/10 px-6 py-5">
+            <div className="flex items-center justify-between border-b border-pine/10 px-6 py-5 dark:border-white/10">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-teal">
+                <p className="text-xs font-semibold uppercase tracking-wide text-teal dark:text-lime">
                   Book a meeting
                 </p>
-                <h3 className="text-lg font-semibold text-pine">
+                <h3 className="text-lg font-semibold text-pine dark:text-white">
                   {planName ? `Let's talk about the ${planName} plan` : "Pick a time that works"}
                 </h3>
               </div>
               <button
                 onClick={onClose}
                 aria-label="Close"
-                className="flex h-8 w-8 items-center justify-center rounded-full text-stone transition-colors hover:bg-pine/5 hover:text-pine"
+                className="flex h-8 w-8 items-center justify-center rounded-full text-stone transition-colors hover:bg-pine/5 hover:text-pine dark:text-white/60 dark:hover:bg-white/10 dark:hover:text-white"
               >
                 <PlusMark className="h-4 w-4 rotate-45" strokeWidth={2.5} />
               </button>
@@ -117,12 +117,12 @@ export function BookingModal({
                             return { year: y, month: m };
                           })
                         }
-                        className="flex h-10 w-10 flex-shrink-0 cursor-pointer items-center justify-center rounded-full border border-pine/15 text-lg text-pine transition-colors hover:border-teal hover:bg-teal/10 active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-pine/15 disabled:hover:bg-transparent"
+                        className="flex h-10 w-10 flex-shrink-0 cursor-pointer items-center justify-center rounded-full border border-pine/15 text-lg text-pine transition-colors hover:border-teal hover:bg-teal/10 active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-pine/15 disabled:hover:bg-transparent dark:border-white/15 dark:text-white dark:hover:border-teal dark:hover:bg-teal/20 dark:disabled:hover:border-white/15"
                         aria-label="Previous month"
                       >
                         ‹
                       </button>
-                      <p className="text-sm font-semibold text-pine">
+                      <p className="text-sm font-semibold text-pine dark:text-white">
                         {MONTH_LABELS[cursor.month]} {cursor.year}
                       </p>
                       <button
@@ -134,7 +134,7 @@ export function BookingModal({
                             return { year: y, month: m };
                           })
                         }
-                        className="flex h-10 w-10 flex-shrink-0 cursor-pointer items-center justify-center rounded-full border border-pine/15 text-lg text-pine transition-colors hover:border-teal hover:bg-teal/10 active:scale-95"
+                        className="flex h-10 w-10 flex-shrink-0 cursor-pointer items-center justify-center rounded-full border border-pine/15 text-lg text-pine transition-colors hover:border-teal hover:bg-teal/10 active:scale-95 dark:border-white/15 dark:text-white dark:hover:border-teal dark:hover:bg-teal/20"
                         aria-label="Next month"
                       >
                         ›
@@ -143,7 +143,7 @@ export function BookingModal({
 
                     <div className="grid grid-cols-7 gap-1 text-center">
                       {WEEKDAY_LABELS.map((d, i) => (
-                        <span key={i} className="py-1 text-xs font-medium text-stone">
+                        <span key={i} className="py-1 text-xs font-medium text-stone dark:text-white/50">
                           {d}
                         </span>
                       ))}
@@ -164,8 +164,8 @@ export function BookingModal({
                               selected
                                 ? "bg-teal text-white"
                                 : disabled
-                                  ? "text-stone/30"
-                                  : "text-pine hover:bg-lime/30"
+                                  ? "text-stone/30 dark:text-white/20"
+                                  : "text-pine hover:bg-lime/30 dark:text-white/80 dark:hover:bg-lime/20"
                             }`}
                           >
                             {cell.date.getDate()}
@@ -177,7 +177,7 @@ export function BookingModal({
 
                   {selectedDate && (
                     <div>
-                      <p className="mb-2 text-sm font-semibold text-pine">Pick a time</p>
+                      <p className="mb-2 text-sm font-semibold text-pine dark:text-white">Pick a time</p>
                       <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
                         {TIME_SLOTS.map((slot) => (
                           <button
@@ -187,7 +187,7 @@ export function BookingModal({
                             className={`rounded-lg border px-2 py-2 text-xs font-medium transition-colors ${
                               selectedTime === slot
                                 ? "border-teal bg-teal text-white"
-                                : "border-pine/15 text-pine hover:border-teal"
+                                : "border-pine/15 text-pine hover:border-teal dark:border-white/15 dark:text-white"
                             }`}
                           >
                             {slot}
@@ -199,7 +199,7 @@ export function BookingModal({
 
                   {selectedDate && selectedTime && (
                     <div>
-                      <label htmlFor="booking-email" className="mb-2 block text-sm font-semibold text-pine">
+                      <label htmlFor="booking-email" className="mb-2 block text-sm font-semibold text-pine dark:text-white">
                         Your email
                       </label>
                       <input
@@ -209,7 +209,7 @@ export function BookingModal({
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="you@company.com"
-                        className="w-full rounded-lg border border-pine/15 px-4 py-2.5 text-sm text-pine placeholder:text-stone/50 focus:border-teal focus:outline-none"
+                        className="w-full rounded-lg border border-pine/15 px-4 py-2.5 text-sm text-pine placeholder:text-stone/50 focus:border-teal focus:outline-none dark:border-white/15 dark:bg-white/5 dark:text-white dark:placeholder:text-white/30"
                       />
                     </div>
                   )}
@@ -248,14 +248,14 @@ function SuccessState({
       <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-teal text-white">
         <PlusMark className="h-6 w-6" strokeWidth={3} />
       </span>
-      <h4 className="text-lg font-semibold text-pine">Request sent</h4>
-      <p className="mx-auto mt-2 max-w-xs text-sm text-stone">
-        We&apos;ll reach out to <span className="font-medium text-pine">{email}</span> to confirm{" "}
+      <h4 className="text-lg font-semibold text-pine dark:text-white">Request sent</h4>
+      <p className="mx-auto mt-2 max-w-xs text-sm text-stone dark:text-white/70">
+        We&apos;ll reach out to <span className="font-medium text-pine dark:text-white">{email}</span> to confirm{" "}
         {date?.toLocaleDateString("en-US", { month: "long", day: "numeric" })} at {time}.
       </p>
       <button
         onClick={onClose}
-        className="mt-6 rounded-full border border-pine/15 px-6 py-2.5 text-sm font-semibold text-pine transition-colors hover:bg-pine/5"
+        className="mt-6 rounded-full border border-pine/15 px-6 py-2.5 text-sm font-semibold text-pine transition-colors hover:bg-pine/5 dark:border-white/15 dark:text-white dark:hover:bg-white/10"
       >
         Close
       </button>

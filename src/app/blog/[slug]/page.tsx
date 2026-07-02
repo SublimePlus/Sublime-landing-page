@@ -41,7 +41,7 @@ export default async function BlogPost({
   return (
     <article className="mx-auto max-w-3xl px-6 pb-28 pt-40">
       <Reveal>
-        <p className="mb-3 text-sm font-medium text-stone">
+        <p className="mb-3 text-sm font-medium text-stone dark:text-white/60">
           {new Date(meta.date).toLocaleDateString("en-US", {
             month: "long",
             day: "numeric",
@@ -49,7 +49,7 @@ export default async function BlogPost({
           })}{" "}
           · {meta.readingTime}
         </p>
-        <h1 className="text-3xl font-bold text-pine sm:text-4xl">
+        <h1 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
           {meta.title}
         </h1>
       </Reveal>
@@ -67,7 +67,7 @@ export default async function BlogPost({
       </Reveal>
 
       <Reveal delay={0.15}>
-        <div className="prose prose-headings:font-semibold prose-headings:text-pine prose-p:text-stone prose-p:leading-relaxed prose-strong:text-pine mt-10 max-w-none">
+        <div className="prose prose-headings:font-semibold prose-headings:text-pine prose-p:text-stone prose-p:leading-relaxed prose-strong:text-pine dark:prose-invert dark:prose-headings:text-white dark:prose-p:text-white/70 dark:prose-strong:text-white mt-10 max-w-none">
           <MDXRemote source={content} />
         </div>
       </Reveal>

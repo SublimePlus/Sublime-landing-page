@@ -6,7 +6,7 @@ export function BlogCard({ post }: { post: PostMeta }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group block overflow-hidden rounded-2xl border border-pine/10 bg-white shadow-sm transition-shadow hover:shadow-md"
+      className="group block overflow-hidden rounded-2xl border border-pine/10 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-white/10 dark:bg-night/40"
     >
       <div className={`relative aspect-[16/10] overflow-hidden duotone-${post.duotone}`}>
         <div
@@ -18,7 +18,7 @@ export function BlogCard({ post }: { post: PostMeta }) {
         </span>
       </div>
       <div className="p-5">
-        <p className="text-xs font-medium text-stone">
+        <p className="text-xs font-medium text-stone dark:text-white/50">
           {new Date(post.date).toLocaleDateString("en-US", {
             month: "short",
             day: "numeric",
@@ -26,10 +26,10 @@ export function BlogCard({ post }: { post: PostMeta }) {
           })}{" "}
           · {post.readingTime}
         </p>
-        <h3 className="mt-2 text-lg font-semibold text-pine group-hover:text-teal">
+        <h3 className="mt-2 text-lg font-semibold text-pine group-hover:text-teal dark:text-white dark:group-hover:text-lime">
           {post.title}
         </h3>
-        <p className="mt-2 text-sm leading-relaxed text-stone line-clamp-2">
+        <p className="mt-2 text-sm leading-relaxed text-stone line-clamp-2 dark:text-white/60">
           {post.excerpt}
         </p>
       </div>
