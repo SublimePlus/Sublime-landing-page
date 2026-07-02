@@ -37,41 +37,25 @@ export function HowItWorks() {
           </h2>
         </Reveal>
 
-        <div className="relative mt-20 grid gap-14 sm:grid-cols-3">
-          <svg
-            className="pointer-events-none absolute left-0 top-6 hidden w-full sm:block"
-            height="4"
-            viewBox="0 0 100 1"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            <line
-              x1="16"
-              y1="0.5"
-              x2="84"
-              y2="0.5"
-              stroke="#1b3a2f"
-              strokeOpacity="0.12"
-              strokeWidth="1"
-            />
-            <motion.line
-              x1="16"
-              y1="0.5"
-              x2="84"
-              y2="0.5"
-              stroke="#3c866b"
-              strokeWidth="1.5"
-              initial={{ pathLength: 0 }}
-              whileInView={{ pathLength: 1 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-            />
-          </svg>
-
+        <div className="mt-20 grid gap-14 sm:grid-cols-3">
           {steps.map((s, i) => (
-            <Reveal key={s.step} delay={i * 0.15} className="relative text-center sm:text-left">
-              <div className="relative z-10 mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-teal text-sm font-bold text-white sm:mx-0">
-                {s.step}
+            <Reveal key={s.step} delay={i * 0.15} className="text-center sm:text-left">
+              <div className="relative mx-auto flex h-12 w-12 items-center justify-center sm:mx-0 sm:w-full sm:justify-start">
+                {i < steps.length - 1 && (
+                  <>
+                    <div className="absolute left-12 right-[-56px] top-1/2 hidden h-[1.5px] -translate-y-1/2 bg-pine/10 sm:block" />
+                    <motion.div
+                      className="absolute left-12 right-[-56px] top-1/2 hidden h-[1.5px] origin-left -translate-y-1/2 bg-teal sm:block"
+                      initial={{ scaleX: 0 }}
+                      whileInView={{ scaleX: 1 }}
+                      viewport={{ once: true, margin: "-80px" }}
+                      transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                    />
+                  </>
+                )}
+                <div className="relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-teal text-sm font-bold text-white">
+                  {s.step}
+                </div>
               </div>
               <h3 className="mt-5 text-lg font-semibold text-pine">
                 {s.title}
