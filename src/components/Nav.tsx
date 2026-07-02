@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Logo } from "./PlusMark";
+import { BookMeetingButton } from "./booking/BookMeetingButton";
 
 const links = [
   { href: "/#services", label: "Services" },
-  { href: "/#how-it-works", label: "How it Works" },
+  { href: "/#plans", label: "Plans" },
   { href: "/blog", label: "Blog" },
 ];
 
@@ -45,12 +46,9 @@ export function Nav() {
             </Link>
           ))}
         </div>
-        <Link
-          href="/#contact"
-          className="rounded-full bg-pine px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-teal"
-        >
+        <BookMeetingButton className="rounded-full bg-pine px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-teal">
           Book a Call
-        </Link>
+        </BookMeetingButton>
       </nav>
     </header>
   );

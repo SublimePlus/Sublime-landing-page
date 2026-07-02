@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { PlusMark } from "../PlusMark";
 import { Reveal } from "../Reveal";
+import { BookMeetingButton } from "../booking/BookMeetingButton";
 
 export function FinalCta() {
   return (
@@ -14,13 +14,10 @@ export function FinalCta() {
           Book a free 20-minute consult. We&apos;ll look at your current
           content and tell you exactly what we&apos;d change.
         </p>
-        <Link
-          href="mailto:hello@sublimeplus.co"
-          className="mt-8 inline-flex items-center gap-2 rounded-full bg-lime px-8 py-3.5 font-semibold text-pine transition-transform hover:scale-[1.03]"
-        >
+        <BookMeetingButton className="mt-8 inline-flex items-center gap-2 rounded-full bg-lime px-8 py-3.5 font-semibold text-pine transition-transform hover:scale-[1.03]">
           Book a free consult
           <PlusMark className="h-4 w-4" strokeWidth={3} />
-        </Link>
+        </BookMeetingButton>
       </Reveal>
     </section>
   );

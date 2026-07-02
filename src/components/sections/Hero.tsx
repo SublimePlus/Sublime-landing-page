@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { PlusMark } from "../PlusMark";
 import { Magnetic } from "../CursorReactive";
+import { BookMeetingButton } from "../booking/BookMeetingButton";
 
 export function Hero() {
   return (
@@ -46,13 +47,10 @@ export function Hero() {
           className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
         >
           <Magnetic strength={14}>
-            <Link
-              href="/#contact"
-              className="inline-flex items-center gap-2 rounded-full bg-lime px-7 py-3.5 font-semibold text-pine transition-transform hover:scale-[1.03]"
-            >
+            <BookMeetingButton className="inline-flex items-center gap-2 rounded-full bg-lime px-7 py-3.5 font-semibold text-pine transition-transform hover:scale-[1.03]">
               Book a free consult
               <PlusMark className="h-4 w-4" strokeWidth={3} />
-            </Link>
+            </BookMeetingButton>
           </Magnetic>
           <Link
             href="/#how-it-works"

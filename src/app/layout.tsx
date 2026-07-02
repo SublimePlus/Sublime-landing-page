@@ -4,6 +4,7 @@ import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { ScrollProgress } from "@/components/ScrollProgress";
+import { BookingModalProvider } from "@/components/booking/BookingModalContext";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -34,10 +35,12 @@ export default function RootLayout({
       className={`${poppins.variable} ${yellowtail.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <ScrollProgress />
-        <Nav />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <BookingModalProvider>
+          <ScrollProgress />
+          <Nav />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </BookingModalProvider>
       </body>
     </html>
   );
