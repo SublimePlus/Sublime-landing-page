@@ -117,7 +117,7 @@ export function BookingModal({
                             return { year: y, month: m };
                           })
                         }
-                        className="flex h-8 w-8 items-center justify-center rounded-full text-pine transition-colors hover:bg-pine/5 disabled:opacity-30"
+                        className="flex h-10 w-10 flex-shrink-0 cursor-pointer items-center justify-center rounded-full border border-pine/15 text-lg text-pine transition-colors hover:border-teal hover:bg-teal/10 active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-pine/15 disabled:hover:bg-transparent"
                         aria-label="Previous month"
                       >
                         ‹
@@ -134,7 +134,7 @@ export function BookingModal({
                             return { year: y, month: m };
                           })
                         }
-                        className="flex h-8 w-8 items-center justify-center rounded-full text-pine transition-colors hover:bg-pine/5"
+                        className="flex h-10 w-10 flex-shrink-0 cursor-pointer items-center justify-center rounded-full border border-pine/15 text-lg text-pine transition-colors hover:border-teal hover:bg-teal/10 active:scale-95"
                         aria-label="Next month"
                       >
                         ›
@@ -178,7 +178,7 @@ export function BookingModal({
                   {selectedDate && (
                     <div>
                       <p className="mb-2 text-sm font-semibold text-pine">Pick a time</p>
-                      <div className="grid grid-cols-3 gap-2">
+                      <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
                         {TIME_SLOTS.map((slot) => (
                           <button
                             type="button"
