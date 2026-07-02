@@ -22,7 +22,7 @@
   --color-lime: var(--color-lime);
   --color-stone: var(--color-stone);
   --font-sans: var(--font-poppins);
-  --font-script: var(--font-caveat);
+  --font-script: var(--font-script);
 }
 
 body {

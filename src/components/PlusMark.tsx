@@ -34,11 +34,9 @@ export function Logo({
 }) {
   const textColor = variant === "light" ? "text-white" : "text-pine";
   return (
-    <span className={`inline-flex items-center gap-1 font-sans font-bold text-xl ${textColor} ${className}`}>
+    <span className={`inline-flex items-center font-script text-4xl leading-none ${textColor} ${className}`}>
       Sublime
-      <span className="relative inline-flex h-5 w-5 items-center justify-center rounded-full bg-lime text-pine">
-        <PlusMark className="h-3.5 w-3.5" strokeWidth={3} />
-      </span>
+      <PlusMark className="ml-0.5 h-4 w-4 self-start" strokeWidth={3.5} />
     </span>
   );
 }

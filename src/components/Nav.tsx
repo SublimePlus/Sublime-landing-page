@@ -30,14 +30,16 @@ export function Nav() {
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" aria-label="Sublime+ home">
-          <Logo />
+          <Logo variant={scrolled ? "dark" : "light"} />
         </Link>
         <div className="hidden items-center gap-8 md:flex">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-pine/80 transition-colors hover:text-teal"
+              className={`text-sm font-medium transition-colors hover:text-lime ${
+                scrolled ? "text-pine/80" : "text-white/85"
+              }`}
             >
               {link.label}
             </Link>
