@@ -1,28 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useRef } from "react";
-import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { motion } from "framer-motion";
 import { PlusMark } from "../PlusMark";
-import { RedditIcon } from "../RedditIcon";
 import { Magnetic } from "../CursorReactive";
 import { BookMeetingButton } from "../booking/BookMeetingButton";
 
 export function Hero() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"],
-  });
-
   return (
-    <section
-      ref={sectionRef}
-      className="relative overflow-hidden bg-gradient-to-b from-pine via-pine to-teal pt-36 pb-28 text-white"
-    >
+    <section className="relative overflow-hidden bg-gradient-to-b from-pine via-pine to-teal pt-36 pb-28 text-white">
       <FloatingPlusField />
-      <FloatingRedditBadge scrollYProgress={scrollYProgress} />
-      <FloatingBlogWidget scrollYProgress={scrollYProgress} />
       <div className="relative mx-auto max-w-4xl px-6 text-center">
         <motion.p
           initial={{ opacity: 0, y: 12 }}
@@ -104,69 +91,5 @@ function FloatingPlusField() {
         </motion.div>
       ))}
     </div>
-  );
-}
-
-function FloatingRedditBadge({
-  scrollYProgress,
-}: {
-  scrollYProgress: MotionValue<number>;
-}) {
-  const y = useTransform(scrollYProgress, [0, 1], [0, -160]);
-  const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
-
-  return (
-    <motion.div
-      className="pointer-events-none absolute right-[8%] top-[16%] hidden md:block"
-      style={{ y, opacity }}
-      aria-hidden="true"
-    >
-      <motion.div
-        animate={{ y: [0, -12, 0], rotate: [-4, 4, -4] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="rounded-full shadow-lg shadow-black/20"
-      >
-        <RedditIcon className="h-11 w-11" />
-      </motion.div>
-    </motion.div>
-  );
-}
-
-function FloatingBlogWidget({
-  scrollYProgress,
-}: {
-  scrollYProgress: MotionValue<number>;
-}) {
-  const y = useTransform(scrollYProgress, [0, 1], [0, -90]);
-  const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
-
-  return (
-    <motion.div
-      className="pointer-events-none absolute bottom-[16%] left-[6%] hidden md:block"
-      style={{ y, opacity }}
-      aria-hidden="true"
-    >
-      <motion.div
-        animate={{ y: [0, -10, 0] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-        className="flex items-center gap-2"
-      >
-        <div className="flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-3 py-2 shadow-lg shadow-black/10 backdrop-blur-sm">
-          <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-lime text-pine">
-            <PlusMark className="h-4 w-4" strokeWidth={3} />
-          </span>
-          <div className="text-left leading-tight">
-            <p className="text-xs font-semibold text-white">New blog post</p>
-            <p className="text-[11px] text-white/60">Just published</p>
-          </div>
-        </div>
-        <span className="text-2xl" role="img" aria-hidden="true">
-          💬
-        </span>
-        <span className="text-2xl" role="img" aria-hidden="true">
-          ✨
-        </span>
-      </motion.div>
-    </motion.div>
   );
 }
