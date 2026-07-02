@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { Reveal } from "../Reveal";
 
 const steps = [
@@ -26,13 +25,6 @@ const steps = [
 ];
 
 export function HowItWorks() {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start 0.8", "end 0.4"],
-  });
-  const pathLength = useTransform(scrollYProgress, [0, 1], [0, 1]);
-
   return (
     <section id="how-it-works" className="bg-pine/[0.03] py-28">
       <div className="mx-auto max-w-5xl px-6">
@@ -45,7 +37,7 @@ export function HowItWorks() {
           </h2>
         </Reveal>
 
-        <div ref={ref} className="relative mt-20 grid gap-14 sm:grid-cols-3">
+        <div className="relative mt-20 grid gap-14 sm:grid-cols-3">
           <svg
             className="pointer-events-none absolute left-0 top-6 hidden w-full sm:block"
             height="4"
@@ -58,7 +50,8 @@ export function HowItWorks() {
               y1="0.5"
               x2="84"
               y2="0.5"
-              stroke="#c9f24e"
+              stroke="#1b3a2f"
+              strokeOpacity="0.12"
               strokeWidth="1"
             />
             <motion.line
@@ -68,7 +61,10 @@ export function HowItWorks() {
               y2="0.5"
               stroke="#3c866b"
               strokeWidth="1.5"
-              style={{ pathLength }}
+              initial={{ pathLength: 0 }}
+              whileInView={{ pathLength: 1 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
             />
           </svg>
 
