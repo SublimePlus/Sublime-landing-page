@@ -3,8 +3,16 @@
 import { motion } from "framer-motion";
 import { Reveal } from "../Reveal";
 import { TopoBackground } from "../TopoBackground";
+import { AnimatedSection } from "../AnimatedSection";
+import { useSpotlight, SpotlightOverlay } from "../SpotlightCard";
 
-const services = [
+type Service = {
+  title: string;
+  description: string;
+  icon: (props: { className?: string }) => React.ReactElement;
+};
+
+const services: Service[] = [
   {
     title: "Content Creation",
     description:
@@ -45,7 +53,7 @@ const services = [
 
 export function Services() {
   return (
-    <section id="services" className="relative overflow-hidden py-28">
+    <AnimatedSection id="services" className="relative overflow-hidden py-28">
       <TopoBackground className="text-pine/[0.06] dark:text-white/[0.05]" />
       <div className="relative mx-auto max-w-6xl px-6">
       <Reveal className="mx-auto max-w-2xl text-center">
@@ -59,26 +67,38 @@ export function Services() {
       <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {services.map((service, i) => (
           <Reveal key={service.title} delay={i * 0.08}>
-            <motion.div
-              whileHover={{ y: -6, rotate: -0.5 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="h-full rounded-2xl border border-pine/10 bg-white p-7 shadow-sm dark:border-white/10 dark:bg-night/40"
-            >
-              <span className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-full bg-teal text-white">
-                <service.icon className="h-5 w-5" />
-              </span>
-              <h3 className="text-lg font-semibold text-pine dark:text-white">
-                {service.title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-stone dark:text-white/60">
-                {service.description}
-              </p>
-            </motion.div>
+            <ServiceCard service={service} />
           </Reveal>
         ))}
       </div>
       </div>
-    </section>
+    </AnimatedSection>
+  );
+}
+
+function ServiceCard({ service }: { service: Service }) {
+  const { x, y, onMouseMove } = useSpotlight();
+
+  return (
+    <motion.div
+      onMouseMove={onMouseMove}
+      whileHover={{ y: -6, rotate: -0.5 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className="neon-teal group relative h-full overflow-hidden rounded-2xl border border-pine/10 bg-white p-7 shadow-sm dark:border-white/10 dark:bg-night/40"
+    >
+      <SpotlightOverlay x={x} y={y} />
+      <div className="relative z-10">
+        <span className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-full bg-teal text-white">
+          <service.icon className="h-5 w-5" />
+        </span>
+        <h3 className="text-lg font-semibold text-pine dark:text-white">
+          {service.title}
+        </h3>
+        <p className="mt-2 text-sm leading-relaxed text-stone dark:text-white/60">
+          {service.description}
+        </p>
+      </div>
+    </motion.div>
   );
 }
 

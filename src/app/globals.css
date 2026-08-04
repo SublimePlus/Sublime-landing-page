@@ -62,6 +62,37 @@ body {
   background: linear-gradient(160deg, rgba(27, 58, 47, 0.75), rgba(27, 58, 47, 0.45));
 }
 
+/* Neon hover glow — cards get a soft border-glow, buttons get a fuller bloom */
+.neon-teal {
+  transition: box-shadow 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
+}
+.neon-teal:hover {
+  box-shadow: 0 0 0 1px rgba(60, 134, 107, 0.5), 0 0 24px rgba(60, 134, 107, 0.35),
+    0 0 48px rgba(60, 134, 107, 0.15);
+}
+
+.neon-lime {
+  transition: box-shadow 0.35s ease, transform 0.35s ease;
+}
+.neon-lime:hover {
+  box-shadow: 0 0 0 1px rgba(201, 242, 78, 0.6), 0 0 24px rgba(201, 242, 78, 0.5),
+    0 0 52px rgba(201, 242, 78, 0.25);
+}
+
+.neon-lime-btn {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.neon-lime-btn:hover {
+  box-shadow: 0 0 16px rgba(201, 242, 78, 0.6), 0 0 36px rgba(201, 242, 78, 0.3);
+}
+
+.neon-teal-btn {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.neon-teal-btn:hover {
+  box-shadow: 0 0 16px rgba(60, 134, 107, 0.55), 0 0 36px rgba(60, 134, 107, 0.28);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;

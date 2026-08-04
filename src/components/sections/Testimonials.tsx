@@ -2,6 +2,7 @@
 
 import { Reveal } from "../Reveal";
 import { TopoBackground } from "../TopoBackground";
+import { AnimatedSection } from "../AnimatedSection";
 
 const testimonials = [
   {
@@ -26,7 +27,7 @@ const testimonials = [
 
 export function Testimonials() {
   return (
-    <section className="relative overflow-hidden bg-pine/[0.03] py-28 dark:bg-white/[0.03]">
+    <AnimatedSection className="relative overflow-hidden bg-pine/[0.03] py-28 dark:bg-white/[0.03]">
       <TopoBackground className="text-pine/[0.06] dark:text-white/[0.05]" />
       <div className="relative mx-auto max-w-6xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
@@ -40,7 +41,7 @@ export function Testimonials() {
         <div className="mt-16 grid gap-6 md:grid-cols-3">
           {testimonials.map((t, i) => (
             <Reveal key={t.name} delay={i * 0.1}>
-              <figure className="h-full rounded-2xl bg-white p-7 shadow-sm dark:bg-night/40">
+              <figure className="neon-teal h-full rounded-2xl bg-white p-7 shadow-sm dark:bg-night/40">
                 <span className="font-script text-4xl leading-none text-lime">&ldquo;</span>
                 <blockquote className="text-sm leading-relaxed text-stone dark:text-white/70">
                   {t.quote}
@@ -54,6 +55,6 @@ export function Testimonials() {
           ))}
         </div>
       </div>
-    </section>
+    </AnimatedSection>
   );
 }

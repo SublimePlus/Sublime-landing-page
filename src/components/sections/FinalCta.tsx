@@ -1,10 +1,11 @@
 import { PlusMark } from "../PlusMark";
 import { Reveal } from "../Reveal";
 import { BookMeetingButton } from "../booking/BookMeetingButton";
+import { AnimatedSection } from "../AnimatedSection";
 
 export function FinalCta() {
   return (
-    <section id="contact" className="relative overflow-hidden bg-pine py-28 text-white">
+    <AnimatedSection id="contact" className="relative overflow-hidden bg-pine py-28 text-white">
       <PlusTexture />
       <Reveal className="relative mx-auto max-w-2xl px-6 text-center">
         <h2 className="text-3xl font-bold sm:text-4xl">
@@ -14,12 +15,12 @@ export function FinalCta() {
           Book a free 20-minute consult. We&apos;ll look at your current
           content and tell you exactly what we&apos;d change.
         </p>
-        <BookMeetingButton className="mt-8 inline-flex items-center gap-2 rounded-full bg-lime px-8 py-3.5 font-semibold text-pine transition-transform hover:scale-[1.03]">
+        <BookMeetingButton className="neon-lime-btn mt-8 inline-flex items-center gap-2 rounded-full bg-lime px-8 py-3.5 font-semibold text-pine transition-transform hover:scale-[1.03]">
           Book a free consult
           <PlusMark className="h-4 w-4" strokeWidth={3} />
         </BookMeetingButton>
       </Reveal>
-    </section>
+    </AnimatedSection>
   );
 }
 

@@ -4,6 +4,7 @@ import { Reveal } from "../Reveal";
 import { PlusMark } from "../PlusMark";
 import { BookMeetingButton } from "../booking/BookMeetingButton";
 import { TopoBackground } from "../TopoBackground";
+import { AnimatedSection } from "../AnimatedSection";
 
 type Plan = {
   name: string;
@@ -53,7 +54,7 @@ const plans: Plan[] = [
 
 export function Pricing() {
   return (
-    <section id="plans" className="relative overflow-hidden bg-pine/[0.03] py-28 dark:bg-white/[0.03]">
+    <AnimatedSection id="plans" className="relative overflow-hidden bg-pine/[0.03] py-28 dark:bg-white/[0.03]">
       <TopoBackground className="text-pine/[0.06] dark:text-white/[0.05]" />
       <div className="relative mx-auto max-w-6xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
@@ -78,7 +79,7 @@ export function Pricing() {
         </div>
 
         <Reveal delay={0.3} className="mt-6">
-          <div className="flex flex-col items-center justify-between gap-6 rounded-2xl border border-pine/10 bg-white p-8 sm:flex-row dark:border-white/10 dark:bg-night/40">
+          <div className="neon-teal flex flex-col items-center justify-between gap-6 rounded-2xl border border-pine/10 bg-white p-8 sm:flex-row dark:border-white/10 dark:bg-night/40">
             <div className="text-center sm:text-left">
               <h3 className="text-lg font-semibold text-pine dark:text-white">Custom Plan</h3>
               <p className="mt-1 text-sm text-stone dark:text-white/60">
@@ -88,7 +89,7 @@ export function Pricing() {
             </div>
             <BookMeetingButton
               planName="Custom"
-              className="inline-flex flex-shrink-0 items-center gap-2 rounded-full bg-pine px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-teal"
+              className="neon-teal-btn inline-flex flex-shrink-0 items-center gap-2 rounded-full bg-pine px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-teal"
             >
               Book Now
               <PlusMark className="h-4 w-4" strokeWidth={3} />
@@ -96,17 +97,17 @@ export function Pricing() {
           </div>
         </Reveal>
       </div>
-    </section>
+    </AnimatedSection>
   );
 }
 
 function PlanCard({ plan }: { plan: Plan }) {
   return (
     <div
-      className={`relative flex h-full flex-col rounded-2xl border p-7 ${
+      className={`relative flex h-full flex-col rounded-2xl border p-7 transition-transform duration-300 hover:-translate-y-1 ${
         plan.highlighted
-          ? "border-teal bg-pine text-white shadow-lg"
-          : "border-pine/10 bg-white text-pine dark:border-white/10 dark:bg-night/40 dark:text-white"
+          ? "neon-lime border-teal bg-pine text-white shadow-lg"
+          : "neon-teal border-pine/10 bg-white text-pine dark:border-white/10 dark:bg-night/40 dark:text-white"
       }`}
     >
       {plan.highlighted && (
@@ -137,7 +138,7 @@ function PlanCard({ plan }: { plan: Plan }) {
       <BookMeetingButton
         planName={plan.name}
         className={`mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-transform hover:scale-[1.02] ${
-          plan.highlighted ? "bg-lime text-pine" : "bg-pine text-white dark:bg-teal"
+          plan.highlighted ? "neon-lime-btn bg-lime text-pine" : "neon-teal-btn bg-pine text-white dark:bg-teal"
         }`}
       >
         Book Now
