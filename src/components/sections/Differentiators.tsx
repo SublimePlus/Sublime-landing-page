@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Reveal } from "../Reveal";
 import { PlusMark } from "../PlusMark";
 import { TopoBackground } from "../TopoBackground";
+import { AnimatedSection } from "../AnimatedSection";
 
 const points = [
   "A dedicated team that learns your brand voice, not a rotating cast of freelancers",
@@ -14,7 +15,7 @@ const points = [
 
 export function Differentiators() {
   return (
-    <section className="relative overflow-hidden py-28">
+    <AnimatedSection className="relative overflow-hidden py-28">
       <TopoBackground className="text-pine/[0.06] dark:text-white/[0.05]" />
       <div className="relative mx-auto max-w-6xl px-6">
       <div className="grid items-center gap-14 lg:grid-cols-2">
@@ -24,7 +25,7 @@ export function Differentiators() {
             <motion.span
               initial={{ scale: 0.8, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               transition={{ duration: 0.5, delay: 0.3 }}
               className="absolute bottom-5 right-5 z-10 flex h-12 w-12 items-center justify-center rounded-xl bg-lime text-pine shadow-lg"
             >
@@ -56,6 +57,6 @@ export function Differentiators() {
         </div>
       </div>
       </div>
-    </section>
+    </AnimatedSection>
   );
 }

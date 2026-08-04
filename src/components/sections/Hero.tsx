@@ -9,6 +9,7 @@ import { BookMeetingButton } from "../booking/BookMeetingButton";
 export function Hero() {
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-pine via-pine to-teal pt-36 pb-28 text-white">
+      <AmbientGlow />
       <FloatingPlusField />
       <div className="relative mx-auto max-w-4xl px-6 text-center">
         <motion.p
@@ -47,7 +48,7 @@ export function Hero() {
           className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
         >
           <Magnetic strength={14}>
-            <BookMeetingButton className="inline-flex items-center gap-2 rounded-full bg-lime px-7 py-3.5 font-semibold text-pine transition-transform hover:scale-[1.03]">
+            <BookMeetingButton className="neon-lime-btn inline-flex items-center gap-2 rounded-full bg-lime px-7 py-3.5 font-semibold text-pine transition-transform hover:scale-[1.03]">
               Book a free consult
               <PlusMark className="h-4 w-4" strokeWidth={3} />
             </BookMeetingButton>
@@ -61,6 +62,17 @@ export function Hero() {
         </motion.div>
       </div>
     </section>
+  );
+}
+
+function AmbientGlow() {
+  return (
+    <motion.div
+      aria-hidden="true"
+      className="pointer-events-none absolute left-1/2 top-1/2 h-[480px] w-[480px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-lime/20 blur-[120px]"
+      animate={{ opacity: [0.5, 0.85, 0.5], scale: [1, 1.12, 1] }}
+      transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+    />
   );
 }
 

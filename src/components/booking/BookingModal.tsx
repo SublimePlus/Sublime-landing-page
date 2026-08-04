@@ -217,7 +217,7 @@ export function BookingModal({
                   <button
                     type="submit"
                     disabled={!selectedDate || !selectedTime || !email || submitting}
-                    className="flex w-full items-center justify-center gap-2 rounded-full bg-lime px-6 py-3 font-semibold text-pine transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100"
+                    className="neon-lime-btn flex w-full items-center justify-center gap-2 rounded-full bg-lime px-6 py-3 font-semibold text-pine transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100"
                   >
                     {submitting ? "Submitting…" : "Confirm request"}
                     {!submitting && <PlusMark className="h-4 w-4" strokeWidth={3} />}

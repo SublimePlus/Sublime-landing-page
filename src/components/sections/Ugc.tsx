@@ -5,8 +5,16 @@ import { Reveal } from "../Reveal";
 import { PlusMark } from "../PlusMark";
 import { BookMeetingButton } from "../booking/BookMeetingButton";
 import { TopoBackground } from "../TopoBackground";
+import { AnimatedSection } from "../AnimatedSection";
+import { useSpotlight, SpotlightOverlay } from "../SpotlightCard";
 
-const products = [
+type Product = {
+  title: string;
+  description: string;
+  icon: (props: { className?: string }) => React.ReactElement;
+};
+
+const products: Product[] = [
   {
     title: "Faceless Content",
     description:
@@ -35,7 +43,7 @@ const products = [
 
 export function Ugc() {
   return (
-    <section id="ugc" className="relative overflow-hidden py-28">
+    <AnimatedSection id="ugc" className="relative overflow-hidden py-28">
       <TopoBackground className="text-pine/[0.06] dark:text-white/[0.05]" />
       <div className="relative mx-auto max-w-6xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
@@ -55,35 +63,45 @@ export function Ugc() {
         <div className="mt-16 grid gap-6 sm:grid-cols-2">
           {products.map((product, i) => (
             <Reveal key={product.title} delay={i * 0.08}>
-              <motion.div
-                whileHover={{ y: -6, rotate: -0.5 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="flex h-full items-start gap-4 rounded-2xl border border-pine/10 bg-white p-7 shadow-sm dark:border-white/10 dark:bg-night/40"
-              >
-                <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-teal text-white">
-                  <product.icon className="h-5 w-5" />
-                </span>
-                <div>
-                  <h3 className="text-lg font-semibold text-pine dark:text-white">
-                    {product.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-stone dark:text-white/60">
-                    {product.description}
-                  </p>
-                </div>
-              </motion.div>
+              <ProductCard product={product} />
             </Reveal>
           ))}
         </div>
 
         <Reveal delay={0.3} className="mt-12 text-center">
-          <BookMeetingButton className="inline-flex items-center gap-2 rounded-full bg-pine px-7 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.03] dark:bg-teal">
+          <BookMeetingButton className="neon-teal-btn inline-flex items-center gap-2 rounded-full bg-pine px-7 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.03] dark:bg-teal">
             Book Now
             <PlusMark className="h-4 w-4" strokeWidth={3} />
           </BookMeetingButton>
         </Reveal>
       </div>
-    </section>
+    </AnimatedSection>
+  );
+}
+
+function ProductCard({ product }: { product: Product }) {
+  const { x, y, onMouseMove } = useSpotlight();
+
+  return (
+    <motion.div
+      onMouseMove={onMouseMove}
+      whileHover={{ y: -6, rotate: -0.5 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className="neon-teal group relative flex h-full items-start gap-4 overflow-hidden rounded-2xl border border-pine/10 bg-white p-7 shadow-sm dark:border-white/10 dark:bg-night/40"
+    >
+      <SpotlightOverlay x={x} y={y} />
+      <span className="relative z-10 flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-teal text-white">
+        <product.icon className="h-5 w-5" />
+      </span>
+      <div className="relative z-10">
+        <h3 className="text-lg font-semibold text-pine dark:text-white">
+          {product.title}
+        </h3>
+        <p className="mt-2 text-sm leading-relaxed text-stone dark:text-white/60">
+          {product.description}
+        </p>
+      </div>
+    </motion.div>
   );
 }
 

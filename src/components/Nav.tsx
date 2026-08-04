@@ -52,7 +52,7 @@ export function Nav() {
         </div>
         <div className="flex items-center gap-3">
           <ThemeToggle scrolled={scrolled} />
-          <BookMeetingButton className="rounded-full bg-pine px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-teal dark:bg-teal dark:hover:bg-teal-dark">
+          <BookMeetingButton className="neon-teal-btn rounded-full bg-pine px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-teal dark:bg-teal dark:hover:bg-teal-dark">
             Book a Call
           </BookMeetingButton>
         </div>

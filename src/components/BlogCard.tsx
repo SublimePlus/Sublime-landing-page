@@ -6,7 +6,7 @@ export function BlogCard({ post }: { post: PostMeta }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group block overflow-hidden rounded-2xl border border-pine/10 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-white/10 dark:bg-night/40"
+      className="neon-teal group block overflow-hidden rounded-2xl border border-pine/10 bg-white shadow-sm dark:border-white/10 dark:bg-night/40"
     >
       <div className={`relative aspect-[16/10] overflow-hidden duotone-${post.duotone}`}>
         <div

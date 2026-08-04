@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Reveal } from "../Reveal";
 import { TopoBackground } from "../TopoBackground";
+import { AnimatedSection } from "../AnimatedSection";
 
 const steps = [
   {
@@ -27,7 +28,7 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="relative overflow-hidden bg-pine/[0.03] py-28 dark:bg-white/[0.03]">
+    <AnimatedSection id="how-it-works" className="relative overflow-hidden bg-pine/[0.03] py-28 dark:bg-white/[0.03]">
       <TopoBackground className="text-pine/[0.07] dark:text-white/[0.06]" />
       <div className="relative mx-auto max-w-5xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
@@ -50,7 +51,7 @@ export function HowItWorks() {
                       className="absolute left-[calc(50%+24px)] top-1/2 hidden h-[1.5px] w-[calc(100%+8px)] origin-left -translate-y-1/2 bg-teal sm:block"
                       initial={{ scaleX: 0 }}
                       whileInView={{ scaleX: 1 }}
-                      viewport={{ once: true, margin: "-80px" }}
+                      viewport={{ once: false, margin: "-80px" }}
                       transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
                     />
                   </>
@@ -69,6 +70,6 @@ export function HowItWorks() {
           ))}
         </div>
       </div>
-    </section>
+    </AnimatedSection>
   );
 }
