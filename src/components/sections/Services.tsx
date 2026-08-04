@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Reveal } from "../Reveal";
+import { TopoBackground } from "../TopoBackground";
 
 const services = [
   {
@@ -44,7 +45,9 @@ const services = [
 
 export function Services() {
   return (
-    <section id="services" className="mx-auto max-w-6xl px-6 py-28">
+    <section id="services" className="relative overflow-hidden py-28">
+      <TopoBackground className="text-pine/[0.06] dark:text-white/[0.05]" />
+      <div className="relative mx-auto max-w-6xl px-6">
       <Reveal className="mx-auto max-w-2xl text-center">
         <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal">
           What we do
@@ -73,6 +76,7 @@ export function Services() {
             </motion.div>
           </Reveal>
         ))}
+      </div>
       </div>
     </section>
   );

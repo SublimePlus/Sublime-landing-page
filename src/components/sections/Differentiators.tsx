@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Reveal } from "../Reveal";
 import { PlusMark } from "../PlusMark";
+import { TopoBackground } from "../TopoBackground";
 
 const points = [
   "A dedicated team that learns your brand voice, not a rotating cast of freelancers",
@@ -13,7 +14,9 @@ const points = [
 
 export function Differentiators() {
   return (
-    <section className="mx-auto max-w-6xl px-6 py-28">
+    <section className="relative overflow-hidden py-28">
+      <TopoBackground className="text-pine/[0.06] dark:text-white/[0.05]" />
+      <div className="relative mx-auto max-w-6xl px-6">
       <div className="grid items-center gap-14 lg:grid-cols-2">
         <Reveal>
           <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-pine">
@@ -51,6 +54,7 @@ export function Differentiators() {
             ))}
           </ul>
         </div>
+      </div>
       </div>
     </section>
   );

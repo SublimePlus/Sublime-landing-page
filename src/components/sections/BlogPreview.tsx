@@ -2,12 +2,15 @@ import Link from "next/link";
 import { Reveal } from "../Reveal";
 import { BlogCard } from "../BlogCard";
 import { getAllPosts } from "@/lib/blog";
+import { TopoBackground } from "../TopoBackground";
 
 export function BlogPreview() {
   const posts = getAllPosts().slice(0, 3);
 
   return (
-    <section className="mx-auto max-w-6xl px-6 py-28">
+    <section className="relative overflow-hidden py-28">
+      <TopoBackground className="text-pine/[0.06] dark:text-white/[0.05]" />
+      <div className="relative mx-auto max-w-6xl px-6">
       <Reveal className="flex flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left">
         <div>
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal">
@@ -30,6 +33,7 @@ export function BlogPreview() {
             <BlogCard post={post} />
           </Reveal>
         ))}
+      </div>
       </div>
     </section>
   );

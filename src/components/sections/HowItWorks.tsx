@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Reveal } from "../Reveal";
+import { TopoBackground } from "../TopoBackground";
 
 const steps = [
   {
@@ -26,8 +27,9 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="bg-pine/[0.03] py-28 dark:bg-white/[0.03]">
-      <div className="mx-auto max-w-5xl px-6">
+    <section id="how-it-works" className="relative overflow-hidden bg-pine/[0.03] py-28 dark:bg-white/[0.03]">
+      <TopoBackground className="text-pine/[0.07] dark:text-white/[0.06]" />
+      <div className="relative mx-auto max-w-5xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal">
             How it works
