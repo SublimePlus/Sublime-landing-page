@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { Logo } from "./PlusMark";
+import { Reveal } from "./Reveal";
 
 export function Footer() {
   return (
     <footer className="relative overflow-hidden bg-pine text-white/80">
       <PlusTexture />
-      <div className="relative mx-auto max-w-6xl px-6 py-16">
+      <Reveal className="relative mx-auto max-w-6xl px-6 py-16">
         <div className="flex flex-col gap-10 md:flex-row md:justify-between">
           <div className="max-w-xs">
             <Logo variant="light" />
@@ -41,7 +42,7 @@ export function Footer() {
         <div className="mt-12 border-t border-white/10 pt-6 text-xs text-white/40">
           © {new Date().getFullYear()} Sublime+. All rights reserved.
         </div>
-      </div>
+      </Reveal>
     </footer>
   );
 }

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { Reveal } from "../Reveal";
 import { PlusMark } from "../PlusMark";
 import { BookMeetingButton } from "../booking/BookMeetingButton";
+import { TopoBackground } from "../TopoBackground";
 
 type Plan = {
   name: string;
@@ -52,11 +52,10 @@ const plans: Plan[] = [
 ];
 
 export function Pricing() {
-  const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
-
   return (
-    <section id="plans" className="bg-pine/[0.03] py-28 dark:bg-white/[0.03]">
-      <div className="mx-auto max-w-6xl px-6">
+    <section id="plans" className="relative overflow-hidden bg-pine/[0.03] py-28 dark:bg-white/[0.03]">
+      <TopoBackground className="text-pine/[0.06] dark:text-white/[0.05]" />
+      <div className="relative mx-auto max-w-6xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal">
             Plans
@@ -66,42 +65,14 @@ export function Pricing() {
           </h2>
           <p className="mt-4 text-stone dark:text-white/60">
             Every plan includes a dedicated content team. Book a call and
-            we&apos;ll recommend the right fit and share pricing.
+            we&apos;ll recommend the right fit for your brand.
           </p>
-        </Reveal>
-
-        <Reveal delay={0.1} className="mt-10 flex justify-center">
-          <div className="inline-flex items-center gap-1 rounded-full border border-pine/10 bg-white p-1 dark:border-white/10 dark:bg-night/40">
-            <button
-              onClick={() => setBilling("monthly")}
-              className={`rounded-full px-5 py-2 text-sm font-semibold transition-colors ${
-                billing === "monthly" ? "bg-pine text-white dark:bg-teal" : "text-stone dark:text-white/60"
-              }`}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setBilling("yearly")}
-              className={`flex items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold transition-colors ${
-                billing === "yearly" ? "bg-pine text-white dark:bg-teal" : "text-stone dark:text-white/60"
-              }`}
-            >
-              Yearly
-              <span
-                className={`rounded-full px-2 py-0.5 text-xs font-bold ${
-                  billing === "yearly" ? "bg-lime text-pine" : "bg-lime/20 text-teal"
-                }`}
-              >
-                Save 20%
-              </span>
-            </button>
-          </div>
         </Reveal>
 
         <div className="mt-12 grid gap-6 lg:grid-cols-3">
           {plans.map((plan, i) => (
             <Reveal key={plan.name} delay={i * 0.1}>
-              <PlanCard plan={plan} billing={billing} />
+              <PlanCard plan={plan} />
             </Reveal>
           ))}
         </div>
@@ -119,7 +90,7 @@ export function Pricing() {
               planName="Custom"
               className="inline-flex flex-shrink-0 items-center gap-2 rounded-full bg-pine px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-teal"
             >
-              Book a Meeting
+              Book Now
               <PlusMark className="h-4 w-4" strokeWidth={3} />
             </BookMeetingButton>
           </div>
@@ -129,7 +100,7 @@ export function Pricing() {
   );
 }
 
-function PlanCard({ plan, billing }: { plan: Plan; billing: "monthly" | "yearly" }) {
+function PlanCard({ plan }: { plan: Plan }) {
   return (
     <div
       className={`relative flex h-full flex-col rounded-2xl border p-7 ${
@@ -143,23 +114,9 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: "monthly" | "yearly"
           Most Popular
         </span>
       )}
-      {billing === "yearly" && (
-        <span
-          className={`absolute -top-3 right-4 rounded-full px-3 py-1 text-xs font-bold ${
-            plan.highlighted ? "bg-white text-pine" : "bg-lime text-pine"
-          }`}
-        >
-          20% OFF
-        </span>
-      )}
-
       <h3 className="text-xl font-bold">{plan.name}</h3>
       <p className={`mt-1 text-sm ${plan.highlighted ? "text-white/70" : "text-stone dark:text-white/60"}`}>
         {plan.tagline}
-      </p>
-
-      <p className={`mt-6 text-sm font-semibold ${plan.highlighted ? "text-lime" : "text-teal dark:text-lime"}`}>
-        Contact us for pricing
       </p>
 
       <ul className="mt-6 flex-1 space-y-3">
@@ -183,7 +140,7 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: "monthly" | "yearly"
           plan.highlighted ? "bg-lime text-pine" : "bg-pine text-white dark:bg-teal"
         }`}
       >
-        Book a Meeting
+        Book Now
         <PlusMark className="h-4 w-4" strokeWidth={3} />
       </BookMeetingButton>
     </div>

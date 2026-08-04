@@ -1,5 +1,6 @@
 import { Hero } from "@/components/sections/Hero";
 import { Services } from "@/components/sections/Services";
+import { Ugc } from "@/components/sections/Ugc";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { Differentiators } from "@/components/sections/Differentiators";
 import { Pricing } from "@/components/sections/Pricing";
@@ -12,6 +13,7 @@ export default function Home() {
     <>
       <Hero />
       <Services />
+      <Ugc />
       <HowItWorks />
       <Differentiators />
       <Pricing />

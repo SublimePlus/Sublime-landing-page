@@ -1,6 +1,7 @@
 "use client";
 
 import { Reveal } from "../Reveal";
+import { TopoBackground } from "../TopoBackground";
 
 const testimonials = [
   {
@@ -25,8 +26,9 @@ const testimonials = [
 
 export function Testimonials() {
   return (
-    <section className="bg-pine/[0.03] py-28 dark:bg-white/[0.03]">
-      <div className="mx-auto max-w-6xl px-6">
+    <section className="relative overflow-hidden bg-pine/[0.03] py-28 dark:bg-white/[0.03]">
+      <TopoBackground className="text-pine/[0.06] dark:text-white/[0.05]" />
+      <div className="relative mx-auto max-w-6xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal">
             Trusted by teams like yours
