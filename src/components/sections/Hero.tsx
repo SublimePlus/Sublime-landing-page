@@ -5,60 +5,74 @@ import { motion } from "framer-motion";
 import { PlusMark } from "../PlusMark";
 import { Magnetic } from "../CursorReactive";
 import { BookMeetingButton } from "../booking/BookMeetingButton";
+import { Mascot3D } from "../Mascot3D";
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-pine via-pine to-teal pt-36 pb-28 text-white">
+    <section className="relative overflow-hidden bg-gradient-to-b from-pine via-pine to-teal pt-36 pb-20 text-white md:pb-28">
       <AmbientGlow />
       <FloatingPlusField />
-      <div className="relative mx-auto max-w-4xl px-6 text-center">
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium text-lime"
-        >
-          <PlusMark className="h-3.5 w-3.5" strokeWidth={3} />
-          Content &amp; social marketing, done with a little extra
-        </motion.p>
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl"
-        >
-          Your content and socials,
-          <br />
-          handled like a creative partner.
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="mx-auto mt-6 max-w-2xl text-lg text-white/70"
-        >
-          Sublime+ writes, schedules, and grows your content across every
-          channel — fast, sharp, and a little more thoughtful than you&apos;d
-          expect from an agency.
-        </motion.p>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
-        >
-          <Magnetic strength={14}>
-            <BookMeetingButton className="neon-lime-btn inline-flex items-center gap-2 rounded-full bg-lime px-7 py-3.5 font-semibold text-pine transition-transform hover:scale-[1.03]">
-              Book a free consult
-              <PlusMark className="h-4 w-4" strokeWidth={3} />
-            </BookMeetingButton>
-          </Magnetic>
-          <Link
-            href="/#how-it-works"
-            className="text-sm font-medium text-white/80 underline underline-offset-4 hover:text-white"
+      <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-12 px-6 md:flex-row md:gap-8 lg:gap-14">
+        {/* Text content */}
+        <div className="flex-1 text-center md:text-left">
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium text-lime"
           >
-            See how it works
-          </Link>
+            <PlusMark className="h-3.5 w-3.5" strokeWidth={3} />
+            Content &amp; social marketing, done with a little extra
+          </motion.p>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl"
+          >
+            Your content and socials,
+            <br />
+            handled like a creative partner.
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="mt-6 max-w-2xl text-lg text-white/70 md:mx-0"
+          >
+            Sublime+ writes, schedules, and grows your content across every
+            channel — fast, sharp, and a little more thoughtful than you&apos;d
+            expect from an agency.
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="mt-10 flex flex-col items-center gap-4 sm:flex-row md:justify-start"
+          >
+            <Magnetic strength={14}>
+              <BookMeetingButton className="neon-lime-btn inline-flex items-center gap-2 rounded-full bg-lime px-7 py-3.5 font-semibold text-pine transition-transform hover:scale-[1.03]">
+                Book a free consult
+                <PlusMark className="h-4 w-4" strokeWidth={3} />
+              </BookMeetingButton>
+            </Magnetic>
+            <Link
+              href="/#how-it-works"
+              className="text-sm font-medium text-white/80 underline underline-offset-4 hover:text-white"
+            >
+              See how it works
+            </Link>
+          </motion.div>
+        </div>
+
+        {/* 3D Mascot */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.85 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="flex-shrink-0"
+        >
+          <Mascot3D />
         </motion.div>
       </div>
     </section>
