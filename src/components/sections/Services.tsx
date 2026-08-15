@@ -88,9 +88,13 @@ function ServiceCard({ service }: { service: Service }) {
     >
       <SpotlightOverlay x={x} y={y} />
       <div className="relative z-10">
-        <span className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-full bg-teal text-white">
+        <motion.span
+          whileHover={{ scale: 1.12, rotate: 6 }}
+          transition={{ type: "spring", stiffness: 400, damping: 12 }}
+          className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-full bg-teal text-white"
+        >
           <service.icon className="h-5 w-5" />
-        </span>
+        </motion.span>
         <h3 className="text-lg font-semibold text-pine dark:text-white">
           {service.title}
         </h3>

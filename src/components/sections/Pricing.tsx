@@ -1,5 +1,7 @@
 "use client";
 
+import { useRef } from "react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import { Reveal } from "../Reveal";
 import { PlusMark } from "../PlusMark";
 import { BookMeetingButton } from "../booking/BookMeetingButton";
@@ -102,18 +104,54 @@ export function Pricing() {
 }
 
 function PlanCard({ plan }: { plan: Plan }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const rotateX = useSpring(useMotionValue(0), { stiffness: 300, damping: 30 });
+  const rotateY = useSpring(useMotionValue(0), { stiffness: 300, damping: 30 });
+
+  function onMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    rotateY.set(px * 6);
+    rotateX.set(py * -6);
+  }
+
+  function onMouseLeave() {
+    rotateX.set(0);
+    rotateY.set(0);
+  }
+
   return (
-    <div
-      className={`relative flex h-full flex-col rounded-2xl border p-7 transition-transform duration-300 hover:-translate-y-1 ${
-        plan.highlighted
-          ? "neon-lime border-teal bg-pine text-white shadow-lg"
-          : "neon-teal border-pine/10 bg-white text-pine dark:border-white/10 dark:bg-night/40 dark:text-white"
-      }`}
-    >
+    <div style={{ perspective: 900 }}>
+      <motion.div
+        ref={ref}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        whileHover={{ y: -6 }}
+        transition={{ type: "spring", stiffness: 300, damping: 22 }}
+        className={`relative flex h-full flex-col rounded-2xl border p-7 ${
+          plan.highlighted
+            ? "neon-lime border-teal bg-pine text-white shadow-lg"
+            : "neon-teal border-pine/10 bg-white text-pine dark:border-white/10 dark:bg-night/40 dark:text-white"
+        }`}
+      >
       {plan.highlighted && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-lime px-3 py-1 text-xs font-bold text-pine">
+        <motion.span
+          className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-lime px-3 py-1 text-xs font-bold text-pine"
+          animate={{
+            boxShadow: [
+              "0 0 0px rgba(201,242,78,0)",
+              "0 0 14px rgba(201,242,78,0.6)",
+              "0 0 0px rgba(201,242,78,0)",
+            ],
+          }}
+          transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+        >
           Most Popular
-        </span>
+        </motion.span>
       )}
       <h3 className="text-xl font-bold">{plan.name}</h3>
       <p className={`mt-1 text-sm ${plan.highlighted ? "text-white/70" : "text-stone dark:text-white/60"}`}>
@@ -144,6 +182,7 @@ function PlanCard({ plan }: { plan: Plan }) {
         Book Now
         <PlusMark className="h-4 w-4" strokeWidth={3} />
       </BookMeetingButton>
+      </motion.div>
     </div>
   );
 }

@@ -71,15 +71,19 @@ export function BookingModal({
             className="absolute inset-0 bg-pine/60 backdrop-blur-sm"
             onClick={onClose}
             aria-hidden="true"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
           />
           <motion.div
             role="dialog"
             aria-modal="true"
             aria-label="Book a meeting"
-            initial={{ opacity: 0, scale: 0.95, y: 16 }}
+            initial={{ opacity: 0, scale: 0.92, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 16 }}
-            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            exit={{ opacity: 0, scale: 0.95, y: 12 }}
+            transition={{ type: "spring", stiffness: 340, damping: 30, mass: 0.8 }}
             className="relative z-10 w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-night"
           >
             <div className="flex items-center justify-between border-b border-pine/10 px-6 py-5 dark:border-white/10">

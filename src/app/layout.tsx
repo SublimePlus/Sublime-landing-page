@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins, Yellowtail } from "next/font/google";
 import "./globals.css";
+import { MotionConfig } from "framer-motion";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { ScrollProgress } from "@/components/ScrollProgress";
@@ -50,14 +51,16 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body className="min-h-full flex flex-col">
-        <ThemeProvider>
-          <BookingModalProvider>
-            <ScrollProgress />
-            <Nav />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </BookingModalProvider>
-        </ThemeProvider>
+        <MotionConfig reducedMotion="user">
+          <ThemeProvider>
+            <BookingModalProvider>
+              <ScrollProgress />
+              <Nav />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </BookingModalProvider>
+          </ThemeProvider>
+        </MotionConfig>
       </body>
     </html>
   );

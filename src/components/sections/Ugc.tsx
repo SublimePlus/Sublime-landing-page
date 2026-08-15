@@ -90,9 +90,13 @@ function ProductCard({ product }: { product: Product }) {
       className="neon-teal group relative flex h-full items-start gap-4 overflow-hidden rounded-2xl border border-pine/10 bg-white p-7 shadow-sm dark:border-white/10 dark:bg-night/40"
     >
       <SpotlightOverlay x={x} y={y} />
-      <span className="relative z-10 flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-teal text-white">
+      <motion.span
+        whileHover={{ scale: 1.12, rotate: 6 }}
+        transition={{ type: "spring", stiffness: 400, damping: 12 }}
+        className="relative z-10 flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-teal text-white"
+      >
         <product.icon className="h-5 w-5" />
-      </span>
+      </motion.span>
       <div className="relative z-10">
         <h3 className="text-lg font-semibold text-pine dark:text-white">
           {product.title}

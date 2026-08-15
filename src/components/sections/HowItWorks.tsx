@@ -52,13 +52,28 @@ export function HowItWorks() {
                       initial={{ scaleX: 0 }}
                       whileInView={{ scaleX: 1 }}
                       viewport={{ once: false, margin: "-80px" }}
-                      transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                      transition={{
+                        duration: 0.6,
+                        delay: i * 0.15 + 0.35,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
                     />
                   </>
                 )}
-                <div className="relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-teal text-sm font-bold text-white">
+                <motion.div
+                  className="relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-teal text-sm font-bold text-white"
+                  initial={{ scale: 0.4, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: false, margin: "-80px" }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 280,
+                    damping: 18,
+                    delay: i * 0.15,
+                  }}
+                >
                   {s.step}
-                </div>
+                </motion.div>
               </div>
               <h3 className="mt-5 text-lg font-semibold text-pine dark:text-white">
                 {s.title}

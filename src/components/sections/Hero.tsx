@@ -21,16 +21,11 @@ export function Hero() {
           <PlusMark className="h-3.5 w-3.5" strokeWidth={3} />
           Content &amp; social marketing, done with a little extra
         </motion.p>
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl"
-        >
-          Your content and socials,
+        <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl">
+          <WordReveal text="Your content and socials," startDelay={0.1} />
           <br />
-          handled like a creative partner.
-        </motion.h1>
+          <WordReveal text="handled like a creative partner." startDelay={0.45} />
+        </h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -61,7 +56,53 @@ export function Hero() {
           </Link>
         </motion.div>
       </div>
+      <ScrollCue />
     </section>
+  );
+}
+
+function WordReveal({ text, startDelay = 0 }: { text: string; startDelay?: number }) {
+  const words = text.split(" ");
+  return (
+    <span className="inline-block">
+      {words.map((word, i) => (
+        <span key={i} className="inline-block overflow-hidden pb-1 align-bottom">
+          <motion.span
+            className="inline-block"
+            initial={{ opacity: 0, y: "100%" }}
+            animate={{ opacity: 1, y: "0%" }}
+            transition={{
+              duration: 0.55,
+              delay: startDelay + i * 0.06,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
+            {word}
+            {i < words.length - 1 ? " " : ""}
+          </motion.span>
+        </span>
+      ))}
+    </span>
+  );
+}
+
+function ScrollCue() {
+  return (
+    <motion.div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-x-0 bottom-8 hidden justify-center sm:flex"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6, delay: 1.2 }}
+    >
+      <motion.div
+        animate={{ y: [0, 8, 0] }}
+        transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+        className="flex h-9 w-6 items-start justify-center rounded-full border border-white/25 pt-1.5"
+      >
+        <span className="h-1.5 w-1.5 rounded-full bg-white/60" />
+      </motion.div>
+    </motion.div>
   );
 }
 
