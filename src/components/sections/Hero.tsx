@@ -1,63 +1,106 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useTransform } from "framer-motion";
 import { PlusMark } from "../PlusMark";
 import { Magnetic } from "../CursorReactive";
 import { BookMeetingButton } from "../booking/BookMeetingButton";
+import { Mascot } from "../mascot/Mascot";
+import { useCursorVector } from "../mascot/useCursorVector";
 
 export function Hero() {
+  const { x, y } = useCursorVector();
+
+  // Layers travel at different rates so the composition reads as depth:
+  // the wordmark sits furthest back, the foreground copy closest.
+  const wordmarkX = useTransform(x, [-1, 1], [26, -26]);
+  const wordmarkY = useTransform(y, [-1, 1], [14, -14]);
+  const copyX = useTransform(x, [-1, 1], [-12, 12]);
+
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-pine via-pine to-teal pt-36 pb-28 text-white">
+    <section className="relative overflow-hidden bg-gradient-to-b from-night via-pine to-pine pt-32 pb-24 text-white">
       <AmbientGlow />
       <FloatingPlusField />
-      <div className="relative mx-auto max-w-4xl px-6 text-center">
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium text-lime"
-        >
-          <PlusMark className="h-3.5 w-3.5" strokeWidth={3} />
-          Content &amp; social marketing, done with a little extra
-        </motion.p>
-        <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl">
-          <WordReveal text="Your content and socials," startDelay={0.1} />
-          <br />
-          <WordReveal text="handled like a creative partner." startDelay={0.45} />
-        </h1>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="mx-auto mt-6 max-w-2xl text-lg text-white/70"
-        >
-          Sublime+ writes, schedules, and grows your content across every
-          channel — fast, sharp, and a little more thoughtful than you&apos;d
-          expect from an agency.
-        </motion.p>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
-        >
-          <Magnetic strength={14}>
-            <BookMeetingButton className="neon-lime-btn inline-flex items-center gap-2 rounded-full bg-lime px-7 py-3.5 font-semibold text-pine transition-transform hover:scale-[1.03]">
-              Book a free consult
-              <PlusMark className="h-4 w-4" strokeWidth={3} />
-            </BookMeetingButton>
-          </Magnetic>
-          <Link
-            href="/#how-it-works"
-            className="text-sm font-medium text-white/80 underline underline-offset-4 hover:text-white"
+      <BackdropWordmark x={wordmarkX} y={wordmarkY} />
+
+      <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-[1fr_minmax(280px,420px)_1fr] lg:gap-6">
+        {/* Left column — badge + headline */}
+        <motion.div style={{ x: copyX }} className="order-2 text-center lg:order-1 lg:text-left">
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium text-lime"
           >
-            See how it works
-          </Link>
+            <PlusMark className="h-3.5 w-3.5" strokeWidth={3} />
+            Content &amp; social marketing, done with a little extra
+          </motion.p>
+          <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+            <WordReveal text="Your content and socials," startDelay={0.1} />
+            <br />
+            <WordReveal text="handled like a creative partner." startDelay={0.45} />
+          </h1>
+        </motion.div>
+
+        {/* Centre — the mascot */}
+        <div className="order-1 lg:order-2">
+          <Mascot />
+        </div>
+
+        {/* Right column — supporting copy + calls to action */}
+        <motion.div
+          style={{ x: copyX }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.55 }}
+          className="order-3 text-center lg:text-right"
+        >
+          <p className="mx-auto text-lg text-white/70 lg:ml-auto lg:mr-0 lg:max-w-sm">
+            Sublime+ writes, schedules, and grows your content across every
+            channel — fast, sharp, and a little more thoughtful than you&apos;d
+            expect from an agency.
+          </p>
+          <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-end">
+            <Magnetic strength={14}>
+              <BookMeetingButton className="neon-lime-btn inline-flex items-center gap-2 rounded-full bg-lime px-7 py-3.5 font-semibold text-pine transition-transform hover:scale-[1.03]">
+                Book a free consult
+                <PlusMark className="h-4 w-4" strokeWidth={3} />
+              </BookMeetingButton>
+            </Magnetic>
+            <Link
+              href="/#how-it-works"
+              className="text-sm font-medium text-white/80 underline underline-offset-4 hover:text-white"
+            >
+              See how it works
+            </Link>
+          </div>
         </motion.div>
       </div>
+
       <ScrollCue />
     </section>
+  );
+}
+
+/** Oversized brand wordmark sitting behind the mascot, which partly occludes it. */
+function BackdropWordmark({
+  x,
+  y,
+}: {
+  x: ReturnType<typeof useTransform<number, number>>;
+  y: ReturnType<typeof useTransform<number, number>>;
+}) {
+  return (
+    <motion.span
+      aria-hidden="true"
+      style={{ x, y }}
+      initial={{ opacity: 0, scale: 1.08 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+      className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap text-[22vw] font-bold leading-none tracking-[0.08em] text-white/[0.045] lg:text-[15vw]"
+    >
+      SUBLIME
+    </motion.span>
   );
 }
 
@@ -66,7 +109,14 @@ function WordReveal({ text, startDelay = 0 }: { text: string; startDelay?: numbe
   return (
     <span className="inline-block">
       {words.map((word, i) => (
-        <span key={i} className="inline-block overflow-hidden pb-1 align-bottom">
+        <span
+          key={i}
+          // The clipping wrapper collapses trailing whitespace, so word spacing
+          // is restored with a margin rather than a literal space character.
+          className={`inline-block overflow-hidden pb-1 align-bottom ${
+            i < words.length - 1 ? "mr-[0.26em]" : ""
+          }`}
+        >
           <motion.span
             className="inline-block"
             initial={{ opacity: 0, y: "100%" }}
@@ -78,7 +128,6 @@ function WordReveal({ text, startDelay = 0 }: { text: string; startDelay?: numbe
             }}
           >
             {word}
-            {i < words.length - 1 ? " " : ""}
           </motion.span>
         </span>
       ))}
@@ -90,10 +139,10 @@ function ScrollCue() {
   return (
     <motion.div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 bottom-8 hidden justify-center sm:flex"
+      className="pointer-events-none absolute inset-x-0 bottom-6 hidden justify-center sm:flex"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.6, delay: 1.2 }}
+      transition={{ duration: 0.6, delay: 1.4 }}
     >
       <motion.div
         animate={{ y: [0, 8, 0] }}
@@ -110,7 +159,7 @@ function AmbientGlow() {
   return (
     <motion.div
       aria-hidden="true"
-      className="pointer-events-none absolute left-1/2 top-1/2 h-[480px] w-[480px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-lime/20 blur-[120px]"
+      className="pointer-events-none absolute left-1/2 top-1/2 h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-lime/25 blur-[130px]"
       animate={{ opacity: [0.5, 0.85, 0.5], scale: [1, 1.12, 1] }}
       transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
     />
