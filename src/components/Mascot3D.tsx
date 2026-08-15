@@ -95,7 +95,7 @@ export function Mascot3D() {
           transition={{ type: "spring", stiffness: 200, damping: 15 }}
         >
           <Image
-            src="/mascot.jpg"
+            src="/mascot.png"
             alt="Sublime+ mascot"
             width={340}
             height={420}
