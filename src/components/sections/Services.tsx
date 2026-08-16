@@ -100,9 +100,9 @@ export function Services() {
             <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal">
               Why Sublime+
             </p>
-            <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
+            <h3 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
               A creative partner, not another vendor.
-            </h2>
+            </h3>
           </Reveal>
           <ul className="mt-8 space-y-5">
             {differentiators.map((point, i) => (

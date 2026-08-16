@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { PlusMark } from "../PlusMark";
 import { Magnetic } from "../CursorReactive";
 import { BookMeetingButton } from "../booking/BookMeetingButton";
@@ -54,14 +54,44 @@ export function Hero() {
             </BookMeetingButton>
           </Magnetic>
           <Link
-            href="/#how-it-works"
-            className="text-sm font-medium text-white/80 underline underline-offset-4 hover:text-white"
+            href="/#plans"
+            className="inline-flex items-center gap-2 rounded-full border border-white/30 px-7 py-3.5 font-semibold text-white transition-colors hover:border-white/60 hover:bg-white/10"
           >
-            See how it works
+            View plans
           </Link>
         </motion.div>
       </div>
+      <ScrollIndicator />
     </section>
+  );
+}
+
+function ScrollIndicator() {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <motion.a
+      href="/#services"
+      aria-label="Scroll to services"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6, delay: 0.9 }}
+      className="absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 text-white/50 transition-colors hover:text-white sm:block"
+    >
+      <motion.svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="h-6 w-6"
+        animate={reduceMotion ? undefined : { y: [0, 6, 0] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <path d="M6 9l6 6 6-6" />
+      </motion.svg>
+    </motion.a>
   );
 }
 

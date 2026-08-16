@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import { absoluteUrl, siteConfig } from "@/lib/site";
 import { Reveal } from "@/components/Reveal";
 import { PlusMark } from "@/components/PlusMark";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
@@ -16,7 +18,25 @@ export async function generateMetadata({
   const { slug } = await params;
   try {
     const { meta } = getPostBySlug(slug);
-    return { title: `${meta.title} | Sublime+ Blog`, description: meta.excerpt };
+    const canonical = `/blog/${slug}`;
+
+    return {
+      title: meta.title,
+      description: meta.excerpt,
+      alternates: { canonical },
+      openGraph: {
+        type: "article",
+        title: meta.title,
+        description: meta.excerpt,
+        url: canonical,
+        publishedTime: new Date(meta.date).toISOString(),
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: meta.title,
+        description: meta.excerpt,
+      },
+    } satisfies Metadata;
   } catch {
     return {};
   }
@@ -38,15 +58,32 @@ export default async function BlogPost({
 
   const { meta, content } = post;
 
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: meta.title,
+    description: meta.excerpt,
+    datePublished: new Date(meta.date).toISOString(),
+    mainEntityOfPage: absoluteUrl(`/blog/${slug}`),
+    author: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url },
+    publisher: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url },
+  };
+
   return (
     <article className="mx-auto max-w-3xl px-6 pb-28 pt-40">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       <Reveal>
         <p className="mb-3 text-sm font-medium text-stone dark:text-white/60">
-          {new Date(meta.date).toLocaleDateString("en-US", {
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-          })}{" "}
+          <time dateTime={new Date(meta.date).toISOString()}>
+            {new Date(meta.date).toLocaleDateString("en-US", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </time>{" "}
           · {meta.readingTime}
         </p>
         <h1 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">

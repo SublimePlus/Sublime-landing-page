@@ -1,10 +1,16 @@
+import type { Metadata } from "next";
 import { Reveal } from "@/components/Reveal";
 import { BlogCard } from "@/components/BlogCard";
 import { getAllPosts } from "@/lib/blog";
 
-export const metadata = {
-  title: "Blog | Sublime+",
-  description: "Notes on content, social, and growth from the Sublime+ team.",
+const description =
+  "Notes on content, social, and growth from the Sublime+ team.";
+
+export const metadata: Metadata = {
+  title: "Blog",
+  description,
+  alternates: { canonical: "/blog" },
+  openGraph: { type: "website", title: "Blog", description, url: "/blog" },
 };
 
 export default function BlogIndex() {

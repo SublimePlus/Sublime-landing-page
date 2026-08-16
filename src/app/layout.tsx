@@ -6,6 +6,23 @@ import { Footer } from "@/components/Footer";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { BookingModalProvider } from "@/components/booking/BookingModalContext";
 import { ThemeProvider } from "@/components/theme/ThemeContext";
+import { siteConfig, absoluteUrl } from "@/lib/site";
+
+/**
+ * Entity-level structured data only — name, URL, contact point.
+ * Deliberately excludes service descriptions, pricing, and FAQ markup until
+ * that copy is sourced from the Sublime+ SOPs; schema makes claims more
+ * quotable by search engines and LLMs, so unverified copy must stay out of it.
+ */
+const ORGANIZATION_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: siteConfig.name,
+  url: siteConfig.url,
+  description: siteConfig.description,
+  email: siteConfig.email,
+  logo: absoluteUrl("/icon.svg"),
+};
 
 const THEME_INIT_SCRIPT = `
 (function () {
@@ -30,9 +47,31 @@ const yellowtail = Yellowtail({
 });
 
 export const metadata: Metadata = {
-  title: "Sublime+ | Content & social marketing, done with a little extra",
-  description:
-    "Sublime+ writes, posts, and manages content and social for brands who'd rather be doing anything else. Creative, reliable, social-savvy.",
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: `${siteConfig.name} | ${siteConfig.tagline}`,
+    template: `%s | ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: siteConfig.name,
+    title: `${siteConfig.name} | ${siteConfig.tagline}`,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${siteConfig.name} | ${siteConfig.tagline}`,
+    description: siteConfig.description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
 };
 
 export default function RootLayout({
@@ -48,6 +87,10 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_SCHEMA) }}
+        />
       </head>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
