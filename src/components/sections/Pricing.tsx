@@ -96,6 +96,70 @@ export function Pricing() {
             </BookMeetingButton>
           </div>
         </Reveal>
+
+        <Reveal delay={0.4} className="mt-16">
+          <div className="rounded-2xl border border-pine/10 bg-white p-8 dark:border-white/10 dark:bg-night/40">
+            <h3 className="mb-8 text-center text-2xl font-bold text-pine dark:text-white">
+              Plan Comparison
+            </h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-pine/10 dark:border-white/10">
+                    <th className="pb-4 text-left font-semibold text-pine dark:text-white">Feature</th>
+                    <th className="pb-4 text-center font-semibold text-pine dark:text-white">Lite</th>
+                    <th className="pb-4 text-center font-semibold text-pine dark:text-white">Pro</th>
+                    <th className="pb-4 text-center font-semibold text-pine dark:text-white">Max</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-pine/10 dark:divide-white/10">
+                  <tr>
+                    <td className="py-3 text-stone dark:text-white/70">Posts per month</td>
+                    <td className="py-3 text-center text-pine dark:text-white">10</td>
+                    <td className="py-3 text-center text-pine dark:text-white">18</td>
+                    <td className="py-3 text-center text-pine dark:text-white">32</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 text-stone dark:text-white/70">Blog articles per month</td>
+                    <td className="py-3 text-center text-pine dark:text-white">3</td>
+                    <td className="py-3 text-center text-pine dark:text-white">5</td>
+                    <td className="py-3 text-center text-pine dark:text-white">9</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 text-stone dark:text-white/70">Platforms covered</td>
+                    <td className="py-3 text-center text-pine dark:text-white">1</td>
+                    <td className="py-3 text-center text-pine dark:text-white">Up to 3</td>
+                    <td className="py-3 text-center text-pine dark:text-white">Unlimited</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 text-stone dark:text-white/70">Performance reporting</td>
+                    <td className="py-3 text-center text-pine dark:text-white">Monthly</td>
+                    <td className="py-3 text-center text-pine dark:text-white">Bi-weekly</td>
+                    <td className="py-3 text-center text-pine dark:text-white">Weekly</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 text-stone dark:text-white/70">Community engagement</td>
+                    <td className="py-3 text-center">
+                      <span className="text-stone dark:text-white/60">–</span>
+                    </td>
+                    <td className="py-3 text-center">
+                      <PlusMark className="mx-auto h-4 w-4 text-teal" strokeWidth={3} />
+                    </td>
+                    <td className="py-3 text-center">
+                      <PlusMark className="mx-auto h-4 w-4 text-teal" strokeWidth={3} />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 text-stone dark:text-white/70">Support tier</td>
+                    <td className="py-3 text-center text-pine dark:text-white">Email</td>
+                    <td className="py-3 text-center text-pine dark:text-white">Priority</td>
+                    <td className="py-3 text-center text-pine dark:text-white">Dedicated manager</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </Reveal>
       </div>
     </AnimatedSection>
   );
