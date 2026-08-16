@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useTransform } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView, useTransform } from "framer-motion";
 import { PlusMark } from "../PlusMark";
 import { Magnetic } from "../CursorReactive";
 import { BookMeetingButton } from "../booking/BookMeetingButton";
@@ -156,17 +157,22 @@ function ScrollCue() {
 }
 
 function AmbientGlow() {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref);
   return (
     <motion.div
+      ref={ref}
       aria-hidden="true"
       className="pointer-events-none absolute left-1/2 top-1/2 h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-lime/25 blur-[130px]"
-      animate={{ opacity: [0.5, 0.85, 0.5], scale: [1, 1.12, 1] }}
+      animate={inView ? { opacity: [0.5, 0.85, 0.5], scale: [1, 1.12, 1] } : { opacity: 0.5, scale: 1 }}
       transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
     />
   );
 }
 
 function FloatingPlusField() {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref);
   const marks = [
     { top: "18%", left: "8%", size: 28, rotate: -12, delay: 0 },
     { top: "65%", left: "14%", size: 18, rotate: 20, delay: 0.4 },
@@ -175,13 +181,17 @@ function FloatingPlusField() {
     { top: "45%", left: "50%", size: 16, rotate: 30, delay: 0.8 },
   ];
   return (
-    <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div ref={ref} className="pointer-events-none absolute inset-0" aria-hidden="true">
       {marks.map((m, i) => (
         <motion.div
           key={i}
           className="absolute text-lime/25"
           style={{ top: m.top, left: m.left }}
-          animate={{ y: [0, -14, 0], rotate: [m.rotate, m.rotate + 10, m.rotate] }}
+          animate={
+            inView
+              ? { y: [0, -14, 0], rotate: [m.rotate, m.rotate + 10, m.rotate] }
+              : { y: 0, rotate: m.rotate }
+          }
           transition={{
             duration: 6 + i,
             repeat: Infinity,

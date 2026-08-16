@@ -1,8 +1,15 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useTransform } from "framer-motion";
 import { MascotFace } from "./MascotFace";
 import { useCursorVector } from "./useCursorVector";
+
+// Intrinsic size of public/mascot-hero.png. Declared so the browser can
+// reserve space before the image loads (no layout shift) and so next/image
+// can generate correctly-sized AVIF/WebP derivatives.
+const MASCOT_WIDTH = 550;
+const MASCOT_HEIGHT = 1022;
 
 /**
  * The hero mascot.
@@ -45,10 +52,17 @@ export function Mascot({
             // inline-block so the wrapper hugs the image, keeping the
             // percentage-positioned face registered at any size.
             <div className="relative inline-block">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={src}
-                alt="Sublime+ mascot"
+                // Decorative: the surrounding copy carries all the meaning, so
+                // announcing the mascot would only add noise for screen readers.
+                alt=""
+                width={MASCOT_WIDTH}
+                height={MASCOT_HEIGHT}
+                // Largest element in the viewport, so it is the LCP candidate
+                // and must be preloaded rather than lazily discovered.
+                priority
+                sizes="(max-width: 640px) 300px, 340px"
                 className="max-h-[62vh] w-auto max-w-[300px] select-none sm:max-w-[340px]"
                 draggable={false}
               />

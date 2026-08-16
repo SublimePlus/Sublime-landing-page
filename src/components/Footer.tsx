@@ -14,27 +14,22 @@ export function Footer() {
               Content &amp; social marketing, done with a little extra.
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-8 text-sm sm:grid-cols-3">
+          {/* Social links are intentionally absent until real profile URLs
+              exist — placeholder links that go nowhere read as a dead site. */}
+          <div className="grid grid-cols-2 gap-8 text-sm">
             <div>
               <p className="mb-3 font-semibold text-white">Company</p>
               <ul className="space-y-2 text-white/60">
-                <li><Link href="/#services" className="hover:text-lime">Services</Link></li>
-                <li><Link href="/#plans" className="hover:text-lime">Plans</Link></li>
-                <li><Link href="/blog" className="hover:text-lime">Blog</Link></li>
-              </ul>
-            </div>
-            <div>
-              <p className="mb-3 font-semibold text-white">Connect</p>
-              <ul className="space-y-2 text-white/60">
-                <li><a href="#" className="hover:text-lime">Instagram</a></li>
-                <li><a href="#" className="hover:text-lime">LinkedIn</a></li>
-                <li><a href="#" className="hover:text-lime">X / Twitter</a></li>
+                <li><Link href="/#services" className="rounded-sm hover:text-lime">Services</Link></li>
+                <li><Link href="/#ugc" className="rounded-sm hover:text-lime">UGC</Link></li>
+                <li><Link href="/#plans" className="rounded-sm hover:text-lime">Plans</Link></li>
+                <li><Link href="/blog" className="rounded-sm hover:text-lime">Blog</Link></li>
               </ul>
             </div>
             <div>
               <p className="mb-3 font-semibold text-white">Get in touch</p>
               <ul className="space-y-2 text-white/60">
-                <li><a href="mailto:hello@sublimeplus.co" className="hover:text-lime">hello@sublimeplus.co</a></li>
+                <li><a href="mailto:hello@sublimeplus.co" className="rounded-sm hover:text-lime">hello@sublimeplus.co</a></li>
               </ul>
             </div>
           </div>

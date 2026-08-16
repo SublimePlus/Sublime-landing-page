@@ -1,7 +1,9 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Reveal } from "@/components/Reveal";
 import { PlusMark } from "@/components/PlusMark";
+import { JsonLd, blogPostingSchema, breadcrumbSchema } from "@/components/JsonLd";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
 
 export function generateStaticParams() {
@@ -12,11 +14,30 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
-}) {
+}): Promise<Metadata> {
   const { slug } = await params;
   try {
     const { meta } = getPostBySlug(slug);
-    return { title: `${meta.title} | Sublime+ Blog`, description: meta.excerpt };
+    const url = `/blog/${slug}`;
+    return {
+      title: meta.title,
+      description: meta.excerpt,
+      alternates: { canonical: url },
+      openGraph: {
+        type: "article",
+        title: meta.title,
+        description: meta.excerpt,
+        url,
+        publishedTime: meta.date,
+        images: meta.cover ? [{ url: meta.cover }] : undefined,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: meta.title,
+        description: meta.excerpt,
+        images: meta.cover ? [meta.cover] : undefined,
+      },
+    };
   } catch {
     return {};
   }
@@ -40,6 +61,8 @@ export default async function BlogPost({
 
   return (
     <article className="mx-auto max-w-3xl px-6 pb-28 pt-40">
+      <JsonLd schema={blogPostingSchema(meta)} />
+      <JsonLd schema={breadcrumbSchema(meta)} />
       <Reveal>
         <p className="mb-3 text-sm font-medium text-stone dark:text-white/60">
           {new Date(meta.date).toLocaleDateString("en-US", {

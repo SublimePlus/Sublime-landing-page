@@ -4,7 +4,6 @@ import { Ugc } from "@/components/sections/Ugc";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { Differentiators } from "@/components/sections/Differentiators";
 import { Pricing } from "@/components/sections/Pricing";
-import { Testimonials } from "@/components/sections/Testimonials";
 import { BlogPreview } from "@/components/sections/BlogPreview";
 import { FinalCta } from "@/components/sections/FinalCta";
 
@@ -17,7 +16,6 @@ export default function Home() {
       <HowItWorks />
       <Differentiators />
       <Pricing />
-      <Testimonials />
       <BlogPreview />
       <FinalCta />
     </>

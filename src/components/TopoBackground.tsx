@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 
 const CONTOUR_PATHS = [
   "M-50,80 C150,40 300,140 500,90 C650,55 750,110 850,70",
@@ -27,8 +28,15 @@ const MARKS = [
 ];
 
 export function TopoBackground({ className = "" }: { className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  // This drift renders on four sections at once. Left running unconditionally
+  // it keeps the compositor busy for backgrounds nobody is looking at, which
+  // costs battery on mobile for no visual benefit.
+  const inView = useInView(ref, { margin: "200px" });
+
   return (
     <div
+      ref={ref}
       className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}
       aria-hidden="true"
     >
@@ -37,7 +45,7 @@ export function TopoBackground({ className = "" }: { className?: string }) {
         preserveAspectRatio="xMidYMid slice"
         className="h-full w-full"
         initial={{ x: 0, y: 0 }}
-        animate={{ x: [0, -18, 0], y: [0, 12, 0] }}
+        animate={inView ? { x: [0, -18, 0], y: [0, 12, 0] } : { x: 0, y: 0 }}
         transition={{ duration: 32, repeat: Infinity, ease: "easeInOut" }}
       >
         <g stroke="currentColor" strokeWidth="1" fill="none">

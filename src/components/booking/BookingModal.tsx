@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { getMonthGrid, isPastDay, isSameDay, TIME_SLOTS } from "@/lib/calendar";
 import { PlusMark } from "../PlusMark";
@@ -28,18 +28,65 @@ export function BookingModal({
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previouslyFocused = useRef<HTMLElement | null>(null);
+
+  const focusableInDialog = useCallback(() => {
+    const root = dialogRef.current;
+    if (!root) return [];
+    return Array.from(
+      root.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )
+    ).filter((el) => el.offsetParent !== null || el === document.activeElement);
+  }, []);
+
   useEffect(() => {
     if (!isOpen) return;
+
+    // Remember where focus came from so it can be handed back on close.
+    previouslyFocused.current = document.activeElement as HTMLElement | null;
+
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key !== "Tab") return;
+
+      // Trap: cycle focus within the dialog instead of letting it escape to
+      // the page behind, which a keyboard or screen reader user cannot see.
+      const focusable = focusableInDialog();
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+
+      if (e.shiftKey && (active === first || !dialogRef.current?.contains(active))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
     }
+
     document.addEventListener("keydown", onKeyDown);
     document.body.style.overflow = "hidden";
+
+    // Move focus in once the entrance animation has committed the node.
+    const focusTimer = window.setTimeout(() => {
+      const focusable = focusableInDialog();
+      (focusable[0] ?? dialogRef.current)?.focus();
+    }, 60);
+
     return () => {
+      window.clearTimeout(focusTimer);
       document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = "";
+      previouslyFocused.current?.focus?.();
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, focusableInDialog]);
 
   const cells = getMonthGrid(cursor.year, cursor.month);
   const canGoPrevMonth =
@@ -77,9 +124,11 @@ export function BookingModal({
             transition={{ duration: 0.2, ease: "easeOut" }}
           />
           <motion.div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-label="Book a meeting"
+            tabIndex={-1}
             initial={{ opacity: 0, scale: 0.92, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 12 }}
@@ -96,6 +145,7 @@ export function BookingModal({
                 </h3>
               </div>
               <button
+                type="button"
                 onClick={onClose}
                 aria-label="Close"
                 className="flex h-8 w-8 items-center justify-center rounded-full text-stone transition-colors hover:bg-pine/5 hover:text-pine dark:text-white/60 dark:hover:bg-white/10 dark:hover:text-white"
@@ -213,7 +263,7 @@ export function BookingModal({
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="you@company.com"
-                        className="w-full rounded-lg border border-pine/15 px-4 py-2.5 text-sm text-pine placeholder:text-stone/50 focus:border-teal focus:outline-none dark:border-white/15 dark:bg-white/5 dark:text-white dark:placeholder:text-white/30"
+                        className="w-full rounded-lg border border-pine/15 px-4 py-2.5 text-sm text-pine placeholder:text-stone/50 focus:border-teal dark:border-white/15 dark:bg-white/5 dark:text-white dark:placeholder:text-white/30"
                       />
                     </div>
                   )}
@@ -258,6 +308,7 @@ function SuccessState({
         {date?.toLocaleDateString("en-US", { month: "long", day: "numeric" })} at {time}.
       </p>
       <button
+        type="button"
         onClick={onClose}
         className="mt-6 rounded-full border border-pine/15 px-6 py-2.5 text-sm font-semibold text-pine transition-colors hover:bg-pine/5 dark:border-white/15 dark:text-white dark:hover:bg-white/10"
       >

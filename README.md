@@ -13,14 +13,40 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Structure
 
-- `src/app/page.tsx` — landing page sections (Hero, Services, How it Works, Differentiators, Testimonials, Blog preview, Final CTA)
+- `src/app/page.tsx` — landing page sections (Hero, Services, UGC, How it Works, Differentiators, Plans, Blog preview, Final CTA)
 - `src/app/blog/` — blog index and post template (MDX-based)
 - `content/blog/*.mdx` — blog posts, edit or add files here
-- `src/components/` — shared UI and section components
+- `src/components/sections/` — one component per landing page section
+- `src/components/mascot/` — hero mascot with cursor-tracking face (see `design/README.md`)
+- `src/components/booking/` — booking modal and its context provider
 - `src/app/globals.css` — brand color tokens and duotone treatment
+- `design/` — original mascot artwork; not served by the site
 
-## Notes
+## Configuration
 
-- Logo is a code-recreated wordmark + plus mark (teal/lime, Poppins) since the original hand-lettered logo files live in the Sublime+ Canva brand kit and couldn't be exported as binary assets in this environment. Swap in the real logo SVG/PNG under `public/` and update `src/components/PlusMark.tsx` once available.
-- Imagery uses placeholder stock photos with a CSS duotone filter approximating the brand's teal/pine photography treatment — replace with real photography when available.
-- All copy is placeholder/launch-draft quality, written to match brand voice, and should be reviewed before shipping.
+Set `NEXT_PUBLIC_SITE_URL` to the production origin. It drives canonical URLs,
+Open Graph image resolution, `sitemap.xml` and `robots.txt`. Without it, those
+fall back to a placeholder and social previews will not resolve correctly.
+
+```bash
+NEXT_PUBLIC_SITE_URL=https://sublimeplus.co
+```
+
+## Content standards
+
+Every claim on the site must trace to a Sublime+ SOP or a signed-off business
+fact. Do not add testimonials, statistics, client names or capability claims
+without a written source — see the QA/QC audit for the provenance rules and the
+outstanding items.
+
+## Known gaps
+
+- **Copy requires owner sign-off.** The Services list, plan tiers and deliverable
+  volumes, reporting cadence, and the stated consult duration are not currently
+  traceable to any SOP. They need confirming or rewriting before launch.
+- Logo is a code-recreated wordmark + plus mark (Poppins + SVG) rather than the
+  original hand-lettered files. Swap in the real logo under `public/` and update
+  `src/components/PlusMark.tsx` when available.
+- The Differentiators background and blog covers use placeholder stock photos
+  hot-linked from Unsplash. Self-host and replace with real imagery.
+- The booking form is a simulated client-side submission. No backend is wired up.

@@ -46,6 +46,23 @@ body {
   color: var(--color-pine);
 }
 
+/* Keyboard focus.
+   One ring for the whole site so no component can quietly ship without a
+   visible focus state. Lime on a dark offset clears 3:1 against both the pine
+   hero and the light page surfaces. Mouse and touch users never see it —
+   :focus-visible only matches keyboard-style interaction. */
+:focus-visible {
+  outline: 2px solid var(--color-lime);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* The hero and CTA sit on lime; a lime ring on lime would be invisible. */
+.bg-lime:focus-visible,
+.neon-lime-btn:focus-visible {
+  outline-color: var(--color-pine);
+}
+
 .duotone-teal {
   filter: grayscale(1) contrast(1.05) brightness(1.02);
   position: relative;
