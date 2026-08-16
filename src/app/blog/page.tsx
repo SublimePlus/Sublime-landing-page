@@ -13,7 +13,7 @@ export default function BlogIndex() {
   return (
     <div className="mx-auto max-w-6xl px-6 pb-28 pt-40">
       <Reveal className="mx-auto max-w-2xl text-center">
-        <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal">
+        <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal-ink">
           Sublime+ Blog
         </p>
         <h1 className="text-4xl font-bold text-pine dark:text-white">

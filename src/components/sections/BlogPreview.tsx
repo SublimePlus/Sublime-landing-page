@@ -14,7 +14,7 @@ export function BlogPreview() {
       <div className="relative mx-auto max-w-6xl px-6">
       <Reveal className="flex flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left">
         <div>
-          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal-ink">
             From the blog
           </p>
           <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
@@ -23,7 +23,7 @@ export function BlogPreview() {
         </div>
         <Link
           href="/blog"
-          className="whitespace-nowrap text-sm font-semibold text-teal hover:text-pine dark:hover:text-lime"
+          className="whitespace-nowrap text-sm font-semibold text-teal-ink hover:text-pine dark:hover:text-lime"
         >
           View all posts →
         </Link>

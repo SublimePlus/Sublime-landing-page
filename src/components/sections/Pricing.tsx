@@ -60,7 +60,7 @@ export function Pricing() {
       <TopoBackground className="text-pine/[0.06] dark:text-white/[0.05]" />
       <div className="relative mx-auto max-w-6xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal-ink">
             Plans
           </p>
           <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">

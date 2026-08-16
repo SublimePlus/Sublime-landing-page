@@ -32,7 +32,7 @@ export function HowItWorks() {
       <TopoBackground className="text-pine/[0.07] dark:text-white/[0.06]" />
       <div className="relative mx-auto max-w-5xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal-ink">
             How it works
           </p>
           <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">

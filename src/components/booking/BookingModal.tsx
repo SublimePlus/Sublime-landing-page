@@ -137,7 +137,7 @@ export function BookingModal({
           >
             <div className="flex items-center justify-between border-b border-pine/10 px-6 py-5 dark:border-white/10">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-teal dark:text-lime">
+                <p className="text-xs font-semibold uppercase tracking-wide text-teal-ink dark:text-lime">
                   Book a meeting
                 </p>
                 <h3 className="text-lg font-semibold text-pine dark:text-white">

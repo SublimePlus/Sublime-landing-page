@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Reveal } from "@/components/Reveal";
@@ -79,9 +80,13 @@ export default async function BlogPost({
 
       <Reveal delay={0.1}>
         <div className={`relative mt-8 aspect-[16/9] overflow-hidden rounded-2xl duotone-${meta.duotone}`}>
-          <div
-            className="h-full w-full bg-cover bg-center"
-            style={{ backgroundImage: `url(${meta.cover})` }}
+          <Image
+            src={meta.cover}
+            alt=""
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 768px"
+            className="object-cover"
           />
           <span className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-lg bg-lime text-pine">
             <PlusMark className="h-4 w-4" strokeWidth={3} />

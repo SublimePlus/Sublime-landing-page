@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Reveal } from "../Reveal";
 import { PlusMark } from "../PlusMark";
@@ -21,7 +22,15 @@ export function Differentiators() {
       <div className="grid items-center gap-14 lg:grid-cols-2">
         <Reveal>
           <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-pine">
-            <div className="duotone-teal absolute inset-0 bg-[url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1200&q=80')] bg-cover bg-center" />
+            <div className="duotone-teal absolute inset-0">
+              <Image
+                src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1200&q=80"
+                alt=""
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
+              />
+            </div>
             <motion.span
               initial={{ scale: 0.8, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
@@ -35,7 +44,7 @@ export function Differentiators() {
         </Reveal>
         <div>
           <Reveal>
-            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal-ink">
               Why Sublime+
             </p>
             <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">

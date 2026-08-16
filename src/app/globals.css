@@ -9,6 +9,11 @@
   /* Sublime+ brand tokens */
   --color-teal: #3c866b;
   --color-teal-dark: #2e6a54;
+  /* Brand teal fails WCAG AA as body-size text: 4.36:1 on white, 3.92:1 on
+     night. `teal-ink` is the text-safe pair — darker in light mode, lighter in
+     dark — clearing 4.5:1 on every surface it is used on. Use `teal` for fills
+     and icons (3:1 non-text), `teal-ink` for anything that is read. */
+  --color-teal-ink: #31705c;
   --color-pine: #1b3a2f;
   --color-lime: #c9f24e;
   --color-stone: #5c6b65;
@@ -18,6 +23,7 @@
 .dark {
   --background: #0e1f19;
   --foreground: #f2f5f3;
+  --color-teal-ink: #5fa98a;
   color-scheme: dark;
 }
 
@@ -26,6 +32,7 @@
   --color-foreground: var(--foreground);
   --color-teal: var(--color-teal);
   --color-teal-dark: var(--color-teal-dark);
+  --color-teal-ink: var(--color-teal-ink);
   --color-pine: var(--color-pine);
   --color-lime: var(--color-lime);
   --color-stone: var(--color-stone);
