@@ -18,7 +18,7 @@ export function BlogPreview() {
             From the blog
           </p>
           <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
-            Notes on content that works.
+            How we actually work.
           </h2>
         </div>
         <Link

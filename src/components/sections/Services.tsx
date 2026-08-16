@@ -12,41 +12,52 @@ type Service = {
   icon: (props: { className?: string }) => React.ReactElement;
 };
 
+/**
+ * Every card below states a service that is documented in an SOP. Nothing here
+ * is aspirational: the SOP reference on each entry is the source of truth, and
+ * a service with no SOP behind it does not belong on this page.
+ */
 const services: Service[] = [
   {
-    title: "Content Creation",
+    // SOP-002 §4 — Posts, Comments, Replies as the three content types.
+    title: "Reddit Posts, Comments & Replies",
     description:
-      "On-brand posts, captions, and blogs written in your voice — never generic, never off-brand.",
+      "Original threads built to rank in search and shape LLM perception, contextual comments inside existing threads, and follow-up replies that build credibility.",
     icon: EditIcon,
   },
   {
-    title: "Scheduling & Publishing",
+    // SOP-009 §6.1 and SOP-001 §4.1 both list blogs as a deliverable type.
+    title: "Blogs & Long-Form",
     description:
-      "A consistent posting cadence across every channel, planned weeks ahead and shipped on time.",
-    icon: CalendarIcon,
-  },
-  {
-    title: "Community Engagement",
-    description:
-      "Real replies, real conversations — we manage comments and DMs like an extension of your team.",
-    icon: ChatIcon,
-  },
-  {
-    title: "Growth Reporting",
-    description:
-      "Clear monthly reporting on what's working, so every post earns its place in the plan.",
-    icon: ChartIcon,
-  },
-  {
-    title: "Blog & Long-Form",
-    description:
-      "SEO-minded articles and long-form content that turn casual readers into subscribers.",
+      "Long-form articles drafted from your approved content plan and client context, reviewed line by line before they reach you.",
     icon: DocIcon,
   },
   {
-    title: "Visual Direction",
+    // SOP-002 §5.1 — the content plan and everything it must contain.
+    title: "Content Planning",
     description:
-      "Consistent, duotone-treated imagery and templates so every asset looks like it belongs.",
+      "A written plan covering target subreddits and platforms, topic themes, posting schedule, tone and style notes, and your key messaging points.",
+    icon: CalendarIcon,
+  },
+  {
+    // SOP-001 §5 — the pre-meeting research phase, item by item.
+    title: "Brand & Visibility Research",
+    description:
+      "Web research, a social audit, review-site analysis, an SEO snapshot, and an LLM perception check across ChatGPT, Claude, Gemini and Perplexity.",
+    icon: ChartIcon,
+  },
+  {
+    // SOP-004 §5–7 — posting, platform compliance and CM verification.
+    title: "Posting & Platform Compliance",
+    description:
+      "Approved content posted so it reads as native to its subreddit, checked against that subreddit's rules, then verified live and logged with its link.",
+    icon: ChatIcon,
+  },
+  {
+    // SOP-U01 §4 — the four UGC product lines, detailed in the section below.
+    title: "UGC Visual Content",
+    description:
+      "Four AI-generated visual product lines — faceless content, AI avatar models, brand ambassadors, and sponsored AI influencer posts.",
     icon: SparkIcon,
   },
 ];
@@ -61,8 +72,12 @@ export function Services() {
           What we do
         </p>
         <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
-          Everything your content needs, minus the headcount.
+          What Sublime+ actually delivers.
         </h2>
+        <p className="mt-4 text-stone dark:text-white/60">
+          Every service below is a documented Sublime+ process. If it is not in
+          our SOPs, we do not put it on this page.
+        </p>
       </Reveal>
       <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {services.map((service, i) => (

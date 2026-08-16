@@ -4,7 +4,7 @@ import { getAllPosts } from "@/lib/blog";
 
 export const metadata = {
   title: "Blog | Sublime+",
-  description: "Notes on content, social, and growth from the Sublime+ team.",
+  description: "How Sublime+ works: our research, approval and AI-usage processes, written up from the SOPs we run on.",
 };
 
 export default function BlogIndex() {
@@ -17,7 +17,7 @@ export default function BlogIndex() {
           Sublime+ Blog
         </p>
         <h1 className="text-4xl font-bold text-pine dark:text-white">
-          Notes on content that works.
+          How we actually work.
         </h1>
       </Reveal>
       <div className="mt-16 grid gap-6 md:grid-cols-3">

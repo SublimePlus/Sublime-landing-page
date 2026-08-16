@@ -7,11 +7,23 @@ import { PlusMark } from "../PlusMark";
 import { TopoBackground } from "../TopoBackground";
 import { AnimatedSection } from "../AnimatedSection";
 
+/**
+ * Each point is a commitment written into an SOP, not a marketing claim.
+ * The previous version of this list asserted "real engagement from real
+ * people", which directly contradicts SOP-009's AI-assisted model — it has
+ * been replaced with what the SOPs actually guarantee.
+ */
 const points = [
-  "A dedicated team that learns your brand voice, not a rotating cast of freelancers",
-  "Content calendars planned weeks ahead — never scrambling for tomorrow's post",
-  "Real engagement from real people, not canned auto-replies",
-  "Monthly reporting that connects content to actual growth",
+  // SOP-001 §6.2.1 and SOP-U01 §3 — one CM owns the relationship.
+  "One Customer Manager owns your account end to end — your single point of contact from onboarding onwards",
+  // SOP-001 §5.5 — the LLM perception check, run before anything is written.
+  "We show you how ChatGPT, Claude, Gemini and Perplexity describe your brand today, before we write a word",
+  // SOP-002 §8.3 — the hard approval gate.
+  "Nothing is published until you approve it in writing. No exceptions",
+  // SOP-009 §4 and §8 — AI drafts, humans are accountable.
+  "AI gives us speed; a human reads and verifies every draft before it reaches you, and carries the accountability for it",
+  // SOP-007 §4 — the core ethical principles.
+  "No fabricated statistics, testimonials or reviews, no astroturfing, and no fake negative feedback about your competitors",
 ];
 
 export function Differentiators() {
@@ -48,7 +60,7 @@ export function Differentiators() {
               Why Sublime+
             </p>
             <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
-              A creative partner, not another vendor.
+              Five things we put in writing.
             </h2>
           </Reveal>
           <ul className="mt-8 space-y-5">

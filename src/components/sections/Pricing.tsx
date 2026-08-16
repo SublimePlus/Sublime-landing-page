@@ -15,41 +15,46 @@ type Plan = {
   highlighted?: boolean;
 };
 
+/**
+ * The three standardised packages from SOP-S01 §10.5, with the SOP's own names
+ * and post volumes. Prices are held back from the page by decision, and are
+ * presented transparently on the call — SOP-S01 §10.4 requires exactly that:
+ * no hidden costs, no ambiguity about what is being paid for.
+ *
+ * Deliberately not listed: blog counts, platform counts and report cadences
+ * per tier. SOP-S01 §10.5 does not break those down by package, and inventing
+ * a breakdown is the same failure as inventing a price.
+ */
 const plans: Plan[] = [
   {
-    name: "Lite",
-    tagline: "For brands just getting consistent.",
+    name: "Starter",
+    tagline: "For brands establishing a presence.",
     deliverables: [
-      "10 posts / month",
-      "3 blog articles / month",
-      "1 platform covered",
-      "Monthly performance report",
-      "Email support",
+      "10 posts per month",
+      "Supporting comments included",
+      "AI-generated, CM-reviewed",
+      "Billed monthly, upfront",
     ],
   },
   {
-    name: "Pro",
-    tagline: "For teams ready to scale their presence.",
+    name: "Growth",
+    tagline: "For brands building momentum.",
     deliverables: [
-      "18 posts / month",
-      "5 blog articles / month",
-      "Up to 3 platforms",
-      "Bi-weekly performance report",
-      "Community engagement included",
-      "Priority support",
+      "25 posts per month",
+      "Supporting comments included",
+      "AI-generated, CM-reviewed",
+      "Billed monthly, upfront",
     ],
     highlighted: true,
   },
   {
-    name: "Max",
-    tagline: "For brands going all in on content.",
+    name: "Pro",
+    tagline: "For brands that need the extra quality layer.",
     deliverables: [
-      "32 posts / month",
-      "9 blog articles / month",
-      "Unlimited platforms",
-      "Weekly performance report",
-      "Full community management",
-      "Dedicated account manager",
+      "30 posts per month",
+      "Supporting comments included",
+      "AI-generated plus human proofread",
+      "Billed monthly, upfront",
     ],
   },
 ];
@@ -67,8 +72,9 @@ export function Pricing() {
             Pick a scope. We&apos;ll handle the rest.
           </h2>
           <p className="mt-4 text-stone dark:text-white/60">
-            Every plan includes a dedicated content team. Book a call and
-            we&apos;ll recommend the right fit for your brand.
+            Three standard packages, billed monthly and upfront. We walk through
+            the full price of each one on the call — no hidden costs and no
+            ambiguity about what you are paying for.
           </p>
         </Reveal>
 
@@ -83,10 +89,11 @@ export function Pricing() {
         <Reveal delay={0.3} className="mt-6">
           <div className="neon-teal flex flex-col items-center justify-between gap-6 rounded-2xl border border-pine/10 bg-white p-8 sm:flex-row dark:border-white/10 dark:bg-night/40">
             <div className="text-center sm:text-left">
-              <h3 className="text-lg font-semibold text-pine dark:text-white">Custom Plan</h3>
+              {/* SOP-S01 §10.5 — "Custom add-ons can be discussed." */}
+              <h3 className="text-lg font-semibold text-pine dark:text-white">Custom add-ons</h3>
               <p className="mt-1 text-sm text-stone dark:text-white/60">
-                Need a different mix of platforms, volume, or languages?
-                Let&apos;s scope something built around your goals.
+                Need something outside the three packages? Bring it to the call
+                and we will scope it with you.
               </p>
             </div>
             <BookMeetingButton
@@ -138,6 +145,9 @@ function PlanCard({ plan }: { plan: Plan }) {
             : "neon-teal border-pine/10 bg-white text-pine dark:border-white/10 dark:bg-night/40 dark:text-white"
         }`}
       >
+      {/* The badge previously read "Most Popular". No SOP or sales record
+          supports a popularity claim, so it states the SOP-documented fact
+          instead: Growth is the middle package. */}
       {plan.highlighted && (
         <motion.span
           className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-lime px-3 py-1 text-xs font-bold text-pine"
@@ -150,7 +160,7 @@ function PlanCard({ plan }: { plan: Plan }) {
           }}
           transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
         >
-          Most Popular
+          Mid tier
         </motion.span>
       )}
       <h3 className="text-xl font-bold">{plan.name}</h3>

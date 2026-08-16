@@ -16,9 +16,13 @@ export const site = {
    * Plain-language definition. Language models resolve entities from explicit
    * definitional statements, so this stays literal — the brand tagline does the
    * personality work in the hero, not here.
+   *
+   * Traceable to SOP-S01 §5.2 (core qualifying question: visibility on Reddit,
+   * in search engines, and in how LLMs perceive the brand), SOP-002 §4 (content
+   * types) and SOP-U01 §4 (UGC product lines).
    */
   description:
-    "Sublime+ is a content and social marketing agency. We plan, write, and publish content for brands, and produce AI-generated visual content through our UGC product line.",
+    "Sublime+ is a content and social marketing agency. We plan, write, and post Reddit content — posts, comments and replies — to improve how brands appear in search results and in how AI language models describe them, and we produce AI-generated visual content through our UGC product line.",
   tagline: "Content & social marketing, done with a little extra",
   email: "hello@sublimeplus.co",
   locale: "en_US",

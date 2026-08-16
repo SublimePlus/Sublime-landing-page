@@ -5,24 +5,30 @@ import { Reveal } from "../Reveal";
 import { TopoBackground } from "../TopoBackground";
 import { AnimatedSection } from "../AnimatedSection";
 
+/** The onboarding-to-live pipeline exactly as SOP-001, SOP-002 and SOP-004
+ *  define it. Timings below are the SOP's own committed timelines. */
 const steps = [
   {
     step: "01",
-    title: "We learn your brand",
+    // SOP-001 §5 — the research phase, completed before the meeting.
+    title: "We research you first",
     description:
-      "A kickoff deep-dive into your voice, audience, and goals — so everything we make sounds like you.",
+      "Before we meet, we audit your website, socials and review sites, capture an SEO snapshot, and ask ChatGPT, Claude, Gemini and Perplexity what they say about you. It all comes back as an onboarding deck.",
   },
   {
     step: "02",
-    title: "We create & schedule",
+    // SOP-001 §6 (30–45 min Google Meet, client alignment, Client Context
+    // Document) and SOP-002 §5 (content plan, Senior Manager approval).
+    title: "We align on the plan",
     description:
-      "Content calendars, posts, and blogs planned and produced weeks ahead of time.",
+      "A 30–45 minute call where you confirm or correct what we found. Everything becomes one client context document, and your content plan — subreddits, themes, schedule, tone — goes to a Senior Manager for approval.",
   },
   {
     step: "03",
-    title: "We engage & report",
+    // SOP-001 §6.2.6 timeline; SOP-002 §8.3 approval gate; SOP-004 §6 verify.
+    title: "You approve, then we post",
     description:
-      "Ongoing community management with clear, monthly reporting on growth and performance.",
+      "First deliverables reach you for approval within 2–4 business days, and your first content is live within 7–10 business days. Nothing is ever posted before you approve it in writing.",
   },
 ];
 
@@ -36,7 +42,7 @@ export function HowItWorks() {
             How it works
           </p>
           <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
-            Three steps to content that runs itself.
+            From first call to first post in 7–10 business days.
           </h2>
         </Reveal>
 

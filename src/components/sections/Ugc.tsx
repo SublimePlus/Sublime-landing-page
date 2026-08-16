@@ -14,31 +14,53 @@ type Product = {
   icon: (props: { className?: string }) => React.ReactElement;
 };
 
+/** The four product lines defined in SOP-U01 §4. All four are available from
+ *  launch; the descriptions below do not go beyond what that SOP states. */
 const products: Product[] = [
   {
+    // SOP-U01 §4.1
     title: "Faceless Content",
     description:
-      "AI-generated product visuals — flat lays, lifestyle shots, hands-only compositions — in as many settings as your feed needs, no shoot required.",
+      "You send reference images of your product. We generate AI images of it in different environments and settings — flat lays, lifestyle shots, product-on-surface compositions and hands-only shots — with no human face in frame.",
     icon: ImageIcon,
   },
   {
+    // SOP-U01 §4.2
     title: "AI Avatar Models",
     description:
-      "Consistent AI-generated models shown holding, wearing, or using your product, so every deliverable looks like one continuous campaign.",
+      "AI-generated characters — not real people — holding, carrying, wearing or using your product. Approve the avatar before production, and reuse the same one across deliverables when you want visual consistency.",
     icon: PersonIcon,
   },
   {
+    // SOP-U01 §4.3, both variants, including the mandatory likeness release.
     title: "Brand Ambassadors",
     description:
-      "A recurring face for your brand — built from your real ambassador's likeness or created from scratch — appearing across every piece of content.",
+      "A recurring face for your brand: either your real ambassador's likeness, which requires their written consent and a signed likeness release before any work starts, or a character we create from scratch to your specification.",
     icon: BadgeIcon,
   },
   {
+    // SOP-U01 §4.4 and §4.4.1, including the AI-disclosure rule.
     title: "AI Influencers & Bloggers",
     description:
-      "Sponsored posts from our library of AI-generated creator personas across gaming, beauty, fitness, travel, and more — always clearly disclosed.",
+      "Sponsor a post on one of our own AI creator personas — roughly ten niches at launch, from gaming and makeup to fitness, cooking, travel and tech. Every bio and post description states that the content is AI-generated.",
     icon: MegaphoneIcon,
   },
+];
+
+/** Delivery facts, each stated verbatim-in-substance from SOP-U01. */
+const deliveryFacts = [
+  // §5.2 Content Formats
+  "Single images or carousels of 2–6 slides, in any standard aspect ratio",
+  // §5.2 — captions included with every deliverable
+  "Captions and on-image text included with every deliverable",
+  // §5.1 Platforms
+  "Instagram, Reddit, Facebook, Pinterest, Etsy and TikTok",
+  // §11.6 Turnaround Times
+  "First draft in under 5 working days from an approved brief",
+  // §13 Revision Policy
+  "2–3 revision rounds, revised content back within 1–2 business days",
+  // §16 What We Never Do
+  "Nothing is posted without your explicit approval",
 ];
 
 export function Ugc() {
@@ -54,9 +76,9 @@ export function Ugc() {
             User-generated content, without waiting on users.
           </h2>
           <p className="mt-4 text-stone dark:text-white/60">
-            Premium, on-brand visuals generated and human-reviewed for your
-            product — every deliverable is clearly AI-disclosed and built to
-            look like it belongs in your feed.
+            Four AI-generated visual product lines. Every deliverable passes an
+            internal quality review before you see it, and nothing goes live
+            until you approve it.
           </p>
         </Reveal>
 
@@ -67,6 +89,19 @@ export function Ugc() {
             </Reveal>
           ))}
         </div>
+
+        <Reveal delay={0.25} className="mt-10">
+          <ul className="grid gap-x-8 gap-y-3 rounded-2xl border border-pine/10 bg-white p-7 text-sm sm:grid-cols-2 dark:border-white/10 dark:bg-night/40">
+            {deliveryFacts.map((fact) => (
+              <li key={fact} className="flex items-start gap-2.5">
+                <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-teal/10 text-teal dark:bg-white/10 dark:text-lime">
+                  <PlusMark className="h-3 w-3" strokeWidth={3} />
+                </span>
+                <span className="text-stone dark:text-white/70">{fact}</span>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
 
         <Reveal delay={0.3} className="mt-12 text-center">
           <BookMeetingButton className="neon-teal-btn inline-flex items-center gap-2 rounded-full bg-pine px-7 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.03] dark:bg-teal">

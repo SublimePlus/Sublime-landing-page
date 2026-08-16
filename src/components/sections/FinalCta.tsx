@@ -8,15 +8,18 @@ export function FinalCta() {
     <AnimatedSection id="contact" className="relative overflow-hidden bg-pine py-28 text-white">
       <PlusTexture />
       <Reveal className="relative mx-auto max-w-2xl px-6 text-center">
+        {/* SOP-S01 §5.2 — the qualifying question, asked back to the visitor. */}
         <h2 className="text-3xl font-bold sm:text-4xl">
-          Ready for content that runs itself?
+          Could your business do more with better visibility?
         </h2>
+        {/* SOP-S01 §10 — 30–45 minutes on Google Meet; §10.2–10.4 set the agenda. */}
         <p className="mt-4 text-white/70">
-          Book a free 20-minute consult. We&apos;ll look at your current
-          content and tell you exactly what we&apos;d change.
+          Book a 30–45 minute call on Google Meet. We&apos;ll talk through your
+          goals, explain how Reddit affects your SEO and how AI models describe
+          you, and walk you through the packages and their prices.
         </p>
         <BookMeetingButton className="neon-lime-btn mt-8 inline-flex items-center gap-2 rounded-full bg-lime px-8 py-3.5 font-semibold text-pine transition-transform hover:scale-[1.03]">
-          Book a free consult
+          Book a discovery call
           <PlusMark className="h-4 w-4" strokeWidth={3} />
         </BookMeetingButton>
       </Reveal>

@@ -36,10 +36,13 @@ export function Hero() {
             <PlusMark className="h-3.5 w-3.5" strokeWidth={3} />
             Content &amp; social marketing, done with a little extra
           </motion.p>
+          {/* SOP-S01 §5.2 — the core qualifying question, stated as the promise. */}
           <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-            <WordReveal text="Your content and socials," startDelay={0.1} />
+            <WordReveal text="Visible on Reddit." startDelay={0.1} />
             <br />
-            <WordReveal text="handled like a creative partner." startDelay={0.45} />
+            <WordReveal text="In search results." startDelay={0.4} />
+            <br />
+            <WordReveal text="In what AI says about you." startDelay={0.7} />
           </h1>
         </motion.div>
 
@@ -56,15 +59,17 @@ export function Hero() {
           transition={{ duration: 0.7, delay: 0.55 }}
           className="order-3 text-center lg:text-right"
         >
+          {/* SOP-002 §4 (posts, comments, replies) + SOP-001 §4.1 (campaign
+              improves SEO rankings and LLM perception of the brand). */}
           <p className="mx-auto text-lg text-white/70 lg:ml-auto lg:mr-0 lg:max-w-sm">
-            Sublime+ writes, schedules, and grows your content across every
-            channel — fast, sharp, and a little more thoughtful than you&apos;d
-            expect from an agency.
+            We plan, write and post Reddit content — posts, comments and
+            replies — to improve your SEO rankings and shape how AI language
+            models describe your brand.
           </p>
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-end">
             <Magnetic strength={14}>
               <BookMeetingButton className="neon-lime-btn inline-flex items-center gap-2 rounded-full bg-lime px-7 py-3.5 font-semibold text-pine transition-transform hover:scale-[1.03]">
-                Book a free consult
+                Book a discovery call
                 <PlusMark className="h-4 w-4" strokeWidth={3} />
               </BookMeetingButton>
             </Magnetic>
