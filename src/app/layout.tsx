@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import { Poppins, Yellowtail } from "next/font/google";
 import "./globals.css";
+import { MotionConfig } from "framer-motion";
 import { Nav } from "@/components/Nav";
-import { Footer } from "@/components/Footer";
+import { CinematicFooter } from "@/components/ui/CinematicFooter";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { BookingModalProvider } from "@/components/booking/BookingModalContext";
 import { ThemeProvider } from "@/components/theme/ThemeContext";
+import { JsonLd, organizationSchema, websiteSchema } from "@/components/JsonLd";
+import { site, siteUrl } from "@/lib/site";
 
 const THEME_INIT_SCRIPT = `
 (function () {
@@ -30,9 +33,31 @@ const yellowtail = Yellowtail({
 });
 
 export const metadata: Metadata = {
-  title: "Sublime+ | Content & social marketing, done with a little extra",
-  description:
-    "Sublime+ writes, posts, and manages content and social for brands who'd rather be doing anything else. Creative, reliable, social-savvy.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: `${site.name} | ${site.tagline}`,
+    template: `%s | ${site.name}`,
+  },
+  description: site.description,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: site.name,
+    title: `${site.name} | ${site.tagline}`,
+    description: site.description,
+    url: "/",
+    locale: site.locale,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${site.name} | ${site.tagline}`,
+    description: site.description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
 };
 
 export default function RootLayout({
@@ -48,16 +73,20 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        <JsonLd schema={organizationSchema} />
+        <JsonLd schema={websiteSchema} />
       </head>
       <body className="min-h-full flex flex-col">
-        <ThemeProvider>
-          <BookingModalProvider>
-            <ScrollProgress />
-            <Nav />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </BookingModalProvider>
-        </ThemeProvider>
+        <MotionConfig reducedMotion="user">
+          <ThemeProvider>
+            <BookingModalProvider>
+              <ScrollProgress />
+              <Nav />
+              <main className="flex-1">{children}</main>
+              <CinematicFooter />
+            </BookingModalProvider>
+          </ThemeProvider>
+        </MotionConfig>
       </body>
     </html>
   );

@@ -9,6 +9,11 @@
   /* Sublime+ brand tokens */
   --color-teal: #3c866b;
   --color-teal-dark: #2e6a54;
+  /* Brand teal fails WCAG AA as body-size text: 4.36:1 on white, 3.92:1 on
+     night. `teal-ink` is the text-safe pair — darker in light mode, lighter in
+     dark — clearing 4.5:1 on every surface it is used on. Use `teal` for fills
+     and icons (3:1 non-text), `teal-ink` for anything that is read. */
+  --color-teal-ink: #31705c;
   --color-pine: #1b3a2f;
   --color-lime: #c9f24e;
   --color-stone: #5c6b65;
@@ -18,6 +23,7 @@
 .dark {
   --background: #0e1f19;
   --foreground: #f2f5f3;
+  --color-teal-ink: #5fa98a;
   color-scheme: dark;
 }
 
@@ -26,6 +32,7 @@
   --color-foreground: var(--foreground);
   --color-teal: var(--color-teal);
   --color-teal-dark: var(--color-teal-dark);
+  --color-teal-ink: var(--color-teal-ink);
   --color-pine: var(--color-pine);
   --color-lime: var(--color-lime);
   --color-stone: var(--color-stone);
@@ -44,6 +51,23 @@ body {
 ::selection {
   background: var(--color-lime);
   color: var(--color-pine);
+}
+
+/* Keyboard focus.
+   One ring for the whole site so no component can quietly ship without a
+   visible focus state. Lime on a dark offset clears 3:1 against both the pine
+   hero and the light page surfaces. Mouse and touch users never see it —
+   :focus-visible only matches keyboard-style interaction. */
+:focus-visible {
+  outline: 2px solid var(--color-lime);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* The hero and CTA sit on lime; a lime ring on lime would be invisible. */
+.bg-lime:focus-visible,
+.neon-lime-btn:focus-visible {
+  outline-color: var(--color-pine);
 }
 
 .duotone-teal {
@@ -99,5 +123,62 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* --- Cinematic footer -------------------------------------------------- */
+
+/* Glass pill used for the footer's links and controls. Built from brand
+   tokens rather than shadcn's --foreground/--background, which this project
+   does not define. */
+.glass-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+  color: rgba(255, 255, 255, 0.75);
+  box-shadow:
+    0 10px 30px -10px rgba(0, 0, 0, 0.5),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-pill:hover {
+  border-color: rgba(201, 242, 78, 0.5);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
+  color: #ffffff;
+  box-shadow:
+    0 20px 40px -10px rgba(0, 0, 0, 0.6),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+@keyframes footer-breathe {
+  from { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+  to { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+}
+
+.footer-breathe {
+  animation: footer-breathe 8s ease-in-out infinite alternate;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  animation: marquee-scroll 45s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-breathe,
+  .marquee-track {
+    animation: none;
   }
 }

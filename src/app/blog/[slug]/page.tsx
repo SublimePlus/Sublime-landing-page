@@ -1,7 +1,10 @@
+import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Reveal } from "@/components/Reveal";
 import { PlusMark } from "@/components/PlusMark";
+import { JsonLd, blogPostingSchema, breadcrumbSchema } from "@/components/JsonLd";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
 
 export function generateStaticParams() {
@@ -12,11 +15,30 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
-}) {
+}): Promise<Metadata> {
   const { slug } = await params;
   try {
     const { meta } = getPostBySlug(slug);
-    return { title: `${meta.title} | Sublime+ Blog`, description: meta.excerpt };
+    const url = `/blog/${slug}`;
+    return {
+      title: meta.title,
+      description: meta.excerpt,
+      alternates: { canonical: url },
+      openGraph: {
+        type: "article",
+        title: meta.title,
+        description: meta.excerpt,
+        url,
+        publishedTime: meta.date,
+        images: meta.cover ? [{ url: meta.cover }] : undefined,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: meta.title,
+        description: meta.excerpt,
+        images: meta.cover ? [meta.cover] : undefined,
+      },
+    };
   } catch {
     return {};
   }
@@ -40,6 +62,8 @@ export default async function BlogPost({
 
   return (
     <article className="mx-auto max-w-3xl px-6 pb-28 pt-40">
+      <JsonLd schema={blogPostingSchema(meta)} />
+      <JsonLd schema={breadcrumbSchema(meta)} />
       <Reveal>
         <p className="mb-3 text-sm font-medium text-stone dark:text-white/60">
           {new Date(meta.date).toLocaleDateString("en-US", {
@@ -56,9 +80,13 @@ export default async function BlogPost({
 
       <Reveal delay={0.1}>
         <div className={`relative mt-8 aspect-[16/9] overflow-hidden rounded-2xl duotone-${meta.duotone}`}>
-          <div
-            className="h-full w-full bg-cover bg-center"
-            style={{ backgroundImage: `url(${meta.cover})` }}
+          <Image
+            src={meta.cover}
+            alt=""
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 768px"
+            className="object-cover"
           />
           <span className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-lg bg-lime text-pine">
             <PlusMark className="h-4 w-4" strokeWidth={3} />
