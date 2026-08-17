@@ -20,7 +20,7 @@ const steps = [
     step: "02",
     // SOP-001 §6 (30–45 min Google Meet, client alignment, Client Context
     // Document) and SOP-002 §5 (content plan, Senior Manager approval).
-    title: "We agree the plan",
+    title: "We agree on the plan",
     description:
       "One 30–45 minute call. You tell us what we got right and what we got wrong. That becomes your plan: subreddits, themes, schedule, tone.",
   },
