@@ -5,7 +5,6 @@ import { HowItWorks } from "@/components/sections/HowItWorks";
 import { Pricing } from "@/components/sections/Pricing";
 import { Faq } from "@/components/sections/Faq";
 import { FinalCta } from "@/components/sections/FinalCta";
-import { SectionFade } from "@/components/AnimatedSection";
 import { JsonLd, faqSchema, serviceSchema } from "@/components/JsonLd";
 import { faqs } from "@/lib/faq";
 
@@ -15,9 +14,9 @@ import { faqs } from "@/lib/faq";
  * action so the last thing a visitor reads before booking is the answer to
  * whatever was holding them back.
  *
- * The middle sections carry no background of their own, so there is nothing to
- * seam between them: they sit on the page background and the boundaries simply
- * do not exist. Only the two dark blocks need a transition, and each gets one.
+ * Every section now sits on the page background, so there are no colour seams
+ * between them to blend. The hero (dark) meets the first section with a clean
+ * edge, and the dark footer is revealed by its own curtain animation.
  */
 export default function Home() {
   return (
@@ -26,18 +25,11 @@ export default function Home() {
       <JsonLd schema={faqSchema(faqs)} />
 
       <Hero />
-      {/* Leaving the dark hero into the light page: pine fades to transparent
-          over the page background, so the midtones are sage, not grey. */}
-      <SectionFade variant="to-light" />
-
       <Services />
       <Ugc />
       <HowItWorks />
       <Pricing />
       <Faq />
-      {/* Entering the dark closing block from the light page. */}
-      <SectionFade variant="to-dark" />
-
       <FinalCta />
     </>
   );
