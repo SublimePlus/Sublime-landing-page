@@ -2,88 +2,94 @@
 
 import Link from "next/link";
 import { useRef } from "react";
-import { motion, useInView, useTransform } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { PlusMark } from "../PlusMark";
+import { PlusField } from "../PlusField";
 import { Magnetic } from "../CursorReactive";
 import { BookMeetingButton } from "../booking/BookMeetingButton";
-import { Mascot } from "../mascot/Mascot";
-import { useCursorVector } from "../mascot/useCursorVector";
 
+/**
+ * The hero leads with the hook rather than the service description.
+ *
+ * The hook is a question the visitor cannot answer, which is the point: SOP-001
+ * §5.5 makes "ask the models what they say about this brand" the first thing we
+ * actually do for a client, so the page opens on the same move. Everything
+ * beneath it is deliberately short — the sections below have room to explain,
+ * the hero only has to earn the scroll.
+ */
 export function Hero() {
-  const { x, y } = useCursorVector();
-
-  // Layers travel at different rates so the composition reads as depth:
-  // the wordmark sits furthest back, the foreground copy closest.
-  const wordmarkX = useTransform(x, [-1, 1], [26, -26]);
-  const wordmarkY = useTransform(y, [-1, 1], [14, -14]);
-  const copyX = useTransform(x, [-1, 1], [-12, 12]);
-
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-night via-pine to-pine pt-32 pb-24 text-white">
+    <section className="relative overflow-hidden bg-gradient-to-b from-night via-pine to-pine pt-36 pb-28 text-white">
       <AmbientGlow />
-      <FloatingPlusField />
-      <BackdropWordmark x={wordmarkX} y={wordmarkY} />
+      <PlusField density="heavy" className="text-lime/25" />
+      <BackdropWordmark />
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-[1fr_minmax(280px,420px)_1fr] lg:gap-6">
-        {/* Left column — badge + headline */}
-        <motion.div style={{ x: copyX }} className="order-2 text-center lg:order-1 lg:text-left">
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium text-lime"
-          >
-            <PlusMark className="h-3.5 w-3.5" strokeWidth={3} />
-            Content &amp; social marketing, done with a little extra
-          </motion.p>
-          {/* SOP-S01 §5.2 — the core qualifying question, stated as the promise. */}
-          <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-            <WordReveal text="Visible on Reddit." startDelay={0.1} />
-            <br />
-            <WordReveal text="In search results." startDelay={0.4} />
-            <br />
-            <WordReveal text="In what AI says about you." startDelay={0.7} />
-          </h1>
-        </motion.div>
+      <div className="relative mx-auto max-w-4xl px-6 text-center">
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium text-lime"
+        >
+          <PlusMark className="h-3.5 w-3.5" strokeWidth={3} />
+          Content &amp; social marketing, done with a little extra
+        </motion.p>
 
-        {/* Centre — the mascot */}
-        <div className="order-1 lg:order-2">
-          <Mascot />
-        </div>
+        <h1 className="text-4xl font-bold leading-[1.1] tracking-tight sm:text-6xl">
+          <WordReveal text="Ask ChatGPT about" startDelay={0.15} />
+          <br />
+          <WordReveal text="your brand." startDelay={0.45} />
+          <br />
+          <WordReveal
+            text="You might not like"
+            startDelay={0.7}
+            className="text-lime"
+          />
+          <br />
+          <WordReveal text="the answer." startDelay={0.95} className="text-lime" />
+        </h1>
 
-        {/* Right column — supporting copy + calls to action */}
-        <motion.div
-          style={{ x: copyX }}
+        <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.55 }}
-          className="order-3 text-center lg:text-right"
+          transition={{ duration: 0.7, delay: 1.15 }}
+          className="mx-auto mt-8 max-w-xl text-lg leading-relaxed text-white/70"
         >
-          {/* SOP-002 §4 (posts, comments, replies) + SOP-001 §4.1 (campaign
-              improves SEO rankings and LLM perception of the brand). */}
-          <p className="mx-auto text-lg text-white/70 lg:ml-auto lg:mr-0 lg:max-w-sm">
-            We plan, write and post Reddit content — posts, comments and
-            replies — to improve your SEO rankings and shape how AI language
-            models describe your brand.
-          </p>
-          <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-end">
-            <Magnetic strength={14}>
-              <BookMeetingButton className="neon-lime-btn inline-flex items-center gap-2 rounded-full bg-lime px-7 py-3.5 font-semibold text-pine transition-transform hover:scale-[1.03]">
-                Book a discovery call
-                <PlusMark className="h-4 w-4" strokeWidth={3} />
-              </BookMeetingButton>
-            </Magnetic>
-            {/* A secondary route for visitors not ready to book. Styled as a
-                real button so the two CTAs read as a pair rather than a button
-                beside an afterthought. */}
-            <Link
-              href="/#plans"
-              className="inline-flex items-center gap-2 rounded-full border border-white/30 px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:border-lime hover:text-lime"
-            >
-              View plans
-            </Link>
-          </div>
+          Buyers ask AI before they ask you. We write the Reddit posts,
+          comments and replies that change what it says back — and lift your
+          search rankings on the way.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 1.3 }}
+          className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
+        >
+          <Magnetic strength={14}>
+            <BookMeetingButton className="neon-lime-btn inline-flex items-center gap-2 rounded-full bg-lime px-8 py-4 font-semibold text-pine transition-transform hover:scale-[1.03]">
+              See what AI says about you
+              <PlusMark className="h-4 w-4" strokeWidth={3} />
+            </BookMeetingButton>
+          </Magnetic>
+          {/* Secondary route for visitors not ready to book, styled as a real
+              button so the two read as a pair. */}
+          <Link
+            href="/#plans"
+            className="inline-flex items-center gap-2 rounded-full border border-white/30 px-8 py-4 text-sm font-semibold text-white transition-colors hover:border-lime hover:text-lime"
+          >
+            View plans
+          </Link>
         </motion.div>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.7, delay: 1.5 }}
+          className="mt-6 text-sm text-white/50"
+        >
+          Free 30–45 minute call. Nothing gets published without your approval.
+        </motion.p>
       </div>
 
       <ScrollCue />
@@ -91,32 +97,33 @@ export function Hero() {
   );
 }
 
-/** Oversized brand wordmark sitting behind the mascot, which partly occludes it. */
-function BackdropWordmark({
-  x,
-  y,
-}: {
-  x: ReturnType<typeof useTransform<number, number>>;
-  y: ReturnType<typeof useTransform<number, number>>;
-}) {
+/** Oversized brand wordmark sitting behind the headline. */
+function BackdropWordmark() {
   return (
     <motion.span
       aria-hidden="true"
-      style={{ x, y }}
       initial={{ opacity: 0, scale: 1.08 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-      className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap text-[22vw] font-bold leading-none tracking-[0.08em] text-white/[0.045] lg:text-[15vw]"
+      className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap text-[22vw] font-bold leading-none tracking-[0.08em] text-white/[0.035] lg:text-[15vw]"
     >
       SUBLIME
     </motion.span>
   );
 }
 
-function WordReveal({ text, startDelay = 0 }: { text: string; startDelay?: number }) {
+function WordReveal({
+  text,
+  startDelay = 0,
+  className = "",
+}: {
+  text: string;
+  startDelay?: number;
+  className?: string;
+}) {
   const words = text.split(" ");
   return (
-    <span className="inline-block">
+    <span className={`inline-block ${className}`}>
       {words.map((word, i) => (
         <span
           key={i}
@@ -151,7 +158,7 @@ function ScrollCue() {
       className="pointer-events-none absolute inset-x-0 bottom-6 hidden justify-center sm:flex"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.6, delay: 1.4 }}
+      transition={{ duration: 0.6, delay: 1.7 }}
     >
       <motion.div
         animate={{ y: [0, 8, 0] }}
@@ -171,45 +178,13 @@ function AmbientGlow() {
     <motion.div
       ref={ref}
       aria-hidden="true"
-      className="pointer-events-none absolute left-1/2 top-1/2 h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-lime/25 blur-[130px]"
-      animate={inView ? { opacity: [0.5, 0.85, 0.5], scale: [1, 1.12, 1] } : { opacity: 0.5, scale: 1 }}
+      className="pointer-events-none absolute left-1/2 top-1/2 h-[620px] w-[620px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-lime/20 blur-[140px]"
+      animate={
+        inView
+          ? { opacity: [0.5, 0.85, 0.5], scale: [1, 1.12, 1] }
+          : { opacity: 0.5, scale: 1 }
+      }
       transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
     />
-  );
-}
-
-function FloatingPlusField() {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref);
-  const marks = [
-    { top: "18%", left: "8%", size: 28, rotate: -12, delay: 0 },
-    { top: "65%", left: "14%", size: 18, rotate: 20, delay: 0.4 },
-    { top: "28%", left: "88%", size: 22, rotate: 8, delay: 0.2 },
-    { top: "72%", left: "84%", size: 32, rotate: -18, delay: 0.6 },
-    { top: "45%", left: "50%", size: 16, rotate: 30, delay: 0.8 },
-  ];
-  return (
-    <div ref={ref} className="pointer-events-none absolute inset-0" aria-hidden="true">
-      {marks.map((m, i) => (
-        <motion.div
-          key={i}
-          className="absolute text-lime/25"
-          style={{ top: m.top, left: m.left }}
-          animate={
-            inView
-              ? { y: [0, -14, 0], rotate: [m.rotate, m.rotate + 10, m.rotate] }
-              : { y: 0, rotate: m.rotate }
-          }
-          transition={{
-            duration: 6 + i,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: m.delay,
-          }}
-        >
-          <PlusMark style={{ width: m.size, height: m.size }} strokeWidth={2.5} />
-        </motion.div>
-      ))}
-    </div>
   );
 }

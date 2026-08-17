@@ -5,6 +5,7 @@ import { Reveal } from "../Reveal";
 import { PlusMark } from "../PlusMark";
 import { TopoBackground } from "../TopoBackground";
 import { AnimatedSection } from "../AnimatedSection";
+import { PlusField } from "../PlusField";
 import { useSpotlight, SpotlightOverlay } from "../SpotlightCard";
 
 type Service = {
@@ -23,42 +24,42 @@ const services: Service[] = [
     // SOP-002 §4 — Posts, Comments, Replies as the three content types.
     title: "Reddit Posts, Comments & Replies",
     description:
-      "Original threads built to rank in search and shape LLM perception, contextual comments inside existing threads, and follow-up replies that build credibility.",
+      "Threads written to rank in search and shift what AI says about you, comments placed inside conversations already happening, and replies that keep the thread alive.",
     icon: EditIcon,
   },
   {
     // SOP-009 §6.1 and SOP-001 §4.1 both list blogs as a deliverable type.
     title: "Blogs & Long-Form",
     description:
-      "Long-form articles drafted from your approved content plan and client context, reviewed line by line before they reach you.",
+      "Articles written from your approved plan and your brand context — then read line by line before they ever reach your inbox.",
     icon: DocIcon,
   },
   {
     // SOP-002 §5.1 — the content plan and everything it must contain.
     title: "Content Planning",
     description:
-      "A written plan covering target subreddits and platforms, topic themes, posting schedule, tone and style notes, and your key messaging points.",
+      "Where to post, what to say, when to say it, and in whose voice. Written down, approved by a Senior Manager, and shared with you.",
     icon: CalendarIcon,
   },
   {
     // SOP-001 §5 — the pre-meeting research phase, item by item.
     title: "Brand & Visibility Research",
     description:
-      "Web research, a social audit, review-site analysis, an SEO snapshot, and an LLM perception check across ChatGPT, Claude, Gemini and Perplexity.",
+      "Your site, socials, reviews and SEO — plus what ChatGPT, Claude, Gemini and Perplexity currently say about you. All of it, before we start.",
     icon: ChartIcon,
   },
   {
     // SOP-004 §5–7 — posting, platform compliance and CM verification.
     title: "Posting & Platform Compliance",
     description:
-      "Approved content posted so it reads as native to its subreddit, checked against that subreddit's rules, then verified live and logged with its link.",
+      "Posted so it reads like it belongs, inside each subreddit's rules. Then checked live, because a post stuck in a spam filter helps nobody.",
     icon: ChatIcon,
   },
   {
     // SOP-U01 §4 — the four UGC product lines, detailed in the section below.
     title: "UGC Visual Content",
     description:
-      "Four AI-generated visual product lines — faceless content, AI avatar models, brand ambassadors, and sponsored AI influencer posts.",
+      "Product imagery, AI models, brand ambassadors and sponsored creator posts. Four visual lines, no photoshoot required.",
     icon: SparkIcon,
   },
 ];
@@ -67,17 +68,18 @@ export function Services() {
   return (
     <AnimatedSection id="services" className="relative overflow-hidden py-28">
       <TopoBackground className="text-pine/[0.06] dark:text-white/[0.05]" />
+      <PlusField density="medium" className="text-lime/25 dark:text-lime/20" />
       <div className="relative mx-auto max-w-6xl px-6">
       <Reveal className="mx-auto max-w-2xl text-center">
         <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal-ink">
           What we do
         </p>
         <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
-          What Sublime+ actually delivers.
+          Everything, handled.
         </h2>
         <p className="mt-4 text-stone dark:text-white/60">
-          Every service below is a documented Sublime+ process. If it is not in
-          our SOPs, we do not put it on this page.
+          Six things we do. Each one is a written process we follow the same
+          way for every client.
         </p>
       </Reveal>
       <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -105,15 +107,15 @@ export function Services() {
  */
 const commitments = [
   // SOP-001 §6.2.1 and SOP-U01 §3 — one CM owns the relationship.
-  "One Customer Manager owns your account end to end — your single point of contact from onboarding onwards",
+  "One Customer Manager owns your account — the same person, from day one",
   // SOP-001 §5.5 — the LLM perception check, run before anything is written.
-  "We show you how ChatGPT, Claude, Gemini and Perplexity describe your brand today, before we write a word",
+  "You see what AI says about you today, before we write a word",
   // SOP-002 §8.3 — the hard approval gate.
-  "Nothing is published until you approve it in writing. No exceptions",
+  "Nothing goes live until you approve it in writing. No exceptions",
   // SOP-009 §4 and §8 — AI drafts, humans are accountable.
-  "AI gives us speed; a human reads and verifies every draft before it reaches you, and carries the accountability for it",
+  "AI gives us the speed. A human reads every draft and answers for it",
   // SOP-007 §4 — the core ethical principles.
-  "No fabricated statistics, testimonials or reviews, no astroturfing, and no fake negative feedback about your competitors",
+  "No invented stats, no fake reviews, no astroturfing, nothing bad written about your competitors",
 ];
 
 function Commitments() {
@@ -121,7 +123,7 @@ function Commitments() {
     <Reveal delay={0.2} className="mt-20">
       <div className="rounded-3xl border border-pine/10 bg-pine/[0.02] p-8 sm:p-12 dark:border-white/10 dark:bg-white/[0.03]">
         <h3 className="text-2xl font-bold text-pine sm:text-3xl dark:text-white">
-          And five things we put in writing.
+          Five promises we put in writing.
         </h3>
         <ul className="mt-8 grid gap-5 sm:grid-cols-2">
           {commitments.map((point, i) => (

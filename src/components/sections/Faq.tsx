@@ -6,6 +6,7 @@ import { Reveal } from "../Reveal";
 import { PlusMark } from "../PlusMark";
 import { TopoBackground } from "../TopoBackground";
 import { AnimatedSection } from "../AnimatedSection";
+import { PlusField } from "../PlusField";
 import { faqs, type FaqItem } from "@/lib/faq";
 
 export function Faq() {
@@ -15,17 +16,17 @@ export function Faq() {
       className="relative overflow-hidden bg-pine/[0.03] py-28 dark:bg-white/[0.03]"
     >
       <TopoBackground className="text-pine/[0.06] dark:text-white/[0.05]" />
+      <PlusField density="light" className="text-lime/30 dark:text-lime/20" />
       <div className="relative mx-auto max-w-3xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal-ink">
             Questions
           </p>
           <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
-            The things people actually ask us.
+            What people ask before they book.
           </h2>
           <p className="mt-4 text-stone dark:text-white/60">
-            Answered from our standard operating procedures, not from what
-            sounds best.
+            Straight answers, taken from the processes we actually follow.
           </p>
         </Reveal>
 

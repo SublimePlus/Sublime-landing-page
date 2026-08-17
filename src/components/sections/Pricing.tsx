@@ -7,6 +7,7 @@ import { PlusMark } from "../PlusMark";
 import { BookMeetingButton } from "../booking/BookMeetingButton";
 import { TopoBackground } from "../TopoBackground";
 import { AnimatedSection } from "../AnimatedSection";
+import { PlusField } from "../PlusField";
 
 type Plan = {
   name: string;
@@ -28,7 +29,7 @@ type Plan = {
 const plans: Plan[] = [
   {
     name: "Starter",
-    tagline: "For brands establishing a presence.",
+    tagline: "Finding your footing.",
     deliverables: [
       "10 posts per month",
       "Supporting comments included",
@@ -38,7 +39,7 @@ const plans: Plan[] = [
   },
   {
     name: "Growth",
-    tagline: "For brands building momentum.",
+    tagline: "Building real momentum.",
     deliverables: [
       "25 posts per month",
       "Supporting comments included",
@@ -49,7 +50,7 @@ const plans: Plan[] = [
   },
   {
     name: "Pro",
-    tagline: "For brands that need the extra quality layer.",
+    tagline: "Maximum volume, extra polish.",
     deliverables: [
       "30 posts per month",
       "Supporting comments included",
@@ -63,18 +64,18 @@ export function Pricing() {
   return (
     <AnimatedSection id="plans" className="relative overflow-hidden bg-pine/[0.03] py-28 dark:bg-white/[0.03]">
       <TopoBackground className="text-pine/[0.06] dark:text-white/[0.05]" />
+        <PlusField density="medium" className="text-lime/25 dark:text-lime/20" />
       <div className="relative mx-auto max-w-6xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal-ink">
             Plans
           </p>
           <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
-            Pick a scope. We&apos;ll handle the rest.
+            Pick your volume.
           </h2>
           <p className="mt-4 text-stone dark:text-white/60">
-            Three standard packages, billed monthly and upfront. We walk through
-            the full price of each one on the call — no hidden costs and no
-            ambiguity about what you are paying for.
+            Three packages, billed monthly and upfront. We walk you through
+            every price on the call — nothing hidden, nothing vague.
           </p>
         </Reveal>
 
@@ -94,8 +95,8 @@ export function Pricing() {
               {/* SOP-S01 §10.5 — "Custom add-ons can be discussed." */}
               <h3 className="text-lg font-semibold text-pine dark:text-white">Custom add-ons</h3>
               <p className="mt-1 text-sm text-stone dark:text-white/60">
-                Need something outside the three packages? Bring it to the call
-                and we will scope it with you.
+                Something outside the three? Bring it to the call and we will
+                scope it with you.
               </p>
             </div>
             <BookMeetingButton

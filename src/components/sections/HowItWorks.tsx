@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Reveal } from "../Reveal";
 import { TopoBackground } from "../TopoBackground";
 import { AnimatedSection } from "../AnimatedSection";
+import { PlusField } from "../PlusField";
 
 /** The onboarding-to-live pipeline exactly as SOP-001, SOP-002 and SOP-004
  *  define it. Timings below are the SOP's own committed timelines. */
@@ -11,24 +12,24 @@ const steps = [
   {
     step: "01",
     // SOP-001 §5 — the research phase, completed before the meeting.
-    title: "We research you first",
+    title: "We do the homework",
     description:
-      "Before we meet, we audit your website, socials and review sites, capture an SEO snapshot, and ask ChatGPT, Claude, Gemini and Perplexity what they say about you. It all comes back as an onboarding deck.",
+      "Before we meet, we audit your site, socials, reviews and SEO — and ask the AI models what they say about you. You get it all back as a deck.",
   },
   {
     step: "02",
     // SOP-001 §6 (30–45 min Google Meet, client alignment, Client Context
     // Document) and SOP-002 §5 (content plan, Senior Manager approval).
-    title: "We align on the plan",
+    title: "We agree the plan",
     description:
-      "A 30–45 minute call where you confirm or correct what we found. Everything becomes one client context document, and your content plan — subreddits, themes, schedule, tone — goes to a Senior Manager for approval.",
+      "One 30–45 minute call. You tell us what we got right and what we got wrong. That becomes your plan: subreddits, themes, schedule, tone.",
   },
   {
     step: "03",
     // SOP-001 §6.2.6 timeline; SOP-002 §8.3 approval gate; SOP-004 §6 verify.
-    title: "You approve, then we post",
+    title: "You approve. We post.",
     description:
-      "First deliverables reach you for approval within 2–4 business days, and your first content is live within 7–10 business days. Nothing is ever posted before you approve it in writing.",
+      "First drafts land in 2–4 business days. Your first content is live in 7–10. And not a word of it posts before you sign off.",
   },
 ];
 
@@ -36,13 +37,14 @@ export function HowItWorks() {
   return (
     <AnimatedSection id="how-it-works" className="relative overflow-hidden bg-pine/[0.03] py-28 dark:bg-white/[0.03]">
       <TopoBackground className="text-pine/[0.07] dark:text-white/[0.06]" />
+      <PlusField density="light" className="text-lime/30 dark:text-lime/20" />
       <div className="relative mx-auto max-w-5xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal-ink">
             How it works
           </p>
           <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
-            From first call to first post in 7–10 business days.
+            Live in 7–10 business days.
           </h2>
         </Reveal>
 

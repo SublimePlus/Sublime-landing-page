@@ -10,13 +10,13 @@ export function FinalCta() {
       <Reveal className="relative mx-auto max-w-2xl px-6 text-center">
         {/* SOP-S01 §5.2 — the qualifying question, asked back to the visitor. */}
         <h2 className="text-3xl font-bold sm:text-4xl">
-          Could your business do more with better visibility?
+          Find out what AI says about you.
         </h2>
         {/* SOP-S01 §10 — 30–45 minutes on Google Meet; §10.2–10.4 set the agenda. */}
         <p className="mt-4 text-white/70">
-          Book a 30–45 minute call on Google Meet. We&apos;ll talk through your
-          goals, explain how Reddit affects your SEO and how AI models describe
-          you, and walk you through the packages and their prices.
+          One 30–45 minute call on Google Meet. We&apos;ll go through your goals,
+          show you how Reddit moves your search and AI visibility, and walk you
+          through the packages and prices.
         </p>
         <BookMeetingButton className="neon-lime-btn mt-8 inline-flex items-center gap-2 rounded-full bg-lime px-8 py-3.5 font-semibold text-pine transition-transform hover:scale-[1.03]">
           Book a discovery call

@@ -29,8 +29,9 @@ used as sources for site copy.
 | Copy | Source |
 | --- | --- |
 | "Content & social marketing, done with a little extra" | Brand guidelines (tagline). **Not SOP-sourced** — the only non-SOP string on the page, retained as established brand identity |
-| "Visible on Reddit. In search results. In what AI says about you." | SOP-S01 §5.2 — the core qualifying question |
-| "We plan, write and post Reddit content — posts, comments and replies — to improve your SEO rankings and shape how AI language models describe your brand." | SOP-002 §4 (content types); SOP-001 §4.1 (campaign improves SEO rankings and LLM perception) |
+| "Ask ChatGPT about your brand. You might not like the answer." | SOP-001 §5.5 — the LLM perception check is literally the first thing we do for a client, so the page opens on the same move. The hook is a question, not a claim about any specific brand |
+| "Buyers ask AI before they ask you. We write the Reddit posts, comments and replies that change what it says back — and lift your search rankings on the way." | SOP-002 §4 (content types); SOP-001 §4.1 (campaign improves SEO rankings and LLM perception) |
+| "Free 30–45 minute call. Nothing gets published without your approval." | SOP-S01 §10 (call length); SOP-002 §8.3 (approval gate) |
 | "Book a discovery call" | SOP-S01 §6 — the "Call Booked" pipeline stage |
 | "View plans" (secondary CTA) | Navigation only, no claim |
 
@@ -64,11 +65,21 @@ source).
 | "Instagram, Reddit, Facebook, Pinterest, Etsy and TikTok" | SOP-U01 §5.1 |
 | "First draft in under 5 working days from an approved brief" | SOP-U01 §11.6 |
 | "2–3 revision rounds, revised content back within 1–2 business days" | SOP-U01 §13, §11.6 |
-| "Nothing is posted without your explicit approval" | SOP-U01 §11.4, §16 |
+| "Nothing posts until you say yes" | SOP-U01 §11.4, §16 |
 | "Every deliverable passes an internal quality review before you see it" | SOP-U01 §11.3 — Senior CM QA |
 
 Niche list follows SOP-U01 §4.4.1 exactly. The previous copy said "beauty";
 the SOP says "makeup".
+
+### UGC carousel
+
+Four slides, one per SOP-U01 §4 product line, defined in `src/lib/ugc-showcase.ts`.
+
+No slide carries a photograph. Each renders a branded panel and a button
+reading "Sample coming soon", because stock or generated imagery presented
+under a "what we make" heading would be a fabricated work sample — the same
+failure as an invented testimonial, and prohibited by SOP-007 §4 and SOP-U01
+§16. Setting `imageUrl` on a slide swaps the placeholder for the real file.
 
 ## How it works
 
