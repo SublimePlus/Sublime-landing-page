@@ -86,6 +86,8 @@ export function Pricing() {
           ))}
         </div>
 
+        <ComparisonTable />
+
         <Reveal delay={0.3} className="mt-6">
           <div className="neon-teal flex flex-col items-center justify-between gap-6 rounded-2xl border border-pine/10 bg-white p-8 sm:flex-row dark:border-white/10 dark:bg-night/40">
             <div className="text-center sm:text-left">
@@ -107,6 +109,88 @@ export function Pricing() {
         </Reveal>
       </div>
     </AnimatedSection>
+  );
+}
+
+/**
+ * Side-by-side comparison of the three packages.
+ *
+ * Every row is a dimension SOP-S01 §10.5 actually varies or states. Rows that
+ * would be conventional here — platforms covered, blog volume, reporting
+ * cadence, support tier — are absent because that clause does not break them
+ * down by package, and a table is the easiest place in the world for an
+ * invented number to look authoritative.
+ */
+const comparisonRows: Array<{ label: string; values: [string, string, string] }> = [
+  { label: "Posts per month", values: ["10", "25", "30"] },
+  { label: "Supporting comments", values: ["Included", "Included", "Included"] },
+  { label: "Quality layer", values: ["AI-generated", "AI-generated", "AI + human proofread"] },
+  { label: "Human review before you see it", values: ["Yes", "Yes", "Yes"] },
+  { label: "Your written approval before posting", values: ["Required", "Required", "Required"] },
+  { label: "Billing", values: ["Monthly, upfront", "Monthly, upfront", "Monthly, upfront"] },
+];
+
+function ComparisonTable() {
+  return (
+    <Reveal delay={0.25} className="mt-10">
+      <div className="overflow-x-auto rounded-2xl border border-pine/10 bg-white dark:border-white/10 dark:bg-night/40">
+        <table className="w-full min-w-[640px] border-collapse text-left text-sm">
+          <caption className="sr-only">
+            Comparison of the Starter, Growth and Pro packages
+          </caption>
+          <thead>
+            <tr className="border-b border-pine/10 dark:border-white/10">
+              <th scope="col" className="px-6 py-4 font-semibold text-pine dark:text-white">
+                Compare
+              </th>
+              {plans.map((plan) => (
+                <th
+                  key={plan.name}
+                  scope="col"
+                  className={`px-6 py-4 font-semibold ${
+                    plan.highlighted
+                      ? "text-teal-ink dark:text-lime"
+                      : "text-pine dark:text-white"
+                  }`}
+                >
+                  {plan.name}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {comparisonRows.map((row) => (
+              <tr
+                key={row.label}
+                className="border-b border-pine/[0.06] last:border-0 dark:border-white/[0.06]"
+              >
+                <th
+                  scope="row"
+                  className="px-6 py-4 font-medium text-stone dark:text-white/70"
+                >
+                  {row.label}
+                </th>
+                {row.values.map((value, i) => (
+                  <td
+                    key={i}
+                    className={`px-6 py-4 ${
+                      plans[i].highlighted
+                        ? "font-semibold text-pine dark:text-white"
+                        : "text-stone dark:text-white/60"
+                    }`}
+                  >
+                    {value}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="mt-3 px-1 text-xs text-stone dark:text-white/50">
+        Package prices are walked through in full on the call.
+      </p>
+    </Reveal>
   );
 }
 

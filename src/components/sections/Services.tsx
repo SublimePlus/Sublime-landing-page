@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Reveal } from "../Reveal";
+import { PlusMark } from "../PlusMark";
 import { TopoBackground } from "../TopoBackground";
 import { AnimatedSection } from "../AnimatedSection";
 import { useSpotlight, SpotlightOverlay } from "../SpotlightCard";
@@ -86,8 +87,63 @@ export function Services() {
           </Reveal>
         ))}
       </div>
+
+      <Commitments />
       </div>
     </AnimatedSection>
+  );
+}
+
+/**
+ * Formerly the standalone "Why Sublime+" section. Merged in here because the
+ * two were answering the same question from opposite ends — what we do, and
+ * what we promise about how we do it — and reading better as one block.
+ *
+ * Each point is a commitment written into an SOP, not a marketing claim. The
+ * previous version of this list asserted "real engagement from real people",
+ * which directly contradicts SOP-009's AI-assisted model.
+ */
+const commitments = [
+  // SOP-001 §6.2.1 and SOP-U01 §3 — one CM owns the relationship.
+  "One Customer Manager owns your account end to end — your single point of contact from onboarding onwards",
+  // SOP-001 §5.5 — the LLM perception check, run before anything is written.
+  "We show you how ChatGPT, Claude, Gemini and Perplexity describe your brand today, before we write a word",
+  // SOP-002 §8.3 — the hard approval gate.
+  "Nothing is published until you approve it in writing. No exceptions",
+  // SOP-009 §4 and §8 — AI drafts, humans are accountable.
+  "AI gives us speed; a human reads and verifies every draft before it reaches you, and carries the accountability for it",
+  // SOP-007 §4 — the core ethical principles.
+  "No fabricated statistics, testimonials or reviews, no astroturfing, and no fake negative feedback about your competitors",
+];
+
+function Commitments() {
+  return (
+    <Reveal delay={0.2} className="mt-20">
+      <div className="rounded-3xl border border-pine/10 bg-pine/[0.02] p-8 sm:p-12 dark:border-white/10 dark:bg-white/[0.03]">
+        <h3 className="text-2xl font-bold text-pine sm:text-3xl dark:text-white">
+          And five things we put in writing.
+        </h3>
+        <ul className="mt-8 grid gap-5 sm:grid-cols-2">
+          {commitments.map((point, i) => (
+            <li
+              key={point}
+              // The odd fifth point spans the full width rather than leaving a
+              // ragged gap beside it.
+              className={`flex items-start gap-3 ${
+                i === commitments.length - 1 ? "sm:col-span-2" : ""
+              }`}
+            >
+              <span className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-teal/10 text-teal dark:bg-white/10 dark:text-lime">
+                <PlusMark className="h-3.5 w-3.5" strokeWidth={3} />
+              </span>
+              <span className="text-sm leading-relaxed text-stone dark:text-white/70">
+                {point}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </Reveal>
   );
 }
 

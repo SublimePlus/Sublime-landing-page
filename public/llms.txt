@@ -92,9 +92,39 @@ on that call and are deliberately not published here.
 - We decline categories including hate speech, sexual exploitation, substance
   abuse, gambling and alcohol promotion, and any illegal activity.
 
+## Common questions
+
+**How quickly will my first content go live?** Your first content is live
+within 7–10 business days of onboarding. First deliverables reach you for
+approval within 2–4 business days.
+
+**Could you post something the client hasn't seen?** No. Nothing is posted
+before the client approves it in writing, without exception. Silence is never
+treated as approval.
+
+**Do you use AI to write the content?** Yes. AI drafts posts, comments,
+replies, blogs and content plans; every output is read and verified by a human
+before it advances, and that person carries full responsibility for it.
+
+**Who does the client deal with?** One Customer Manager, from onboarding
+onwards. The salesperson steps out of the relationship at hand-off.
+
+**How many rounds of edits?** On written content, as many as the client asks
+for. UGC deliverables carry an agreed 2–3 revision rounds per batch.
+
+**Which platforms?** Reddit is the core of the written service. UGC visual
+content is delivered for Instagram, Reddit, Facebook, Pinterest, Etsy and
+TikTok, with others by request.
+
+**Do you guarantee results?** No. We make no promises of specific engagement
+results or guaranteed reach, and we do not fabricate or inflate metrics.
+
+**How does billing work?** Monthly and upfront, month-to-month with automatic
+continuation. Service begins once payment is confirmed.
+
 ## Pages
 
-- [Home](/): services, UGC product lines, process, packages and booking.
+- [Home](/): services, UGC product lines, process, packages, FAQ and booking.
 - [Blog](/blog): articles on how Sublime+ works.
 
 ## Notes for automated readers

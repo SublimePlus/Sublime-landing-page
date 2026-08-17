@@ -15,7 +15,7 @@ without a source is visible as such.
 | SOP-002 | Content Creation & Production v2 | |
 | SOP-004 | Content Posting & Reddit Operations v2 | |
 | SOP-007 | Ethical Guidelines & Content Standards v2 | |
-| SOP-008 | Crisis Management & Escalation v2 | Internal only — nothing on the page draws from it |
+| SOP-008 | Crisis Management & Escalation v2 | Sourced by the FAQ answer on post removal |
 | SOP-009 | AI Usage Policy v2 | |
 | SOP-010 | Team Meetings & Internal Communication v2 | Internal only — nothing on the page draws from it |
 | SOP-S01 | Sales Process | Supersedes SOP-012, SOP-013 and SOP-014 |
@@ -29,9 +29,10 @@ used as sources for site copy.
 | Copy | Source |
 | --- | --- |
 | "Content & social marketing, done with a little extra" | Brand guidelines (tagline). **Not SOP-sourced** — the only non-SOP string on the page, retained as established brand identity |
-| "Be visible on Reddit, in search, and in what AI says about you." | SOP-S01 §5.2 — the core qualifying question |
+| "Visible on Reddit. In search results. In what AI says about you." | SOP-S01 §5.2 — the core qualifying question |
 | "We plan, write and post Reddit content — posts, comments and replies — to improve your SEO rankings and shape how AI language models describe your brand." | SOP-002 §4 (content types); SOP-001 §4.1 (campaign improves SEO rankings and LLM perception) |
 | "Book a discovery call" | SOP-S01 §6 — the "Call Booked" pipeline stage |
+| "View plans" (secondary CTA) | Navigation only, no claim |
 
 ## Services
 
@@ -78,7 +79,10 @@ the SOP says "makeup".
 | 03 — approve, then post | SOP-001 §6.2.6 (2–4 business days to first deliverables, 7–10 to first content live); SOP-002 §8.3 (no posting before explicit approval) |
 | "From first call to first post in 7–10 business days" | SOP-001 §6.2.6 |
 
-## Differentiators
+## Services — "Five things we put in writing"
+
+Formerly a standalone Differentiators section, merged into Services because
+both answered the same question from opposite ends.
 
 | Point | Source |
 | --- | --- |
@@ -124,6 +128,53 @@ deliberately withheld from the page by decision, and presented on the call.
 **Corrected in this pass:** the page previously offered a "free 20-minute
 consult". SOP-S01 §10 sets the call at 30–45 minutes.
 
+## FAQ
+
+Answers live in `src/lib/faq.ts` and are rendered by
+`src/components/sections/Faq.tsx`. The same array generates the FAQPage
+structured data, so the visible answer and the machine-readable answer cannot
+drift apart.
+
+| Question | Source |
+| --- | --- |
+| How quickly will my first content go live? | SOP-001 §6.2.6 |
+| Could you post something I haven't seen? | SOP-002 §8.3, §9.1; SOP-004 §4; SOP-U01 §16 |
+| Do you use AI to write the content? | SOP-009 §4, §5, §6.1, §8 |
+| Who will I actually be dealing with? | SOP-001 §6.2.1; SOP-U01 §3; SOP-S01 §12.2 |
+| What do you need from me to get started? | SOP-001 §5; SOP-U01 §9.3, §10 |
+| How many rounds of edits do I get? | SOP-002 §9.4–9.5; SOP-U01 §13, §11.6 |
+| Which platforms do you cover? | SOP-004; SOP-U01 §5.1 |
+| What happens if a post gets removed? | SOP-004 §8; SOP-008 §4, §5 |
+| Can you guarantee results? | SOP-U01 §16; SOP-S01 §15; SOP-007 §4 |
+| Are there businesses you won't work with? | SOP-007 §5; SOP-S01 §5.3; SOP-U01 §6.1 |
+| Is AI-generated content disclosed as AI? | SOP-U01 §4.4 |
+| How does billing work? | SOP-S01 §12.1 |
+
+Answers are written answer-first: the opening sentence must stand alone as a
+complete claim, because that is the unit a language model lifts when citing a
+page. Cancellation and refund terms are absent — SOP-007 §6.4 covers refunds
+only for undelivered work after an ethics cancellation, which is not a general
+cancellation policy and must not be presented as one.
+
+## Structured data
+
+| Schema | Source |
+| --- | --- |
+| Organization, WebSite | `src/lib/site.ts` description; sources as above |
+| Service + OfferCatalog | SOP-S01 §10.5 (packages), §5.1 (audience segments) |
+| FAQPage | Generated from `src/lib/faq.ts`; sources in the FAQ table above |
+| BlogPosting, BreadcrumbList | Post front matter |
+
+Offers deliberately carry no `price` property, and no Review or
+AggregateRating is emitted anywhere.
+
+## Plan comparison table
+
+Rows come from SOP-S01 §10.5 and the approval and review rules in SOP-002 §8.3
+and SOP-009 §6.1. Rows a comparison table would conventionally carry —
+platforms covered, blog volume, reporting cadence, support tier — are absent
+because that clause does not break them down by package.
+
 ## Blog
 
 | Post | Source |
@@ -159,6 +210,8 @@ them requires an SOP update first, not a copy decision.
 - **Testimonials, client names, case studies and performance figures.** SOP-007
   §4 and SOP-S01 §15 prohibit fabricating any of these; none exist yet.
 - **Social profile links.** No real profiles to link to.
-- **An FAQ section.** Would need real questions from real sales calls.
+- **Cancellation and refund terms.** SOP-007 §6.4 covers refunds only for
+  undelivered work following an ethics cancellation. No general cancellation
+  policy is documented, so the page states none.
 - **Per-tier platform coverage.** SOP-S01 §10.5 does not break platforms down
   by package.

@@ -73,11 +73,14 @@ export function Hero() {
                 <PlusMark className="h-4 w-4" strokeWidth={3} />
               </BookMeetingButton>
             </Magnetic>
+            {/* A secondary route for visitors not ready to book. Styled as a
+                real button so the two CTAs read as a pair rather than a button
+                beside an afterthought. */}
             <Link
-              href="/#how-it-works"
-              className="text-sm font-medium text-white/80 underline underline-offset-4 hover:text-white"
+              href="/#plans"
+              className="inline-flex items-center gap-2 rounded-full border border-white/30 px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:border-lime hover:text-lime"
             >
-              See how it works
+              View plans
             </Link>
           </div>
         </motion.div>
