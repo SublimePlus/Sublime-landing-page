@@ -91,8 +91,6 @@ export function Hero() {
           Free 30–45 minute call. Nothing gets published without your approval.
         </motion.p>
       </div>
-
-      <ScrollCue />
     </section>
   );
 }
@@ -148,26 +146,6 @@ function WordReveal({
         </span>
       ))}
     </span>
-  );
-}
-
-function ScrollCue() {
-  return (
-    <motion.div
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 bottom-8 hidden justify-center sm:flex"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.6, delay: 1.7 }}
-    >
-      <motion.div
-        animate={{ y: [0, 8, 0] }}
-        transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-        className="flex h-9 w-6 items-start justify-center rounded-full border border-white/25 pt-1.5"
-      >
-        <span className="h-1.5 w-1.5 rounded-full bg-white/60" />
-      </motion.div>
-    </motion.div>
   );
 }
 
