@@ -12,37 +12,40 @@ type Product = {
   title: string;
   /** One-line explanation shown over the carousel card. */
   blurb: string;
+  /** Example output for this line, shown on the carousel card. */
+  image: string;
   icon: (props: { className?: string }) => React.ReactElement;
 };
 
-/** The four product lines from SOP-U01 §4, said plainly. */
+/** The four product lines from SOP-U01 §4, said plainly. Images are the
+ *  client-supplied examples in `public/showcase`, one per line, in order. */
 const products: Product[] = [
   {
     // SOP-U01 §4.1
     title: "Faceless Content",
-    blurb:
-      "Your product in any setting, with nobody in the frame.",
+    blurb: "Your product in any setting, with nobody in the frame.",
+    image: "/showcase/faceless.jpg",
     icon: ImageIcon,
   },
   {
     // SOP-U01 §4.2
     title: "AI Avatar Models",
-    blurb:
-      "One AI model you approve, reused across every post.",
+    blurb: "One AI model you approve, reused across every post.",
+    image: "/showcase/ai-model.webp",
     icon: PersonIcon,
   },
   {
     // SOP-U01 §4.3 — the likeness release is mandatory, so it is stated here.
     title: "Brand Ambassadors",
-    blurb:
-      "A recurring face for your brand, yours or one we build.",
+    blurb: "A recurring face for your brand, yours or one we build.",
+    image: "/showcase/ambassador.webp",
     icon: BadgeIcon,
   },
   {
     // SOP-U01 §4.4 — AI disclosure is not optional, so it is stated here.
     title: "AI Influencers",
-    blurb:
-      "Sponsored posts on our creator accounts, always AI labelled.",
+    blurb: "Sponsored posts on our creator accounts, always AI labelled.",
+    image: "/showcase/ai-influencer.webp",
     icon: MegaphoneIcon,
   },
 ];
@@ -72,6 +75,7 @@ export function Ugc() {
               id: p.title,
               label: p.title,
               description: p.blurb,
+              image: p.image,
               icon: p.icon,
             }))}
           />

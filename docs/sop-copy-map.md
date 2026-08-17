@@ -29,11 +29,11 @@ used as sources for site copy.
 | Copy | Source |
 | --- | --- |
 | "Content & social marketing, done with a little extra" | Brand guidelines (tagline). **Not SOP-sourced** — the only non-SOP string on the page, retained as established brand identity |
-| "Ask ChatGPT about your brand. You might not like the answer." | SOP-001 §5.5 — the LLM perception check is literally the first thing we do for a client, so the page opens on the same move. The hook is a question, not a claim about any specific brand |
-| "Buyers ask AI before they ask you. We write the Reddit posts, comments and replies that change what it says back — and lift your search rankings on the way." | SOP-002 §4 (content types); SOP-001 §4.1 (campaign improves SEO rankings and LLM perception) |
+| "Be the brand AI recommends." | SOP-001 §5.5 (LLM perception is what we work on) and §4.1 (campaign shapes LLM perception). A goal statement, not a guarantee about any specific brand |
+| "We plan, write and create content that shapes how AI describes you, and moves you up in search." | SOP-002 §4 (we plan, write and create content); SOP-001 §4.1 (improves SEO rankings and shapes LLM perception) |
 | "Free 30–45 minute call. Nothing gets published without your approval." | SOP-S01 §10 (call length); SOP-002 §8.3 (approval gate) |
 | "Book a discovery call" | SOP-S01 §6 — the "Call Booked" pipeline stage |
-| "View plans" (secondary CTA) | Navigation only, no claim |
+| "Book a call" (secondary CTA) | Opens the booking modal, like every CTA on the page. No claim |
 
 ## Services
 
@@ -77,11 +77,11 @@ Four slides, one per SOP-U01 §4 product line. The titles and one-line blurbs
 live in `src/components/sections/Ugc.tsx` and feed
 `src/components/ui/FeatureCarousel.tsx`.
 
-No slide carries a photograph. Each renders a branded panel, because stock or
-generated imagery presented under a "what we make" heading would be a
-fabricated work sample: the same failure as an invented testimonial, and
-prohibited by SOP-007 §4 and SOP-U01 §16. Setting `image` on a feature swaps
-the placeholder for the real file.
+Each slide shows a client-supplied example image from `public/showcase`, one
+per line in order (faceless, AI avatar, ambassador, AI influencer). These are
+the client's own chosen example assets, not stock passed off as delivered work,
+so they do not run into the SOP-007 §4 / SOP-U01 §16 fabrication concern. A
+slide with no `image` falls back to a branded panel.
 
 ## How it works
 
@@ -257,3 +257,21 @@ The six-item box under the UGC carousel (formats, platforms, turnaround,
 revisions, approval gate) is removed from the page by request. Its facts remain
 SOP-sourced and are still stated in `public/llms.txt`, and the two that matter
 most to a buyer, turnaround and the approval gate, are in the FAQ.
+
+## Footer, socials and blog
+
+- The footer is compact (no full-height curtain). It carries the brand line,
+  quick links, social icons, the contact email and a back-to-top control.
+- Social profiles are real and verified: TikTok `@sublimeplus_`, Instagram
+  `@sublimeplus_`, Facebook page `61592610954773`. They are linked in the
+  footer and emitted as Organization `sameAs`, and listed in `llms.txt`.
+- The contact email `try.sublime.plus@gmail.com` is a `mailto:` link.
+- The blog has been removed entirely (route, components, content, sitemap
+  entries and BlogPosting/Breadcrumb schema) by request.
+
+## Buttons
+
+Every call-to-action on the page opens the booking modal: both hero buttons,
+the plan cards, the custom add-ons button, the UGC button and the final CTA.
+The nav "Book a Call" and the footer quick links are the only exceptions (the
+latter are in-page navigation, not CTAs).

@@ -30,7 +30,19 @@ export const site = {
   tagline: "Content & social marketing, done with a little extra",
   email: "try.sublime.plus@gmail.com",
   locale: "en_US",
+  /** Real, verified profiles. Also emitted as Organization sameAs. */
+  socials: {
+    tiktok: "https://www.tiktok.com/@sublimeplus_",
+    instagram: "https://www.instagram.com/sublimeplus_/",
+    facebook: "https://www.facebook.com/profile.php?id=61592610954773",
+  },
 } as const;
+
+export const socialLinks = [
+  { label: "TikTok", href: site.socials.tiktok },
+  { label: "Instagram", href: site.socials.instagram },
+  { label: "Facebook", href: site.socials.facebook },
+] as const;
 
 export function absoluteUrl(path = "/") {
   return new URL(path, siteUrl).toString();

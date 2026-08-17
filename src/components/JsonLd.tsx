@@ -1,5 +1,4 @@
-import { absoluteUrl, site, siteUrl } from "@/lib/site";
-import type { PostMeta } from "@/lib/blog";
+import { absoluteUrl, site, siteUrl, socialLinks } from "@/lib/site";
 import type { FaqItem } from "@/lib/faq";
 
 /**
@@ -43,8 +42,9 @@ export const organizationSchema = {
     "@type": "ImageObject",
     url: absoluteUrl("/icon.svg"),
   },
-  // sameAs is omitted until real social profile URLs exist. An empty or
-  // placeholder sameAs is worse than none — it asserts profiles that aren't there.
+  // Real, verified profiles. sameAs is how a search engine or language model
+  // ties this entity to its social presence.
+  sameAs: socialLinks.map((s) => s.href),
 };
 
 export const websiteSchema = {
@@ -121,31 +121,3 @@ export const serviceSchema = {
   },
 };
 
-export function blogPostingSchema(post: PostMeta) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "@id": absoluteUrl(`/blog/${post.slug}#article`),
-    headline: post.title,
-    description: post.excerpt,
-    datePublished: post.date,
-    dateModified: post.date,
-    image: post.cover,
-    mainEntityOfPage: absoluteUrl(`/blog/${post.slug}`),
-    author: { "@id": ORGANIZATION_ID },
-    publisher: { "@id": ORGANIZATION_ID },
-    inLanguage: "en",
-  };
-}
-
-export function breadcrumbSchema(post: PostMeta) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
-      { "@type": "ListItem", position: 2, name: "Blog", item: absoluteUrl("/blog") },
-      { "@type": "ListItem", position: 3, name: post.title },
-    ],
-  };
-}

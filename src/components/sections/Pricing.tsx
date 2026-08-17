@@ -230,9 +230,7 @@ function PlanCard({ plan }: { plan: Plan }) {
             : "neon-teal border-pine/10 bg-white text-pine dark:border-white/10 dark:bg-night/40 dark:text-white"
         }`}
       >
-      {/* The badge previously read "Most Popular". No SOP or sales record
-          supports a popularity claim, so it states the SOP-documented fact
-          instead: Growth is the middle package. */}
+      {/* Badge marks the recommended package. */}
       {plan.highlighted && (
         <motion.span
           className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-lime px-3 py-1 text-xs font-bold text-pine"
@@ -245,7 +243,7 @@ function PlanCard({ plan }: { plan: Plan }) {
           }}
           transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
         >
-          Mid tier
+          Suggested
         </motion.span>
       )}
       <h3 className="text-xl font-bold">{plan.name}</h3>
