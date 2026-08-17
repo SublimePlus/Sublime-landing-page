@@ -19,23 +19,23 @@ import { BookMeetingButton } from "../booking/BookMeetingButton";
  */
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-night via-pine to-pine pt-36 pb-28 text-white">
+    <section className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-night via-pine to-pine px-6 pb-20 pt-28 text-white">
       <AmbientGlow />
       <PlusField density="heavy" className="text-lime/25" />
       <BackdropWordmark />
 
-      <div className="relative mx-auto max-w-4xl px-6 text-center">
+      <div className="relative mx-auto w-full max-w-4xl text-center">
         <motion.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium text-lime"
+          className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium text-lime"
         >
           <PlusMark className="h-3.5 w-3.5" strokeWidth={3} />
           Content &amp; social marketing, done with a little extra
         </motion.p>
 
-        <h1 className="text-4xl font-bold leading-[1.1] tracking-tight sm:text-6xl">
+        <h1 className="text-[2.1rem] font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
           <WordReveal text="Ask ChatGPT about" startDelay={0.15} />
           <br />
           <WordReveal text="your brand." startDelay={0.45} />
@@ -53,10 +53,10 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 1.15 }}
-          className="mx-auto mt-8 max-w-xl text-lg leading-relaxed text-white/70"
+          className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg"
         >
           Buyers ask AI before they ask you. We write the Reddit posts,
-          comments and replies that change what it says back — and lift your
+          comments and replies that change what it says back, and lift your
           search rankings on the way.
         </motion.p>
 
@@ -64,7 +64,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 1.3 }}
-          className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
+          className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row"
         >
           <Magnetic strength={14}>
             <BookMeetingButton className="neon-lime-btn inline-flex items-center gap-2 rounded-full bg-lime px-8 py-4 font-semibold text-pine transition-transform hover:scale-[1.03]">
@@ -86,7 +86,7 @@ export function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7, delay: 1.5 }}
-          className="mt-6 text-sm text-white/50"
+          className="mt-5 text-sm text-white/50"
         >
           Free 30–45 minute call. Nothing gets published without your approval.
         </motion.p>
@@ -155,7 +155,7 @@ function ScrollCue() {
   return (
     <motion.div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 bottom-6 hidden justify-center sm:flex"
+      className="pointer-events-none absolute inset-x-0 bottom-8 hidden justify-center sm:flex"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6, delay: 1.7 }}

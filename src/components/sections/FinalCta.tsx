@@ -5,7 +5,7 @@ import { AnimatedSection } from "../AnimatedSection";
 
 export function FinalCta() {
   return (
-    <AnimatedSection id="contact" className="relative overflow-hidden bg-pine py-28 text-white">
+    <AnimatedSection id="contact" fade="in" className="relative overflow-hidden bg-pine py-28 text-white">
       <PlusTexture />
       <Reveal className="relative mx-auto max-w-2xl px-6 text-center">
         {/* SOP-S01 §5.2 — the qualifying question, asked back to the visitor. */}

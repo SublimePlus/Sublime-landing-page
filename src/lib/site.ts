@@ -22,7 +22,7 @@ export const site = {
    * types) and SOP-U01 §4 (UGC product lines).
    */
   description:
-    "Sublime+ is a content and social marketing agency. We plan, write, and post Reddit content — posts, comments and replies — to improve how brands appear in search results and in how AI language models describe them, and we produce AI-generated visual content through our UGC product line.",
+    "Sublime+ is a content and social marketing agency. We plan, write and post Reddit content (posts, comments and replies) to improve how brands appear in search results and in how AI language models describe them, and we produce AI-generated visual content through our UGC product line.",
   tagline: "Content & social marketing, done with a little extra",
   email: "hello@sublimeplus.co",
   locale: "en_US",

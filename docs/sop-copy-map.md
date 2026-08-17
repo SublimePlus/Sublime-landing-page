@@ -73,13 +73,15 @@ the SOP says "makeup".
 
 ### UGC carousel
 
-Four slides, one per SOP-U01 §4 product line, defined in `src/lib/ugc-showcase.ts`.
+Four slides, one per SOP-U01 §4 product line. The titles and one-line blurbs
+live in `src/components/sections/Ugc.tsx` and feed
+`src/components/ui/FeatureCarousel.tsx`.
 
-No slide carries a photograph. Each renders a branded panel and a button
-reading "Sample coming soon", because stock or generated imagery presented
-under a "what we make" heading would be a fabricated work sample — the same
-failure as an invented testimonial, and prohibited by SOP-007 §4 and SOP-U01
-§16. Setting `imageUrl` on a slide swaps the placeholder for the real file.
+No slide carries a photograph. Each renders a branded panel, because stock or
+generated imagery presented under a "what we make" heading would be a
+fabricated work sample: the same failure as an invented testimonial, and
+prohibited by SOP-007 §4 and SOP-U01 §16. Setting `image` on a feature swaps
+the placeholder for the real file.
 
 ## How it works
 
@@ -90,24 +92,20 @@ failure as an invented testimonial, and prohibited by SOP-007 §4 and SOP-U01
 | 03 — approve, then post | SOP-001 §6.2.6 (2–4 business days to first deliverables, 7–10 to first content live); SOP-002 §8.3 (no posting before explicit approval) |
 | "From first call to first post in 7–10 business days" | SOP-001 §6.2.6 |
 
-## Services — "Five things we put in writing"
+## Removed: the commitments block
 
-Formerly a standalone Differentiators section, merged into Services because
-both answered the same question from opposite ends.
+The five-point "things we put in writing" block (originally the standalone
+Differentiators section, later merged into Services) has been removed from the
+page by request.
 
-| Point | Source |
-| --- | --- |
-| One Customer Manager owns your account | SOP-001 §6.2.1; SOP-U01 §3 |
-| We show you how the models describe you first | SOP-001 §5.5 |
-| Nothing published without written approval | SOP-002 §8.3 |
-| Human reads and verifies every draft | SOP-009 §4, §8 |
-| No fabricated statistics, testimonials or reviews | SOP-007 §4 |
+The commitments themselves are unchanged as company policy, and four of the
+five are still stated on the page through the FAQ: the single Customer Manager,
+the LLM perception check, the written-approval gate, and the human review of
+every AI draft. The fifth, the SOP-007 §4 prohibition on fabricated statistics
+and testimonials, is stated in the "Can you guarantee results?" answer.
 
-**Removed in this pass:** "Real engagement from real people, not canned
-auto-replies" — directly contradicts the AI-assisted production model in
-SOP-009 and SOP-002. "A dedicated team… not a rotating cast of freelancers"
-and "content calendars planned weeks ahead" — no SOP source for either as
-stated; the supportable parts are now points 1 and 3.
+Sources, retained for reference: SOP-001 §6.2.1 and SOP-U01 §3; SOP-001 §5.5;
+SOP-002 §8.3; SOP-009 §4 and §8; SOP-007 §4.
 
 ## Plans
 
@@ -226,3 +224,11 @@ them requires an SOP update first, not a copy decision.
   policy is documented, so the page states none.
 - **Per-tier platform coverage.** SOP-S01 §10.5 does not break platforms down
   by package.
+
+## House style
+
+- **No em dashes.** Copy uses commas, colons or full stops instead. En dashes
+  are retained in numeric ranges (2–4 business days, 30–45 minutes, 7–10 days)
+  because those are ranges, not punctuation.
+- **Answer-first phrasing** in the FAQ: the opening sentence of every answer
+  must stand alone as a complete claim.

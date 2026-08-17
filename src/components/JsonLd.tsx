@@ -90,7 +90,7 @@ export const serviceSchema = {
   serviceType: "Content marketing",
   provider: { "@id": ORGANIZATION_ID },
   description:
-    "Planning, writing and posting Reddit content — posts, comments and replies — to improve a brand's search rankings and how AI language models describe it.",
+    "Planning, writing and posting Reddit content (posts, comments and replies) to improve a brand's search rankings and how AI language models describe it.",
   // SOP-S01 §5.1 — the three Ideal Client Profile segments.
   audience: [
     { "@type": "Audience", audienceType: "B2B companies improving brand visibility and SEO" },

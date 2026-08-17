@@ -24,13 +24,13 @@ export const faqs: FaqItem[] = [
     // SOP-002 §8.3, §9.1; SOP-004 §4; SOP-U01 §16
     question: "Could you post something I haven't seen?",
     answer:
-      "No. Nothing is posted before you approve it in writing, without exception. If you ask for changes, the deliverable is immediately marked as non-approved and re-enters the full review cycle before it can come back to you — silence is never treated as approval, and a passing deadline does not turn an unapproved draft into an approved one.",
+      "No. Nothing is posted before you approve it in writing, without exception. If you ask for changes, the deliverable is immediately marked as non-approved and re-enters the full review cycle before it can come back to you. Silence is never treated as approval, and a passing deadline does not turn an unapproved draft into an approved one.",
   },
   {
     // SOP-009 §4, §5, §6.1, §8
     question: "Do you use AI to write the content?",
     answer:
-      "Yes, and we would rather say so plainly. AI drafts posts, comments, replies, blogs and content plans — that is a large part of why we can work at the pace and price we do. Every single output is then read and verified by your Customer Manager before it advances, and the person who submits or posts it carries full responsibility for it regardless of how it was drafted.",
+      "Yes, and we would rather say so plainly. AI drafts posts, comments, replies, blogs and content plans, and that is a large part of why we can work at the pace and price we do. Every single output is then read and verified by your Customer Manager before it advances, and the person who submits or posts it carries full responsibility for it regardless of how it was drafted.",
   },
   {
     // SOP-001 §6.2.1; SOP-U01 §3; SOP-S01 §12.2
@@ -42,13 +42,13 @@ export const faqs: FaqItem[] = [
     // SOP-001 §5; SOP-U01 §9.3, §10
     question: "What do you need from me to get started?",
     answer:
-      "Less than most agencies ask for, because we research you before we meet. We audit your website, socials, review sites and SEO profile, and run an LLM perception check, then bring it all to a 30–45 minute onboarding call for you to confirm or correct. What we need from you is that hour, your brand guidelines and tone preferences, and — for UGC work — reference images of your product, ideally a full 360-degree set.",
+      "Less than most agencies ask for, because we research you before we meet. We audit your website, socials, review sites and SEO profile, and run an LLM perception check, then bring it all to a 30–45 minute onboarding call for you to confirm or correct. What we need from you is that hour, your brand guidelines and tone preferences, and for UGC work, reference images of your product, ideally a full 360-degree set.",
   },
   {
     // SOP-002 §9.4, §9.5 (Reddit content); SOP-U01 §13 (UGC)
     question: "How many rounds of edits do I get?",
     answer:
-      "On written content, as many as you ask for. Before making an edit we will ask you for the context behind it, so the change lands the first time instead of after three rounds of guessing. UGC deliverables work differently — those carry an agreed 2–3 revision rounds per batch, set during onboarding and written into your contract, with revised work back within 1–2 business days.",
+      "On written content, as many as you ask for. Before making an edit we will ask you for the context behind it, so the change lands the first time instead of after three rounds of guessing. UGC deliverables work differently: those carry an agreed 2–3 revision rounds per batch, set during onboarding and written into your contract, with revised work back within 1–2 business days.",
   },
   {
     // SOP-004 (Reddit); SOP-U01 §5.1 (UGC platforms)

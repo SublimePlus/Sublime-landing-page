@@ -75,7 +75,7 @@ export function Pricing() {
           </h2>
           <p className="mt-4 text-stone dark:text-white/60">
             Three packages, billed monthly and upfront. We walk you through
-            every price on the call — nothing hidden, nothing vague.
+            every price on the call. Nothing hidden, nothing vague.
           </p>
         </Reveal>
 

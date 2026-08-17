@@ -1,20 +1,17 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Reveal } from "../Reveal";
 import { PlusMark } from "../PlusMark";
 import { PlusField } from "../PlusField";
 import { BookMeetingButton } from "../booking/BookMeetingButton";
 import { TopoBackground } from "../TopoBackground";
 import { AnimatedSection } from "../AnimatedSection";
-import { useSpotlight, SpotlightOverlay } from "../SpotlightCard";
-import { Carousel } from "../ui/Carousel";
-import { ShowcaseCard } from "../ui/ShowcaseCard";
-import { ugcShowcase } from "@/lib/ugc-showcase";
+import { FeatureCarousel } from "../ui/FeatureCarousel";
 
 type Product = {
   title: string;
-  description: string;
+  /** One-line explanation shown over the carousel card. */
+  blurb: string;
   icon: (props: { className?: string }) => React.ReactElement;
 };
 
@@ -23,29 +20,29 @@ const products: Product[] = [
   {
     // SOP-U01 §4.1
     title: "Faceless Content",
-    description:
-      "Send us your product. We put it in any setting you need — flat lays, lifestyle, hands-only — with nobody's face in the frame.",
+    blurb:
+      "Your product in any setting, with nobody in the frame.",
     icon: ImageIcon,
   },
   {
     // SOP-U01 §4.2
     title: "AI Avatar Models",
-    description:
-      "AI-generated models holding, wearing or using your product. Approve the face first, then reuse it so every post looks like one campaign.",
+    blurb:
+      "One AI model you approve, reused across every post.",
     icon: PersonIcon,
   },
   {
     // SOP-U01 §4.3 — the likeness release is mandatory, so it is stated here.
     title: "Brand Ambassadors",
-    description:
-      "One recurring face for your brand. Use your real ambassador — with their signed release on file — or let us build a character to your spec.",
+    blurb:
+      "A recurring face for your brand, yours or one we build.",
     icon: BadgeIcon,
   },
   {
     // SOP-U01 §4.4 — AI disclosure is not optional, so it is stated here.
     title: "AI Influencers",
-    description:
-      "Sponsor a post on one of our own creator personas, across ten niches from gaming to fitness. Every one is labelled as AI, every time.",
+    blurb:
+      "Sponsored posts on our creator accounts, always AI labelled.",
     icon: MegaphoneIcon,
   },
 ];
@@ -80,20 +77,15 @@ export function Ugc() {
         </Reveal>
 
         <Reveal delay={0.15} className="mt-14">
-          <Carousel label="Sublime+ UGC product lines">
-            {ugcShowcase.map((slide, i) => (
-              <ShowcaseCard key={slide.title} {...slide} priority={i === 0} />
-            ))}
-          </Carousel>
+          <FeatureCarousel
+            features={products.map((p) => ({
+              id: p.title,
+              label: p.title,
+              description: p.blurb,
+              icon: p.icon,
+            }))}
+          />
         </Reveal>
-
-        <div className="mt-20 grid gap-6 sm:grid-cols-2">
-          {products.map((product, i) => (
-            <Reveal key={product.title} delay={i * 0.08}>
-              <ProductCard product={product} />
-            </Reveal>
-          ))}
-        </div>
 
         <Reveal delay={0.2} className="mt-10">
           <ul className="grid gap-x-8 gap-y-3 rounded-2xl border border-pine/10 bg-white p-7 text-sm sm:grid-cols-2 dark:border-white/10 dark:bg-night/40">
@@ -116,37 +108,6 @@ export function Ugc() {
         </Reveal>
       </div>
     </AnimatedSection>
-  );
-}
-
-function ProductCard({ product }: { product: Product }) {
-  const { x, y, onMouseMove } = useSpotlight();
-  const Icon = product.icon;
-
-  return (
-    <motion.div
-      onMouseMove={onMouseMove}
-      whileHover={{ y: -6 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className="neon-teal group relative flex h-full items-start gap-4 overflow-hidden rounded-2xl border border-pine/10 bg-white p-7 shadow-sm dark:border-white/10 dark:bg-night/40"
-    >
-      <SpotlightOverlay x={x} y={y} />
-      <motion.span
-        whileHover={{ scale: 1.12, rotate: 6 }}
-        transition={{ type: "spring", stiffness: 400, damping: 12 }}
-        className="relative z-10 flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-teal text-white"
-      >
-        <Icon className="h-5 w-5" />
-      </motion.span>
-      <div className="relative z-10">
-        <h3 className="text-lg font-semibold text-pine dark:text-white">
-          {product.title}
-        </h3>
-        <p className="mt-2 text-sm leading-relaxed text-stone dark:text-white/60">
-          {product.description}
-        </p>
-      </div>
-    </motion.div>
   );
 }
 

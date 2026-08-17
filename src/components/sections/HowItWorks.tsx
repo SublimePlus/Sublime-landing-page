@@ -14,7 +14,7 @@ const steps = [
     // SOP-001 §5 — the research phase, completed before the meeting.
     title: "We do the homework",
     description:
-      "Before we meet, we audit your site, socials, reviews and SEO — and ask the AI models what they say about you. You get it all back as a deck.",
+      "Before we meet we audit your site, socials, reviews and SEO, then ask the AI models what they say about you. You get it all back as a deck.",
   },
   {
     step: "02",
