@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { PlusMark } from "../PlusMark";
@@ -35,29 +34,20 @@ export function Hero() {
           Content &amp; social marketing, done with a little extra
         </motion.p>
 
-        <h1 className="text-[2.1rem] font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
-          <WordReveal text="Ask ChatGPT about" startDelay={0.15} />
+        <h1 className="text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">
+          <WordReveal text="Be the brand" startDelay={0.15} />
           <br />
-          <WordReveal text="your brand." startDelay={0.45} />
-          <br />
-          <WordReveal
-            text="You might not like"
-            startDelay={0.7}
-            className="text-lime"
-          />
-          <br />
-          <WordReveal text="the answer." startDelay={0.95} className="text-lime" />
+          <WordReveal text="AI recommends." startDelay={0.4} className="text-lime" />
         </h1>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 1.15 }}
+          transition={{ duration: 0.7, delay: 0.85 }}
           className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg"
         >
-          Buyers ask AI before they ask you. We write the Reddit posts,
-          comments and replies that change what it says back, and lift your
-          search rankings on the way.
+          We plan, write and create content that shapes how AI describes you,
+          and moves you up in search.
         </motion.p>
 
         <motion.div
@@ -72,14 +62,11 @@ export function Hero() {
               <PlusMark className="h-4 w-4" strokeWidth={3} />
             </BookMeetingButton>
           </Magnetic>
-          {/* Secondary route for visitors not ready to book, styled as a real
-              button so the two read as a pair. */}
-          <Link
-            href="/#plans"
-            className="inline-flex items-center gap-2 rounded-full border border-white/30 px-8 py-4 text-sm font-semibold text-white transition-colors hover:border-lime hover:text-lime"
-          >
-            View plans
-          </Link>
+          {/* Secondary CTA. Every button on the page routes to the booking
+              modal, so this opens it too, styled as an outline pair. */}
+          <BookMeetingButton className="inline-flex items-center gap-2 rounded-full border border-white/30 px-8 py-4 text-sm font-semibold text-white transition-colors hover:border-lime hover:text-lime">
+            Book a call
+          </BookMeetingButton>
         </motion.div>
 
         <motion.p
