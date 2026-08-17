@@ -35,9 +35,9 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <AnimatedSection id="how-it-works" className="relative overflow-hidden bg-pine/[0.03] py-28 dark:bg-white/[0.03]">
+    <AnimatedSection id="how-it-works" className="relative overflow-hidden py-20">
       <TopoBackground className="text-pine/[0.07] dark:text-white/[0.06]" />
-      <PlusField density="light" className="text-lime/30 dark:text-lime/20" />
+      <PlusField density="heavy" className="text-lime/40 dark:text-lime/25" />
       <div className="relative mx-auto max-w-5xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal-ink">
@@ -48,7 +48,7 @@ export function HowItWorks() {
           </h2>
         </Reveal>
 
-        <div className="mt-20 grid gap-14 sm:grid-cols-3">
+        <div className="mt-14 grid gap-12 sm:grid-cols-3">
           {steps.map((s, i) => (
             <Reveal key={s.step} delay={i * 0.15} className="text-center sm:text-left">
               <div className="relative flex h-12 w-full items-center justify-center">

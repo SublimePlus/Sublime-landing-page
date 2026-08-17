@@ -15,11 +15,9 @@ import { faqs } from "@/lib/faq";
  * action so the last thing a visitor reads before booking is the answer to
  * whatever was holding them back.
  *
- * `SectionFade` only appears where a real colour change happens, and only there.
- * The dark hero into the light services section is the one hard edge on the
- * page, so it gets a tall bleed plus a soft shade to keep it from reading as a
- * drawn line. Sections that already share a background need nothing between
- * them; adding a seam there was what produced the visible band before.
+ * The middle sections carry no background of their own, so there is nothing to
+ * seam between them: they sit on the page background and the boundaries simply
+ * do not exist. Only the two dark blocks need a transition, and each gets one.
  */
 export default function Home() {
   return (
@@ -28,19 +26,16 @@ export default function Home() {
       <JsonLd schema={faqSchema(faqs)} />
 
       <Hero />
-      <SectionFade from="var(--color-pine)" shadow />
+      <SectionFade from="var(--color-pine)" to="var(--background)" />
 
       <Services />
       <Ugc />
       <HowItWorks />
       <Pricing />
       <Faq />
-      {/* Light FAQ background ramping into the dark closing section, so the
-          page does not end on a hard band above the footer. */}
-      <SectionFade
-        from="color-mix(in srgb, var(--color-pine) 3%, var(--background))"
-        to="var(--color-pine)"
-      />
+      {/* Light page background ramping into the dark closing block, so the
+          page does not end on a hard band. */}
+      <SectionFade from="var(--background)" to="var(--color-pine)" />
 
       <FinalCta />
     </>

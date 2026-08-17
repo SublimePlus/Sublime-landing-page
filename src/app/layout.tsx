@@ -3,7 +3,7 @@ import { Poppins, Yellowtail } from "next/font/google";
 import "./globals.css";
 import { MotionConfig } from "framer-motion";
 import { Nav } from "@/components/Nav";
-import { Footer } from "@/components/Footer";
+import { CinematicFooter } from "@/components/ui/CinematicFooter";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { BookingModalProvider } from "@/components/booking/BookingModalContext";
 import { ThemeProvider } from "@/components/theme/ThemeContext";
@@ -83,7 +83,7 @@ export default function RootLayout({
               <ScrollProgress />
               <Nav />
               <main className="flex-1">{children}</main>
-              <Footer />
+              <CinematicFooter />
             </BookingModalProvider>
           </ThemeProvider>
         </MotionConfig>

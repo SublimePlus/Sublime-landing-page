@@ -47,21 +47,11 @@ const products: Product[] = [
   },
 ];
 
-/** Delivery facts, each from SOP-U01. Kept to the six that answer a real question. */
-const deliveryFacts = [
-  "Single images or 2–6 slide carousels", // §5.2
-  "Captions and on-image text included", // §5.2, §14.3
-  "Instagram, Reddit, Facebook, Pinterest, Etsy, TikTok", // §5.1
-  "First draft in under 5 working days", // §11.6
-  "2–3 revisions, back within 1–2 days", // §13, §11.6
-  "Nothing posts until you say yes", // §11.4, §16
-];
-
 export function Ugc() {
   return (
-    <AnimatedSection id="ugc" className="relative overflow-hidden py-28">
+    <AnimatedSection id="ugc" className="relative overflow-hidden py-20">
       <TopoBackground className="text-pine/[0.06] dark:text-white/[0.05]" />
-      <PlusField density="medium" className="text-lime/25 dark:text-lime/20" />
+      <PlusField density="heavy" className="text-lime/40 dark:text-lime/25" />
       <div className="relative mx-auto max-w-6xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal-ink">
@@ -87,20 +77,7 @@ export function Ugc() {
           />
         </Reveal>
 
-        <Reveal delay={0.2} className="mt-10">
-          <ul className="grid gap-x-8 gap-y-3 rounded-2xl border border-pine/10 bg-white p-7 text-sm sm:grid-cols-2 dark:border-white/10 dark:bg-night/40">
-            {deliveryFacts.map((fact) => (
-              <li key={fact} className="flex items-start gap-2.5">
-                <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-teal/10 text-teal dark:bg-white/10 dark:text-lime">
-                  <PlusMark className="h-3 w-3" strokeWidth={3} />
-                </span>
-                <span className="text-stone dark:text-white/70">{fact}</span>
-              </li>
-            ))}
-          </ul>
-        </Reveal>
-
-        <Reveal delay={0.3} className="mt-12 text-center">
+        <Reveal delay={0.3} className="mt-10 text-center">
           <BookMeetingButton className="neon-teal-btn inline-flex items-center gap-2 rounded-full bg-pine px-7 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.03] dark:bg-teal">
             Talk through your product
             <PlusMark className="h-4 w-4" strokeWidth={3} />

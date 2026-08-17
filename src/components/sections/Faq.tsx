@@ -13,10 +13,10 @@ export function Faq() {
   return (
     <AnimatedSection
       id="faq"
-      className="relative overflow-hidden bg-pine/[0.03] py-28 dark:bg-white/[0.03]"
+      className="relative overflow-hidden py-20"
     >
       <TopoBackground className="text-pine/[0.06] dark:text-white/[0.05]" />
-      <PlusField density="light" className="text-lime/30 dark:text-lime/20" />
+      <PlusField density="heavy" className="text-lime/40 dark:text-lime/25" />
       <div className="relative mx-auto max-w-3xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal-ink">
@@ -30,7 +30,7 @@ export function Faq() {
           </p>
         </Reveal>
 
-        <dl className="mt-14 space-y-3">
+        <dl className="mt-10 space-y-3">
           {faqs.map((item, i) => (
             <Reveal key={item.question} delay={Math.min(i, 6) * 0.05}>
               <FaqRow item={item} />

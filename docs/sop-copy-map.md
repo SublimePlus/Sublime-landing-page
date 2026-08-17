@@ -149,15 +149,17 @@ drift apart.
 | How quickly will my first content go live? | SOP-001 §6.2.6 |
 | Could you post something I haven't seen? | SOP-002 §8.3, §9.1; SOP-004 §4; SOP-U01 §16 |
 | Do you use AI to write the content? | SOP-009 §4, §5, §6.1, §8 |
-| Who will I actually be dealing with? | SOP-001 §6.2.1; SOP-U01 §3; SOP-S01 §12.2 |
-| What do you need from me to get started? | SOP-001 §5; SOP-U01 §9.3, §10 |
-| How many rounds of edits do I get? | SOP-002 §9.4–9.5; SOP-U01 §13, §11.6 |
-| Which platforms do you cover? | SOP-004; SOP-U01 §5.1 |
-| What happens if a post gets removed? | SOP-004 §8; SOP-008 §4, §5 |
 | Can you guarantee results? | SOP-U01 §16; SOP-S01 §15; SOP-007 §4 |
-| Are there businesses you won't work with? | SOP-007 §5; SOP-S01 §5.3; SOP-U01 §6.1 |
-| Is AI-generated content disclosed as AI? | SOP-U01 §4.4 |
 | How does billing work? | SOP-S01 §12.1 |
+
+Trimmed from twelve to the five that decide a booking: when it goes live, who
+controls what gets published, whether AI writes it, whether results are
+promised, and how billing works. The seven that were cut (Customer Manager
+ownership, what we need to start, revision rounds, platforms, post removal,
+prohibited categories, AI disclosure) remain sourced and are still served to
+machines through `public/llms.txt`, which is not competing for a visitor's
+attention. FAQPage schema follows the five on the page, since Google requires
+schema content to be visible.
 
 Answers are written answer-first: the opening sentence must stand alone as a
 complete claim, because that is the unit a language model lifts when citing a
@@ -232,3 +234,26 @@ them requires an SOP update first, not a copy decision.
   because those are ranges, not punctuation.
 - **Answer-first phrasing** in the FAQ: the opening sentence of every answer
   must stand alone as a complete claim.
+
+## Footer
+
+The footer restates commitments the page already makes. Its marquee phrases are
+condensed forms of SOP clauses already mapped above:
+
+| Phrase | Source |
+| --- | --- |
+| "Your approval before anything posts" | SOP-002 §8.3 |
+| "One Customer Manager, start to finish" | SOP-001 §6.2.1; SOP-U01 §3 |
+| "Every AI draft read by a human" | SOP-009 §4, §8 |
+| "No fabricated stats or testimonials" | SOP-007 §4 |
+| "Live in 7 to 10 business days" | SOP-001 §6.2.6 |
+
+The heading is the brand tagline. App-store and download links from the source
+pattern are absent: there is no app.
+
+## Removed: the UGC delivery-facts list
+
+The six-item box under the UGC carousel (formats, platforms, turnaround,
+revisions, approval gate) is removed from the page by request. Its facts remain
+SOP-sourced and are still stated in `public/llms.txt`, and the two that matter
+most to a buyer, turnaround and the approval gate, are in the FAQ.

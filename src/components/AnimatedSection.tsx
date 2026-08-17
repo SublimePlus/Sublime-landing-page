@@ -29,7 +29,13 @@ export function AnimatedSection({
   children: React.ReactNode;
   className?: string;
   id?: string;
-  fade?: "both" | "in";
+  /**
+   * "both" softens the section at both viewport edges. "in" skips the fade out,
+   * for the last section on the page. "none" disables the curve entirely, which
+   * is what a solid dark block on a light page needs: partial opacity over a
+   * white body turns pine into washed-out grey.
+   */
+  fade?: "both" | "in" | "none";
 }) {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
@@ -37,11 +43,12 @@ export function AnimatedSection({
     offset: ["start end", "end start"],
   });
 
-  const fadeOutTo = fade === "in" ? 1 : 0.55;
+  const fadeIn = fade === "none" ? 1 : 0.55;
+  const fadeOut = fade === "both" ? 0.55 : 1;
   const opacity = useTransform(
     scrollYProgress,
     [0, 0.25, 0.75, 1],
-    [0.55, 1, 1, fadeOutTo]
+    [fadeIn, 1, 1, fadeOut]
   );
 
   return (
@@ -74,45 +81,30 @@ export function AnimatedSection({
  */
 export function SectionFade({
   from = "transparent",
-  to,
-  shadow = false,
+  to = "transparent",
+  height = "h-40",
 }: {
-  /** CSS colour the seam bleeds down from, e.g. "var(--color-pine)". */
+  /** Colour the seam starts at, matching the section above. */
   from?: string;
-  /**
-   * Colour to land on. When set, the seam is a real ramp between two solid
-   * backgrounds and occupies its own height. When omitted it overlaps the
-   * section above instead, bleeding `from` away into transparency.
-   */
+  /** Colour it lands on, matching the section below. */
   to?: string;
-  /** Adds a soft radial shade across the join. Use on dark-to-light edges. */
-  shadow?: boolean;
+  height?: string;
 }) {
-  const ramp = to !== undefined;
-
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none relative h-32 w-full"
-      style={ramp ? undefined : { marginTop: "-8rem" }}
-    >
-      <div
-        className="absolute inset-0"
-        style={{
-          background: ramp
-            ? `linear-gradient(to bottom, ${from} 0%, ${to} 100%)`
-            : `linear-gradient(to bottom, ${from} 0%, color-mix(in srgb, ${from} 55%, transparent) 45%, transparent 100%)`,
-        }}
-      />
-      {shadow && (
-        <div
-          className="absolute inset-x-0 bottom-0 h-24"
-          style={{
-            background:
-              "radial-gradient(80% 100% at 50% 0%, rgba(14,31,25,0.28), transparent 72%)",
-          }}
-        />
-      )}
-    </div>
+      className={`pointer-events-none relative w-full ${height}`}
+      style={{
+        // Two stops in the middle rather than a straight linear ramp: a plain
+        // two-colour gradient still shows a faint band where it starts and
+        // stops, because the eye is very good at finding the point where a
+        // slope begins. Easing it at both ends removes the edge entirely.
+        background: `linear-gradient(to bottom,
+          ${from} 0%,
+          color-mix(in srgb, ${from} 72%, ${to}) 28%,
+          color-mix(in srgb, ${from} 28%, ${to}) 62%,
+          ${to} 100%)`,
+      }}
+    />
   );
 }

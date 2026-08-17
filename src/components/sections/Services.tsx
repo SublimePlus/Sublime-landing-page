@@ -67,7 +67,7 @@ export function Services() {
   return (
     <AnimatedSection id="services" className="relative flex min-h-svh flex-col justify-center overflow-hidden py-20">
       <TopoBackground className="text-pine/[0.06] dark:text-white/[0.05]" />
-      <PlusField density="medium" className="text-lime/25 dark:text-lime/20" />
+      <PlusField density="heavy" className="text-lime/40 dark:text-lime/25" />
       <div className="relative mx-auto max-w-6xl px-6">
       <Reveal className="mx-auto max-w-2xl text-center">
         <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal-ink">
