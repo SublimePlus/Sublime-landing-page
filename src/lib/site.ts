@@ -1,14 +1,18 @@
 /**
  * Single source of truth for site-level identity.
  *
- * `NEXT_PUBLIC_SITE_URL` must be set in the production environment — it drives
- * canonical URLs, Open Graph image resolution, the sitemap and robots.txt.
- * The fallback below keeps local development and preview builds working; it is
- * deliberately obvious so a missing env var is caught in review rather than
- * silently shipping wrong canonicals.
+ * `NEXT_PUBLIC_SITE_URL` drives canonical URLs, Open Graph image resolution,
+ * the sitemap and robots.txt. Set it in the production environment the moment
+ * a real domain exists, and it overrides everything below.
+ *
+ * The fallback is the live Vercel production URL rather than a guessed brand
+ * domain, so that until the env var is set the canonicals point at where the
+ * site actually is, not at a domain that may not be owned. Update the fallback
+ * (or better, set the env var) when a custom domain goes live.
  */
 export const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://sublimeplus.co";
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ??
+  "https://sublime-landing-page.vercel.app";
 
 export const site = {
   name: "Sublime+",
