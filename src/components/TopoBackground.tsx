@@ -53,7 +53,17 @@ export function TopoBackground({ className = "" }: { className?: string }) {
             <path key={i} d={d} />
           ))}
         </g>
-        <g stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        {/* The scattered marks are the "stars". They take their own colour
+            rather than the faint contour-line colour: brand lime in light mode,
+            and the section's own subtle tone in dark mode (unchanged). Setting
+            `color` here means the children's `stroke="currentColor"` resolves
+            to lime without touching the contour lines above. */}
+        <g
+          className="text-lime dark:text-white/[0.05]"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        >
           {MARKS.map((m, i) => (
             <g key={i} transform={`translate(${m.x} ${m.y}) rotate(45)`} opacity={m.opacity}>
               <line x1={-m.size} y1="0" x2={m.size} y2="0" />

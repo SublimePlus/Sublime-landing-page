@@ -26,16 +26,17 @@ export default function Home() {
       <JsonLd schema={faqSchema(faqs)} />
 
       <Hero />
-      <SectionFade from="var(--color-pine)" to="var(--background)" />
+      {/* Leaving the dark hero into the light page: pine fades to transparent
+          over the page background, so the midtones are sage, not grey. */}
+      <SectionFade variant="to-light" />
 
       <Services />
       <Ugc />
       <HowItWorks />
       <Pricing />
       <Faq />
-      {/* Light page background ramping into the dark closing block, so the
-          page does not end on a hard band. */}
-      <SectionFade from="var(--background)" to="var(--color-pine)" />
+      {/* Entering the dark closing block from the light page. */}
+      <SectionFade variant="to-dark" />
 
       <FinalCta />
     </>

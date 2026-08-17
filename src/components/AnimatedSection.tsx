@@ -68,43 +68,45 @@ export function AnimatedSection({
 }
 
 /**
- * Blended seam between two sections.
+ * Blended seam between a dark brand block and the page background.
  *
- * A hard colour change between a dark section and a light one reads as a drawn
- * line, which is exactly what we do not want. This sits on the boundary and
- * does two things: bleeds the upper colour downward over a tall distance, and
- * lays a soft radial shadow across the join so the edge reads as depth rather
- * than as a rule.
+ * The earlier version interpolated straight from green to white, which always
+ * looked muddy: the midpoint of dark-green → white lands on grey, and the eye
+ * reads that grey stripe as a dirty band. This instead lays the dark colour at
+ * full strength fading to *transparent* over the page background, so the
+ * midtones are washes of the brand green over white (sage), never grey. In dark
+ * mode `--background` is night, so the same fade reads as pine settling into
+ * night. It works in both themes with no colour maths.
  *
- * It overlaps the section above via a negative margin, so no extra vertical
- * space is introduced. Purely decorative.
+ * `variant` says which way the seam runs:
+ *   - "to-light": leaving a dark section (dark at top, page background at bottom)
+ *   - "to-dark":  entering a dark section (page background at top, dark at bottom)
  */
 export function SectionFade({
-  from = "transparent",
-  to = "transparent",
+  variant,
+  color = "var(--color-pine)",
   height = "h-40",
 }: {
-  /** Colour the seam starts at, matching the section above. */
-  from?: string;
-  /** Colour it lands on, matching the section below. */
-  to?: string;
+  variant: "to-light" | "to-dark";
+  /** The dark brand colour on the dark side of the seam. */
+  color?: string;
   height?: string;
 }) {
   return (
     <div
       aria-hidden="true"
       className={`pointer-events-none relative w-full ${height}`}
-      style={{
-        // Two stops in the middle rather than a straight linear ramp: a plain
-        // two-colour gradient still shows a faint band where it starts and
-        // stops, because the eye is very good at finding the point where a
-        // slope begins. Easing it at both ends removes the edge entirely.
-        background: `linear-gradient(to bottom,
-          ${from} 0%,
-          color-mix(in srgb, ${from} 72%, ${to}) 28%,
-          color-mix(in srgb, ${from} 28%, ${to}) 62%,
-          ${to} 100%)`,
-      }}
-    />
+      style={{ background: "var(--background)" }}
+    >
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            variant === "to-light"
+              ? `linear-gradient(to bottom, ${color}, transparent)`
+              : `linear-gradient(to bottom, transparent, ${color})`,
+        }}
+      />
+    </div>
   );
 }
