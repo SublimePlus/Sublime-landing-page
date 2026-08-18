@@ -72,40 +72,48 @@ export function CinematicFooter() {
 
         <Magnetic strength={10}>
           <a
-            href={`mailto:${site.email}`}
+            href={`mailto:${site.email}?subject=${encodeURIComponent(
+              "Enquiry for Sublime+"
+            )}&body=${encodeURIComponent(
+              "Hi Sublime+,\n\nI'd like to know more about working with you.\n\n"
+            )}`}
             className="glass-pill mt-5 inline-flex px-6 py-3 text-sm font-bold text-lime"
           >
             {site.email}
           </a>
         </Magnetic>
-      </div>
 
-      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 border-t border-white/10 px-6 py-6 md:flex-row">
-        <Logo variant="light" />
-        <p className="order-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40 md:order-2">
-          © {new Date().getFullYear()} Sublime+. All rights reserved.
-        </p>
-        <Magnetic strength={8}>
-          <button
-            type="button"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            aria-label="Back to top"
-            className="glass-pill group order-2 flex h-11 w-11 items-center justify-center md:order-3"
-          >
-            <svg
-              className="h-5 w-5 transition-transform duration-300 group-hover:-translate-y-1"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
+        {/* Centred back-to-top, then a balanced credit row underneath. */}
+        <div className="mt-10 flex w-full flex-col items-center gap-6 border-t border-white/10 pt-8">
+          <Magnetic strength={8}>
+            <button
+              type="button"
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              aria-label="Back to top"
+              className="glass-pill group flex h-11 w-11 items-center justify-center"
             >
-              <path d="M5 10l7-7m0 0l7 7m-7-7v18" />
-            </svg>
-          </button>
-        </Magnetic>
+              <svg
+                className="h-5 w-5 transition-transform duration-300 group-hover:-translate-y-1"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path d="M5 10l7-7m0 0l7 7m-7-7v18" />
+              </svg>
+            </button>
+          </Magnetic>
+
+          <div className="flex w-full flex-col items-center justify-between gap-3 sm:flex-row">
+            <Logo variant="light" />
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">
+              © {new Date().getFullYear()} Sublime+. All rights reserved.
+            </p>
+          </div>
+        </div>
       </div>
     </footer>
   );

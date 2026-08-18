@@ -55,7 +55,7 @@ export function FeatureCarousel({ features }: { features: Feature[] }) {
 
   return (
     <div
-      className="relative flex min-h-[560px] flex-col overflow-hidden rounded-[2rem] border border-pine/10 lg:min-h-[480px] lg:flex-row dark:border-white/10"
+      className="glass-panel relative flex min-h-[560px] flex-col overflow-hidden rounded-[2rem] lg:min-h-[480px] lg:flex-row"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -104,7 +104,7 @@ export function FeatureCarousel({ features }: { features: Feature[] }) {
       </div>
 
       {/* Right: the card deck */}
-      <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-pine/[0.04] px-6 py-14 lg:px-10 dark:bg-white/[0.04]">
+      <div className="relative flex flex-1 items-center justify-center overflow-hidden px-6 py-14 lg:px-10">
         <div className="relative flex aspect-[4/5] w-full max-w-[340px] items-center justify-center">
           {features.map((feature, i) => {
             const offset = ringOffset(i, active, features.length);
