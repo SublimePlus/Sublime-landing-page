@@ -10,7 +10,7 @@
  * will only resolve once a Cal.com account and event exist at that path.
  */
 export const CAL_LINK =
-  process.env.NEXT_PUBLIC_CAL_LINK ?? "sublimeplus/discovery";
+  process.env.NEXT_PUBLIC_CAL_LINK ?? "sublime-s0s2if";
 
 /** A stable namespace so the popup can be initialised once and reused. */
 export const CAL_NAMESPACE = "discovery";
