@@ -90,7 +90,7 @@ export function Pricing() {
         <ComparisonTable />
 
         <Reveal delay={0.3} className="mt-6">
-          <div className="neon-teal flex flex-col items-center justify-between gap-6 rounded-2xl border border-pine/10 bg-white p-8 sm:flex-row dark:border-white/10 dark:bg-night/40">
+          <div className="neon-teal glass-panel flex flex-col items-center justify-between gap-6 rounded-2xl p-8 sm:flex-row">
             <div className="text-center sm:text-left">
               {/* SOP-S01 §10.5 — "Custom add-ons can be discussed." */}
               <h3 className="text-lg font-semibold text-pine dark:text-white">Custom add-ons</h3>
@@ -134,7 +134,7 @@ const comparisonRows: Array<{ label: string; values: [string, string, string] }>
 function ComparisonTable() {
   return (
     <Reveal delay={0.25} className="mt-10">
-      <div className="overflow-x-auto rounded-2xl border border-pine/10 bg-white dark:border-white/10 dark:bg-night/40">
+      <div className="glass-panel overflow-x-auto rounded-2xl">
         <table className="w-full min-w-[640px] border-collapse text-left text-sm">
           <caption className="sr-only">
             Comparison of the Starter, Growth and Pro packages
@@ -224,10 +224,10 @@ function PlanCard({ plan }: { plan: Plan }) {
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
         whileHover={{ y: -6 }}
         transition={{ type: "spring", stiffness: 300, damping: 22 }}
-        className={`relative flex h-full flex-col rounded-2xl border p-7 ${
+        className={`relative flex h-full flex-col rounded-2xl p-7 ${
           plan.highlighted
-            ? "neon-lime border-teal bg-pine text-white shadow-lg"
-            : "neon-teal border-pine/10 bg-white text-pine dark:border-white/10 dark:bg-night/40 dark:text-white"
+            ? "neon-lime border border-teal bg-pine text-white shadow-lg"
+            : "neon-teal glass-panel text-pine dark:text-white"
         }`}
       >
       {/* Badge marks the recommended package. */}

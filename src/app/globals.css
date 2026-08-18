@@ -126,6 +126,31 @@ body {
   }
 }
 
+/* --- Frosted glass panels ---------------------------------------------- */
+
+/* Tempered-glass / matte surface. In light mode it floats a translucent panel
+   over the section's topo pattern and star field, picking up a soft blur so
+   the panel reads as frosted glass rather than a flat white card. Dark mode
+   gets the same treatment in night tones. Use on cards and tables that should
+   stand out from the page background. */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(16px) saturate(150%);
+  border: 1px solid rgba(27, 58, 47, 0.1);
+  box-shadow:
+    0 14px 44px -16px rgba(27, 58, 47, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+.dark .glass-panel {
+  background: rgba(14, 31, 25, 0.5);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 14px 44px -16px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
 /* --- Cinematic footer -------------------------------------------------- */
 
 /* Glass pill used for the footer's links and controls. Built from brand
