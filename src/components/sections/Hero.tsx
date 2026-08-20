@@ -6,6 +6,7 @@ import { PlusMark } from "../PlusMark";
 import { PlusField } from "../PlusField";
 import { Magnetic } from "../CursorReactive";
 import { BookMeetingButton } from "../booking/BookMeetingButton";
+import { HeroMascot3D } from "../HeroMascot3DClient";
 
 /**
  * The hero leads with the hook rather than the service description.
@@ -23,7 +24,23 @@ export function Hero() {
       <PlusField density="heavy" className="text-lime/25" />
       <BackdropWordmark />
 
-      <div className="relative mx-auto w-full max-w-4xl text-center">
+      {/* Centered 3D mascot, half-body, behind the copy. Its head turns toward
+          the cursor. Client-only (WebGL); pointer-events stay off so the CTAs
+          underneath remain clickable. */}
+      <HeroMascot3D className="pointer-events-none absolute inset-0 z-0" />
+
+      {/* Soft dark scrim behind the copy so white text stays readable where it
+          overlaps the mascot's face and torso. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-[1]"
+        style={{
+          background:
+            "radial-gradient(58% 46% at 50% 46%, rgba(6,20,15,0.7), rgba(6,20,15,0.34) 46%, transparent 74%)",
+        }}
+      />
+
+      <div className="relative z-10 mx-auto w-full max-w-4xl text-center">
         <motion.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
