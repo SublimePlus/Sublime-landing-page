@@ -2,12 +2,10 @@
   "name": "sublime-landing-page",
   "version": "0.1.0",
   "private": true,
-  "engines": {
-    "node": "22.x"
-  },
   "scripts": {
     "dev": "next dev",
-    "build": "next build --webpack",
+    "build": "next build",
+    "build:vendor": "node scripts/build-vendor.mjs",
     "start": "next start",
     "lint": "eslint"
   },
@@ -29,6 +27,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/three": "^0.169.0",
+    "esbuild": "^0.28.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "tailwindcss": "^4",
