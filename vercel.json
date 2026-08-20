@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "next build --webpack",
+  "build": {
+    "env": {
+      "NODE_OPTIONS": "--max-old-space-size=6144"
+    }
+  }
+}
