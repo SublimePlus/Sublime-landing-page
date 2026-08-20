@@ -24,9 +24,9 @@ export function Hero() {
       <PlusField density="heavy" className="text-lime/25" />
       <BackdropWordmark />
 
-      {/* Half-body mascot rising from the bottom of the hero. Sits behind the
-          copy (pointer-events-none); the head turns toward the cursor. */}
-      <HeroMascot className="pointer-events-none absolute bottom-0 left-1/2 z-0 w-[min(78vw,360px)] -translate-x-1/2 opacity-95" />
+      {/* Half-body mascot rising from the bottom-right of the hero. Sits behind
+          the copy (pointer-events-none); the head turns toward the cursor. */}
+      <HeroMascot className="pointer-events-none absolute bottom-0 right-0 z-0 w-[38vw] min-w-[240px] max-w-[360px] sm:right-4" />
 
       <div className="relative mx-auto w-full max-w-4xl text-center">
         <motion.p

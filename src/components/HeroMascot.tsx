@@ -22,11 +22,12 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 const HEAD_SRC = "/mascot/head.webp";
 const BODY_SRC = "/mascot/body.webp";
 
-// Source canvas is square (1024×1024 like the design reference). Adjust
-// FRAME_ASPECT if the real export differs; CROP is how much of the top of the
-// figure stays visible (0.62 ≈ head + torso, legs cropped).
-const FRAME_ASPECT = 1; // width / height of the source webp
-const CROP = 0.62;
+// The layers are trimmed to the figure's shared bounding box (402×740), so
+// FRAME_ASPECT is that width/height. CROP is how much of the top of the figure
+// stays visible — 0.68 keeps head + hoodie + hips and drops the lower legs and
+// shoes for the half-body look.
+const FRAME_ASPECT = 0.543; // width / height of the source webp
+const CROP = 0.68;
 
 export function HeroMascot({ className }: { className?: string }) {
   const frameRef = useRef<HTMLDivElement>(null);
@@ -49,7 +50,7 @@ export function HeroMascot({ className }: { className?: string }) {
       const r = el.getBoundingClientRect();
       // Head sits near the top-centre of the frame.
       const headX = r.left + r.width / 2;
-      const headY = r.top + r.height * 0.28;
+      const headY = r.top + r.height * 0.42;
       const dx = (e.clientX - headX) / (window.innerWidth / 2);
       const dy = (e.clientY - headY) / (window.innerHeight / 2);
       px.set(Math.max(-1, Math.min(1, dx)));
@@ -64,7 +65,9 @@ export function HeroMascot({ className }: { className?: string }) {
       ref={frameRef}
       className={className}
       style={{
-        position: "relative",
+        // Position comes from `className` (the caller anchors it in the hero);
+        // an `absolute`/`relative` class makes this a containing block for the
+        // absolutely-positioned layers below.
         aspectRatio: `${FRAME_ASPECT} / ${CROP}`,
         overflow: "hidden",
       }}
@@ -87,7 +90,7 @@ export function HeroMascot({ className }: { className?: string }) {
             rotate,
             x: translateX,
             y: translateY,
-            transformOrigin: "50% 46%", // neck pivot
+            transformOrigin: "50% 48%", // neck pivot (collar of the trimmed figure)
           }}
         >
           <Image
