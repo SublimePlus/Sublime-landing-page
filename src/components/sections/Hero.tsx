@@ -6,6 +6,7 @@ import { PlusMark } from "../PlusMark";
 import { PlusField } from "../PlusField";
 import { Magnetic } from "../CursorReactive";
 import { BookMeetingButton } from "../booking/BookMeetingButton";
+import { HeroMascot } from "../HeroMascot";
 
 /**
  * The hero leads with the hook rather than the service description.
@@ -22,6 +23,10 @@ export function Hero() {
       <AmbientGlow />
       <PlusField density="heavy" className="text-lime/25" />
       <BackdropWordmark />
+
+      {/* Half-body mascot rising from the bottom of the hero. Sits behind the
+          copy (pointer-events-none); the head turns toward the cursor. */}
+      <HeroMascot className="pointer-events-none absolute bottom-0 left-1/2 z-0 w-[min(78vw,360px)] -translate-x-1/2 opacity-95" />
 
       <div className="relative mx-auto w-full max-w-4xl text-center">
         <motion.p
