@@ -1,4 +1,13 @@
-@import "tailwindcss";
+/* Restrict Tailwind's automatic class-usage scan to src/ (this file's parent
+   directory) instead of the whole project. Without this, Tailwind v4's
+   zero-config source detection walks up to the repo root and scans every
+   file it finds there, including the large binary assets under public/
+   (the 3D mascot's GLB/wasm/vendor bundle) — see debug/webpack-memory-test
+   for the investigation that traced the webpack client-compiler memory
+   spike to this. A bare `@source` directive only *adds* extra paths to
+   scan; it doesn't stop the automatic project-wide scan, so the base has to
+   be overridden here via the `source(...)` import modifier instead. */
+@import "tailwindcss" source("..");
 @plugin "@tailwindcss/typography";
 @custom-variant dark (&:where(.dark, .dark *));
 
