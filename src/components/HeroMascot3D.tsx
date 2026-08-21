@@ -13,13 +13,12 @@ import type * as THREE from "three";
  * as a static asset keeps it out of the build entirely. Only TypeScript types
  * are imported from "three" below, and those are erased at build time.
  *
- * The GLB is a decomposed, draco-compressed model (thousands of one-material
+ * The GLB is a decomposed, uncompressed model (thousands of one-material
  * meshes named by region). On load we bake each mesh's world transform and
  * merge into two meshes: a static body and a head that pivots at the neck and
  * eases toward the pointer.
  */
 const MODEL = "/mascot/mascot.glb";
-const DRACO = "/draco/";
 const HEAD_PREFIXES = ["HEAD_", "FACE_", "HAIR_", "HEADPHONES_"];
 
 const DEFAULTS = {
@@ -43,7 +42,6 @@ const isHead = (name: string) => HEAD_PREFIXES.some((p) => name.startsWith(p));
 type Vendor = {
   THREE: typeof THREE;
   GLTFLoader: new () => {
-    setDRACOLoader(loader: unknown): void;
     load(
       url: string,
       onLoad: (gltf: { scene: THREE.Object3D }) => void,
@@ -51,7 +49,6 @@ type Vendor = {
       onError?: (err: unknown) => void
     ): void;
   };
-  DRACOLoader: new () => { setDecoderPath(path: string): void; dispose(): void };
   mergeGeometries: (
     geometries: THREE.BufferGeometry[],
     useGroups?: boolean
@@ -59,7 +56,7 @@ type Vendor = {
 };
 
 function initMascot(mount: HTMLDivElement, V: Vendor): () => void {
-  const { THREE, GLTFLoader, DRACOLoader, mergeGeometries } = V;
+  const { THREE, GLTFLoader, mergeGeometries } = V;
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const scene = new THREE.Scene();
@@ -111,10 +108,7 @@ function initMascot(mount: HTMLDivElement, V: Vendor): () => void {
     frame();
   }
 
-  const draco = new DRACOLoader();
-  draco.setDecoderPath(DRACO);
   const loader = new GLTFLoader();
-  loader.setDRACOLoader(draco);
 
   loader.load(MODEL, (gltf) => {
     if (disposed) return;
@@ -192,7 +186,6 @@ function initMascot(mount: HTMLDivElement, V: Vendor): () => void {
     ro.disconnect();
     window.removeEventListener("hashchange", onHash);
     window.removeEventListener("pointermove", onMove);
-    draco.dispose();
     renderer.dispose();
     scene.traverse((obj) => {
       const mesh = obj as THREE.Mesh;
