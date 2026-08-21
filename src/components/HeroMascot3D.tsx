@@ -1,210 +1,24 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type * as THREE from "three";
 
 /**
  * 3D hero mascot with a head that turns toward the cursor.
  *
- * three.js is NOT imported through Next here — it is loaded at runtime from a
- * self-hosted bundle at `/vendor/three-mascot.js` (built by
- * `scripts/build-vendor.mjs`). Bundling three through Next pushes the
- * production build past Vercel's 8 GB build machine and OOMs it; loading three
- * as a static asset keeps it out of the build entirely. Only TypeScript types
- * are imported from "three" below, and those are erased at build time.
+ * This component has zero compile-time dependency on three.js, the GLB, or
+ * the draco decoder — it only renders a container and, after mount, loads a
+ * static runtime script from /public that does the actual work. Bundling
+ * three.js (and the client-side module graph it pulls in) through Next's
+ * client webpack compiler was pushing the production build far past Vercel's
+ * build machine and OOMing it; a static runtime the browser fetches after
+ * the page loads keeps Next's compiler from ever seeing three.js at all.
  *
- * The GLB is a decomposed, draco-compressed model (thousands of one-material
- * meshes named by region). On load we bake each mesh's world transform and
- * merge into two meshes: a static body and a head that pivots at the neck and
- * eases toward the pointer.
+ * See public/mascot/mascot-runtime.js for the actual scene/camera/lighting
+ * setup, GLTFLoader + DRACOLoader loading, the head/body merge, and the
+ * pointer-tracking animation loop — this file used to contain all of that
+ * directly; the behavior is unchanged, only its location moved.
  */
-const MODEL = "/mascot/mascot.glb";
-const DRACO = "/draco/";
-const HEAD_PREFIXES = ["HEAD_", "FACE_", "HAIR_", "HEADPHONES_"];
-
-const DEFAULTS = {
-  crop: 0.72, // fraction of the figure height kept in view (half-body)
-  top: 0.06, // headroom above the head, as a fraction of height
-  yaw: 0.5, // max head turn left/right (radians)
-  pitch: 0.32, // max head tilt up/down (radians)
-};
-
-function readParams() {
-  if (typeof window === "undefined") return { ...DEFAULTS };
-  const p = new URLSearchParams(window.location.hash.slice(1));
-  const num = (k: keyof typeof DEFAULTS) =>
-    p.has(k) ? parseFloat(p.get(k)!) : DEFAULTS[k];
-  return { crop: num("crop"), top: num("top"), yaw: num("yaw"), pitch: num("pitch") };
-}
-
-const isHead = (name: string) => HEAD_PREFIXES.some((p) => name.startsWith(p));
-
-/** Shape of the self-hosted three bundle's exports. */
-type Vendor = {
-  THREE: typeof THREE;
-  GLTFLoader: new () => {
-    setDRACOLoader(loader: unknown): void;
-    load(
-      url: string,
-      onLoad: (gltf: { scene: THREE.Object3D }) => void,
-      onProgress?: unknown,
-      onError?: (err: unknown) => void
-    ): void;
-  };
-  DRACOLoader: new () => { setDecoderPath(path: string): void; dispose(): void };
-  mergeGeometries: (
-    geometries: THREE.BufferGeometry[],
-    useGroups?: boolean
-  ) => THREE.BufferGeometry;
-};
-
-function initMascot(mount: HTMLDivElement, V: Vendor): () => void {
-  const { THREE, GLTFLoader, DRACOLoader, mergeGeometries } = V;
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
-  mount.appendChild(renderer.domElement);
-
-  scene.add(new THREE.AmbientLight(0xffffff, 0.9));
-  const key = new THREE.DirectionalLight(0xffffff, 1.5);
-  key.position.set(3, 6, 5);
-  scene.add(key);
-  const rim = new THREE.DirectionalLight(0xffffff, 0.5);
-  rim.position.set(-4, 2, -3);
-  scene.add(rim);
-
-  const params = readParams();
-  const onHash = () => Object.assign(params, readParams());
-  window.addEventListener("hashchange", onHash);
-
-  const pointer = { x: 0, y: 0 };
-  const onMove = (e: PointerEvent) => {
-    pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
-    pointer.y = (e.clientY / window.innerHeight) * 2 - 1;
-  };
-  if (!reduce) window.addEventListener("pointermove", onMove, { passive: true });
-
-  let headGroup: THREE.Group | null = null;
-  let figureHeight = 1;
-  let raf = 0;
-  let disposed = false;
-
-  function frame() {
-    const fov = (camera.fov * Math.PI) / 180;
-    const visibleH = figureHeight * params.crop;
-    const dist = visibleH / (2 * Math.tan(fov / 2));
-    const topY = figureHeight / 2 + figureHeight * params.top;
-    const targetY = topY - visibleH / 2;
-    camera.position.set(0, targetY, dist);
-    camera.lookAt(0, targetY, 0);
-  }
-
-  function resize() {
-    const w = mount.clientWidth || 1;
-    const h = mount.clientHeight || 1;
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    renderer.setSize(w, h);
-    frame();
-  }
-
-  const draco = new DRACOLoader();
-  draco.setDecoderPath(DRACO);
-  const loader = new GLTFLoader();
-  loader.setDRACOLoader(draco);
-
-  loader.load(MODEL, (gltf) => {
-    if (disposed) return;
-    gltf.scene.updateMatrixWorld(true);
-    const heads: THREE.BufferGeometry[] = [];
-    const bodies: THREE.BufferGeometry[] = [];
-    let material: THREE.Material | null = null;
-
-    gltf.scene.traverse((obj) => {
-      const mesh = obj as THREE.Mesh;
-      if (!mesh.isMesh) return;
-      if (!material) material = mesh.material as THREE.Material;
-      const g = mesh.geometry.clone();
-      g.applyMatrix4(mesh.matrixWorld);
-      for (const attr of Object.keys(g.attributes)) {
-        if (!["position", "normal", "uv"].includes(attr)) g.deleteAttribute(attr);
-      }
-      (isHead(mesh.name) ? heads : bodies).push(g);
-    });
-
-    const headGeo = mergeGeometries(heads, false);
-    const bodyGeo = mergeGeometries(bodies, false);
-
-    const full = mergeGeometries([headGeo.clone(), bodyGeo.clone()], false);
-    full.computeBoundingBox();
-    const center = new THREE.Vector3();
-    full.boundingBox!.getCenter(center);
-    const size = new THREE.Vector3();
-    full.boundingBox!.getSize(size);
-    figureHeight = size.y;
-
-    headGeo.computeBoundingBox();
-    const hb = headGeo.boundingBox!;
-    const neck = new THREE.Vector3(
-      (hb.min.x + hb.max.x) / 2,
-      hb.min.y,
-      (hb.min.z + hb.max.z) / 2
-    );
-    headGeo.translate(-neck.x, -neck.y, -neck.z);
-
-    const root = new THREE.Group();
-    root.position.set(-center.x, -center.y, -center.z);
-    root.add(new THREE.Mesh(bodyGeo, material!));
-    headGroup = new THREE.Group();
-    headGroup.position.copy(neck);
-    headGroup.add(new THREE.Mesh(headGeo, material!));
-    root.add(headGroup);
-    scene.add(root);
-    frame();
-  });
-
-  let last = performance.now();
-  function animate(now: number) {
-    raf = requestAnimationFrame(animate);
-    const delta = Math.min((now - last) / 1000, 0.1);
-    last = now;
-    if (headGroup && !reduce) {
-      const targetYaw = pointer.x * params.yaw;
-      const targetPitch = -pointer.y * params.pitch;
-      const k = 1 - Math.pow(0.001, delta);
-      headGroup.rotation.y += (targetYaw - headGroup.rotation.y) * k;
-      headGroup.rotation.x += (targetPitch - headGroup.rotation.x) * k;
-    }
-    renderer.render(scene, camera);
-  }
-  raf = requestAnimationFrame(animate);
-
-  const ro = new ResizeObserver(resize);
-  ro.observe(mount);
-  resize();
-
-  return () => {
-    disposed = true;
-    cancelAnimationFrame(raf);
-    ro.disconnect();
-    window.removeEventListener("hashchange", onHash);
-    window.removeEventListener("pointermove", onMove);
-    draco.dispose();
-    renderer.dispose();
-    scene.traverse((obj) => {
-      const mesh = obj as THREE.Mesh;
-      if (mesh.isMesh) {
-        mesh.geometry.dispose();
-        const m = mesh.material as THREE.Material | THREE.Material[];
-        (Array.isArray(m) ? m : [m]).forEach((mat) => mat.dispose());
-      }
-    });
-    if (renderer.domElement.parentNode === mount) mount.removeChild(renderer.domElement);
-  };
-}
+const RUNTIME = "/mascot/mascot-runtime.js";
 
 export function HeroMascot3D({ className }: { className?: string }) {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -216,12 +30,17 @@ export function HeroMascot3D({ className }: { className?: string }) {
     let cancelled = false;
 
     (async () => {
-      // Runtime import of the self-hosted, pre-built bundle. The bundler is told
-      // to ignore it so three is never compiled into the Next build.
-      // @ts-expect-error runtime-only module served from /public (not resolvable at build)
-      const V = (await import(/* webpackIgnore: true */ /* turbopackIgnore: true */ "/vendor/three-mascot.js")) as Vendor;
+      // Runtime import of a static, non-TypeScript file served from /public.
+      // The bundler is told to ignore it so nothing it pulls in (three.js,
+      // the vendor bundle, the GLB) is ever compiled into the Next build.
+      // Importing via a variable (rather than a string literal) means
+      // TypeScript treats the result as `any` — nothing to resolve at build time.
+      const { initHeroMascot } = await import(
+        /* webpackIgnore: true */ /* turbopackIgnore: true */ RUNTIME
+      );
       if (cancelled || !mountRef.current) return;
-      cleanup = initMascot(mount, V);
+      cleanup = await initHeroMascot(mount);
+      if (cancelled) cleanup();
     })();
 
     return () => {
