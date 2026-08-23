@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // Must match the existing Worker name in the Cloudflare dashboard, otherwise
+  // a deploy creates a second Worker and the custom domain keeps pointing at
+  // the old, empty one.
+  "name": "sublime-landing-page",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-08-23",
+  // Required by @opennextjs/cloudflare: the Next.js server code it bundles
+  // relies on Node.js built-ins that workerd only exposes behind this flag.
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  }
+}
