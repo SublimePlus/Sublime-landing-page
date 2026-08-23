@@ -2,14 +2,14 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    // Placeholder photography is still hot-linked from Unsplash. Routing it
-    // through next/image means it is at least resized, converted to AVIF/WebP
-    // and served with explicit dimensions, so it no longer shifts layout.
-    // These entries come out when the images are replaced with self-hosted art.
-    remotePatterns: [
-      { protocol: "https", hostname: "images.unsplash.com", pathname: "/**" },
-    ],
-    formats: ["image/avif", "image/webp"],
+    /**
+     * Cloudflare Workers has no built-in next/image optimizer — the OpenNext
+     * adapter routes optimization through Cloudflare Images, a separately
+     * billed product. The four showcase images are hand-exported WebP/JPEG
+     * totalling well under a megabyte, so they are served as-is from Workers
+     * Assets instead. Revisit if user-supplied or much larger art appears.
+     */
+    unoptimized: true,
   },
 };
 
