@@ -8,6 +8,7 @@ import { ScrollProgress } from "@/components/ScrollProgress";
 import { CalProvider } from "@/components/booking/CalProvider";
 import { ThemeProvider } from "@/components/theme/ThemeContext";
 import { JsonLd, organizationSchema, websiteSchema } from "@/components/JsonLd";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { site, siteUrl } from "@/lib/site";
 
 const THEME_INIT_SCRIPT = `
@@ -75,6 +76,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <JsonLd schema={organizationSchema} />
         <JsonLd schema={websiteSchema} />
+        <GoogleAnalytics />
       </head>
       <body className="min-h-full flex flex-col">
         <MotionConfig reducedMotion="user">
