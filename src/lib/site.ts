@@ -2,17 +2,17 @@
  * Single source of truth for site-level identity.
  *
  * `NEXT_PUBLIC_SITE_URL` drives canonical URLs, Open Graph image resolution,
- * the sitemap and robots.txt. Set it in the production environment the moment
- * a real domain exists, and it overrides everything below.
+ * the sitemap and robots.txt. Set it in the production environment to override
+ * everything below.
  *
- * The fallback is the live Vercel production URL rather than a guessed brand
- * domain, so that until the env var is set the canonicals point at where the
- * site actually is, not at a domain that may not be owned. Update the fallback
- * (or better, set the env var) when a custom domain goes live.
+ * The fallback is the production domain, which is live on Cloudflare Workers
+ * and is the origin Google should index. Keep it pointing at the domain the
+ * site actually serves from, so canonicals stay correct even when the env var
+ * is unset.
  */
 export const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ??
-  "https://sublime-landing-page.vercel.app";
+  "https://sublime-plus.com";
 
 export const site = {
   name: "Sublime+",

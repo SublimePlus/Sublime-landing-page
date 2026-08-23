@@ -29,7 +29,7 @@ Open Graph image resolution, `sitemap.xml` and `robots.txt`. Without it, those
 fall back to a placeholder and social previews will not resolve correctly.
 
 ```bash
-NEXT_PUBLIC_SITE_URL=https://sublimeplus.co
+NEXT_PUBLIC_SITE_URL=https://sublime-plus.com
 ```
 
 ## Content standards
