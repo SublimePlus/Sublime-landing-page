@@ -1,6 +1,6 @@
-# Sublime+ Landing Page
+# Sublime Plus Landing Page
 
-Preliminary marketing landing page for Sublime+ ("Content & social marketing, done with a little extra"), built with Next.js, Tailwind CSS, and Framer Motion, following the Sublime+ brand identity guidelines (teal/pine/lime palette, Poppins type, plus-mark motif).
+Preliminary marketing landing page for Sublime Plus ("Content & social marketing, done with a little extra"), built with Next.js, Tailwind CSS, and Framer Motion, following the Sublime Plus brand identity guidelines (teal/pine/lime palette, Poppins type, plus-mark motif).
 
 ## Getting started
 
@@ -34,7 +34,7 @@ NEXT_PUBLIC_SITE_URL=https://sublime-plus.com
 
 ## Content standards
 
-Every claim on the site must trace to a Sublime+ SOP or a signed-off business
+Every claim on the site must trace to a Sublime Plus SOP or a signed-off business
 fact. Do not add testimonials, statistics, client names or capability claims
 without a written source — see the QA/QC audit for the provenance rules and the
 outstanding items.

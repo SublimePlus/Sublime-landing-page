@@ -4,7 +4,7 @@ import { absoluteUrl } from "@/lib/site";
 /**
  * AI crawlers are allowed deliberately, not by omission.
  *
- * Sublime+ sells LLM brand perception as a service, so being readable by the
+ * Sublime Plus sells LLM brand perception as a service, so being readable by the
  * models that answer questions about the company is the point. If that position
  * ever changes it should change here, explicitly.
  */

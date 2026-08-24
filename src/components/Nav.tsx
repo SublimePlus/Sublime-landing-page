@@ -41,7 +41,7 @@ export function Nav() {
       }`}
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" aria-label="Sublime+ home">
+        <Link href="/" aria-label="Sublime Plus home">
           <Logo variant={scrolled ? "dark" : "light"} />
         </Link>
         <div className="hidden items-center gap-8 md:flex">
