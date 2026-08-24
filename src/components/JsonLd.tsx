@@ -35,6 +35,10 @@ export const organizationSchema = {
   "@type": "Organization",
   "@id": ORGANIZATION_ID,
   name: site.name,
+  // The brand is written "Sublime Plus", but the symbol form is what existing
+  // citations and social handles use. Listing both ties them to one entity, so
+  // a search engine does not read them as two different companies.
+  alternateName: ["Sublime+", "SublimePlus"],
   url: siteUrl,
   description: site.description,
   email: site.email,
@@ -79,7 +83,7 @@ export function faqSchema(items: FaqItem[]) {
 }
 
 /**
- * The service Sublime+ sells, with the three SOP-S01 §10.5 packages as offers.
+ * The service Sublime Plus sells, with the three SOP-S01 §10.5 packages as offers.
  * Volumes come from that same clause; nothing is inferred.
  */
 export const serviceSchema = {
@@ -99,7 +103,7 @@ export const serviceSchema = {
   ],
   hasOfferCatalog: {
     "@type": "OfferCatalog",
-    name: "Sublime+ packages",
+    name: "Sublime Plus packages",
     itemListElement: [
       {
         "@type": "Offer",

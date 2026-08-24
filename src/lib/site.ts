@@ -15,7 +15,7 @@ export const siteUrl =
   "https://sublime-plus.com";
 
 export const site = {
-  name: "Sublime+",
+  name: "Sublime Plus",
   /**
    * Plain-language definition. Language models resolve entities from explicit
    * definitional statements, so this stays literal — the brand tagline does the
@@ -26,7 +26,7 @@ export const site = {
    * types) and SOP-U01 §4 (UGC product lines).
    */
   description:
-    "Sublime+ is a content and social marketing agency. We plan, write and post Reddit content (posts, comments and replies) to improve how brands appear in search results and in how AI language models describe them, and we produce AI-generated visual content through our UGC product line.",
+    "Sublime Plus is a content and social marketing agency. We plan, write and post Reddit content (posts, comments and replies) to improve how brands appear in search results and in how AI language models describe them, and we produce AI-generated visual content through our UGC product line.",
   tagline: "Content & social marketing, done with a little extra",
   email: "try.sublime.plus@gmail.com",
   locale: "en_US",

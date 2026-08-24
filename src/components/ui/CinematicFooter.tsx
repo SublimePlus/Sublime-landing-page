@@ -73,9 +73,9 @@ export function CinematicFooter() {
         <Magnetic strength={10}>
           <a
             href={`mailto:${site.email}?subject=${encodeURIComponent(
-              "Enquiry for Sublime+"
+              "Enquiry for Sublime Plus"
             )}&body=${encodeURIComponent(
-              "Hi Sublime+,\n\nI'd like to know more about working with you.\n\n"
+              "Hi Sublime Plus,\n\nI'd like to know more about working with you.\n\n"
             )}`}
             className="glass-pill mt-5 inline-flex px-6 py-3 text-sm font-bold text-lime"
           >
@@ -110,7 +110,7 @@ export function CinematicFooter() {
           <div className="flex w-full flex-col items-center justify-between gap-3 sm:flex-row">
             <Logo variant="light" />
             <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">
-              © {new Date().getFullYear()} Sublime+. All rights reserved.
+              © {new Date().getFullYear()} Sublime Plus. All rights reserved.
             </p>
           </div>
         </div>

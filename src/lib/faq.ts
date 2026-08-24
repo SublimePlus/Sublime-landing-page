@@ -1,5 +1,5 @@
 /**
- * Every answer below is drawn from a Sublime+ SOP — the source is named in the
+ * Every answer below is drawn from a Sublime Plus SOP — the source is named in the
  * comment above each entry, and `docs/sop-copy-map.md` carries the full map.
  *
  * Answers are written answer-first on purpose: the opening sentence has to be
