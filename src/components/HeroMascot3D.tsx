@@ -23,10 +23,10 @@ const DRACO = "/draco/";
 const HEAD_PREFIXES = ["HEAD_", "FACE_", "HAIR_", "HEADPHONES_"];
 
 const DEFAULTS = {
-  crop: 0.72, // fraction of the figure height kept in view (half-body)
-  top: 0.06, // headroom above the head, as a fraction of height
-  yaw: 0.5, // max head turn left/right (radians)
-  pitch: 0.32, // max head tilt up/down (radians)
+  crop: 1.05, // show full figure including hands — no cropping
+  top: 0.04, // headroom above the head, as a fraction of height
+  yaw: 0.3, // max head turn left/right (radians) — subtle
+  pitch: 0.2, // max head tilt up/down (radians) — subtle
 };
 
 function readParams() {
@@ -172,8 +172,8 @@ function initMascot(mount: HTMLDivElement, V: Vendor): () => void {
     const delta = Math.min((now - last) / 1000, 0.1);
     last = now;
     if (headGroup && !reduce) {
-      const targetYaw = pointer.x * params.yaw;
-      const targetPitch = -pointer.y * params.pitch;
+      const targetYaw = -pointer.x * params.yaw;
+      const targetPitch = pointer.y * params.pitch;
       const k = 1 - Math.pow(0.001, delta);
       headGroup.rotation.y += (targetYaw - headGroup.rotation.y) * k;
       headGroup.rotation.x += (targetPitch - headGroup.rotation.x) * k;

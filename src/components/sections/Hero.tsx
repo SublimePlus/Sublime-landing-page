@@ -24,21 +24,10 @@ export function Hero() {
       <PlusField density="heavy" className="text-lime/25" />
       <BackdropWordmark />
 
-      {/* Centered 3D mascot, half-body, behind the copy. Its head turns toward
-          the cursor. Client-only (WebGL); pointer-events stay off so the CTAs
-          underneath remain clickable. */}
-      <HeroMascot3D className="pointer-events-none absolute inset-0 z-0" />
-
-      {/* Soft dark scrim behind the copy so white text stays readable where it
-          overlaps the mascot's face and torso. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[1]"
-        style={{
-          background:
-            "radial-gradient(58% 46% at 50% 46%, rgba(6,20,15,0.7), rgba(6,20,15,0.34) 46%, transparent 74%)",
-        }}
-      />
+      {/* Small 3D mascot positioned in the empty right-side space of the hero.
+          Client-only (WebGL); pointer-events stay off so CTAs remain clickable.
+          Hidden on small screens where there's no room for it. */}
+      <HeroMascot3D className="pointer-events-none absolute bottom-8 right-4 z-[2] hidden h-[340px] w-[260px] lg:block xl:right-[5%] xl:h-[420px] xl:w-[320px] 2xl:right-[8%]" />
 
       <div className="relative z-10 mx-auto w-full max-w-4xl text-center">
         <motion.p
