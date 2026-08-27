@@ -26,8 +26,10 @@ export function Hero() {
 
       {/* Small 3D mascot positioned in the empty right-side space of the hero.
           Client-only (WebGL); pointer-events stay off so CTAs remain clickable.
-          Hidden on small screens where there's no room for it. */}
-      <HeroMascot3D className="pointer-events-none absolute bottom-8 right-4 z-[2] hidden h-[340px] w-[260px] lg:block xl:right-[5%] xl:h-[420px] xl:w-[320px] 2xl:right-[8%]" />
+          The centered max-w-4xl copy column only leaves real side margin from
+          1280px up (~192px at 1280, ~320px at 1536) — sized with a buffer at
+          each step so it never reaches the headline/CTAs; hidden below that. */}
+      <HeroMascot3D className="pointer-events-none absolute bottom-8 right-4 z-[2] hidden h-[170px] w-[130px] xl:block 2xl:right-8 2xl:h-[250px] 2xl:w-[190px]" />
 
       <div className="relative z-10 mx-auto w-full max-w-4xl text-center">
         <motion.p
