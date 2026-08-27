@@ -24,12 +24,17 @@ export function Hero() {
       <PlusField density="heavy" className="text-lime/25" />
       <BackdropWordmark />
 
-      {/* Small 3D mascot positioned in the empty right-side space of the hero.
-          Client-only (WebGL); pointer-events stay off so CTAs remain clickable.
-          The centered max-w-4xl copy column only leaves real side margin from
-          1280px up (~192px at 1280, ~320px at 1536) — sized with a buffer at
-          each step so it never reaches the headline/CTAs; hidden below that. */}
-      <HeroMascot3D className="pointer-events-none absolute bottom-8 right-4 z-[2] hidden h-[170px] w-[130px] xl:block 2xl:right-8 2xl:h-[250px] 2xl:w-[190px]" />
+      {/* Large upper-body 3D mascot anchored to the bottom-right of the hero,
+          in the empty space beside the centered copy column. The lower body
+          is cropped by the camera framing itself (see `crop` in
+          HeroMascot3D), not by CSS, so it reads as the figure standing
+          partly outside the frame. Client-only (WebGL); pointer-events stay
+          off so CTAs remain clickable.
+
+          DESKTOP-ONLY FOR NOW, deliberately not responsive yet — fixed size
+          and position tuned for a standard desktop viewport (~1536-1920px).
+          Revisit per-breakpoint sizing once this composition is approved. */}
+      <HeroMascot3D className="pointer-events-none absolute bottom-0 right-12 z-[2] h-[620px] w-[460px]" />
 
       <div className="relative z-10 mx-auto w-full max-w-4xl text-center">
         <motion.p
