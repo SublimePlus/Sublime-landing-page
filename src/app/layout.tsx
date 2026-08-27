@@ -5,7 +5,8 @@ import { MotionConfig } from "framer-motion";
 import { Nav } from "@/components/Nav";
 import { CinematicFooter } from "@/components/ui/CinematicFooter";
 import { ScrollProgress } from "@/components/ScrollProgress";
-import { CalProvider } from "@/components/booking/CalProvider";
+import { BookingDialogProvider } from "@/components/booking/BookingDialogContext";
+import { BookingDialog } from "@/components/booking/BookingDialog";
 import { ThemeProvider } from "@/components/theme/ThemeContext";
 import { JsonLd, organizationSchema, websiteSchema } from "@/components/JsonLd";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
@@ -81,12 +82,13 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <MotionConfig reducedMotion="user">
           <ThemeProvider>
-            <CalProvider>
+            <BookingDialogProvider>
               <ScrollProgress />
               <Nav />
               <main className="flex-1">{children}</main>
               <CinematicFooter />
-            </CalProvider>
+              <BookingDialog />
+            </BookingDialogProvider>
           </ThemeProvider>
         </MotionConfig>
       </body>
