@@ -66,7 +66,7 @@ function initHead(mount: HTMLDivElement, V: Vendor): () => void {
   let disposed = false;
 
   const YAW = 0.75;   // max head turn left/right (radians)
-  const PITCH = 0.40;  // max head tilt up/down (radians)
+  const PITCH = 0.35;  // max head tilt up/down (radians)
 
   const draco = new DRACOLoader();
   draco.setDecoderPath(DRACO);
