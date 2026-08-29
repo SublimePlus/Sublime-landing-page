@@ -195,10 +195,7 @@ function Head3D({ className }: { className?: string }) {
 export function HeroMascotHybrid({ className }: { className?: string }) {
   return (
     <div className={`relative ${className ?? ""}`}>
-      {/* 3D head — behind body so collar hides the seam */}
-      <Head3D className="absolute -top-[30%] left-1/2 -translate-x-[48%] w-[85%] aspect-square z-0" />
-
-      {/* 2D body — on top so collar covers the 3D head edge */}
+      {/* 2D body — base layer */}
       <Image
         src="/mascot/mascot-body.png"
         alt=""
@@ -209,6 +206,9 @@ export function HeroMascotHybrid({ className }: { className?: string }) {
         aria-hidden="true"
         draggable={false}
       />
+
+      {/* 3D head — TOP layer, positioned flush on the neck/collar */}
+      <Head3D className="absolute -top-[37%] left-1/2 -translate-x-[47%] w-[58%] aspect-square z-20" />
     </div>
   );
 }

@@ -28,67 +28,57 @@ export function Hero() {
       {/* Two-column layout: text left, mascot right */}
       <div className="relative mx-auto flex w-full max-w-7xl items-end gap-0 px-4 lg:px-12">
         {/* Left column — text & CTAs */}
-        <div className="relative z-[3] w-full max-w-2xl pb-16">
+        <div className="relative z-[3] w-full max-w-xl pb-16">
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium text-lime"
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium text-lime"
           >
             <PlusMark className="h-3.5 w-3.5" strokeWidth={3} />
             Content &amp; social marketing, done with a little extra
           </motion.p>
 
-          <h1 className="text-[2.1rem] font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
-            <WordReveal text="Ask ChatGPT about" startDelay={0.15} />
+          <h1 className="text-[2.5rem] font-bold leading-[1.06] tracking-tight sm:text-5xl lg:text-[3.8rem]">
+            <WordReveal text="Be the brand" startDelay={0.15} />
             <br />
-            <WordReveal text="your brand." startDelay={0.45} />
-            <br />
-            <WordReveal
-              text="You might not like"
-              startDelay={0.7}
-              className="text-lime"
-            />
-            <br />
-            <WordReveal text="the answer." startDelay={0.95} className="text-lime" />
+            <WordReveal text="AI recommends." startDelay={0.45} />
           </h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 1.15 }}
-            className="mt-6 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg"
+            transition={{ duration: 0.7, delay: 0.8 }}
+            className="mt-5 max-w-md text-[0.95rem] leading-relaxed text-white/70 sm:text-base"
           >
-            Buyers ask AI before they ask you. We write the Reddit posts,
-            comments and replies that change what it says back, and lift your
-            search rankings on the way.
+            We plan, write and create content that shapes how AI
+            describes you, and moves you up in search.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 1.3 }}
-            className="mt-8 flex flex-col items-start gap-4 sm:flex-row"
+            transition={{ duration: 0.7, delay: 1.0 }}
+            className="mt-7 flex flex-col items-start gap-3 sm:flex-row"
           >
             <Magnetic strength={14}>
-              <BookMeetingButton className="neon-lime-btn inline-flex items-center gap-2 rounded-full bg-lime px-8 py-4 font-semibold text-pine transition-transform hover:scale-[1.03]">
+              <BookMeetingButton className="neon-lime-btn inline-flex items-center gap-2 rounded-full bg-lime px-7 py-3.5 font-semibold text-pine transition-transform hover:scale-[1.03]">
                 See what AI says about you
                 <PlusMark className="h-4 w-4" strokeWidth={3} />
               </BookMeetingButton>
             </Magnetic>
-            <Link
-              href="/#plans"
-              className="inline-flex items-center gap-2 rounded-full border border-white/30 px-8 py-4 text-sm font-semibold text-white transition-colors hover:border-lime hover:text-lime"
-            >
-              View plans
-            </Link>
+            <Magnetic strength={14}>
+              <BookMeetingButton className="inline-flex items-center gap-2 rounded-full border border-white/30 px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:border-lime hover:text-lime">
+                Book a call
+              </BookMeetingButton>
+            </Magnetic>
           </motion.div>
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.7, delay: 1.5 }}
-            className="mt-5 text-sm text-white/50"
+            transition={{ duration: 0.7, delay: 1.2 }}
+            className="mt-4 text-sm text-white/50"
           >
             Free 30–45 minute call. Nothing gets published without your approval.
           </motion.p>
@@ -98,7 +88,7 @@ export function Hero() {
             The mascot is sized large enough that its legs extend past the
             section's bottom edge; the section's overflow-hidden clips them
             so only the upper body, hand and head are visible. */}
-        <div className="pointer-events-none absolute -bottom-[32%] right-8 z-[2] w-[480px] lg:w-[520px] xl:w-[560px]">
+        <div className="pointer-events-none absolute -bottom-[122%] -right-2 z-[2] w-[620px] lg:w-[680px] xl:w-[740px]">
           <HeroMascotHybrid />
         </div>
       </div>
