@@ -117,7 +117,7 @@ function initHead(mount: HTMLDivElement, V: Vendor): () => void {
       const targetYaw = pointer.x * YAW;
       // Cursor down → head looks down, cursor up → head looks up
       const targetPitch = pointer.y * PITCH;
-      const k = 1 - Math.pow(0.00001, delta);
+      const k = 1 - Math.pow(1e-12, delta);
       headPivot.rotation.y += (targetYaw - headPivot.rotation.y) * k;
       headPivot.rotation.x += (targetPitch - headPivot.rotation.x) * k;
     }
