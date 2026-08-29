@@ -65,8 +65,8 @@ function initHead(mount: HTMLDivElement, V: Vendor): () => void {
   let raf = 0;
   let disposed = false;
 
-  const YAW = 0.12;   // max head turn left/right (radians)
-  const PITCH = 0.08;  // max head tilt up/down (radians)
+  const YAW = 0.25;   // max head turn left/right (radians)
+  const PITCH = 0.18;  // max head tilt up/down (radians)
 
   const draco = new DRACOLoader();
   draco.setDecoderPath(DRACO);
@@ -117,7 +117,7 @@ function initHead(mount: HTMLDivElement, V: Vendor): () => void {
       const targetYaw = pointer.x * YAW;
       // Cursor down → head looks down, cursor up → head looks up
       const targetPitch = pointer.y * PITCH;
-      const k = 1 - Math.pow(0.001, delta);
+      const k = 1 - Math.pow(0.00001, delta);
       headPivot.rotation.y += (targetYaw - headPivot.rotation.y) * k;
       headPivot.rotation.x += (targetPitch - headPivot.rotation.x) * k;
     }
@@ -208,7 +208,7 @@ export function HeroMascotHybrid({ className }: { className?: string }) {
       />
 
       {/* 3D head — TOP layer, positioned flush on the neck/collar */}
-      <Head3D className="absolute -top-[37%] left-1/2 -translate-x-[47%] w-[58%] aspect-square z-20" />
+      <Head3D className="absolute -top-[36%] left-1/2 -translate-x-[47%] w-[58%] aspect-square z-20" />
     </div>
   );
 }
