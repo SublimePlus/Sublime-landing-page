@@ -208,7 +208,7 @@ export function HeroMascotHybrid({ className }: { className?: string }) {
       />
 
       {/* 3D head — TOP layer, positioned flush on the neck/collar */}
-      <Head3D className="absolute -top-[34%] left-1/2 -translate-x-[46%] w-[58%] aspect-square z-20" />
+      <Head3D className="absolute -top-[33%] left-1/2 -translate-x-[46%] w-[58%] aspect-square z-20" />
     </div>
   );
 }
