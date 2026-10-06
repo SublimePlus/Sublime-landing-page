@@ -34,11 +34,16 @@ function config() {
   const repo = process.env.GITHUB_REPO;
   const branch = process.env.GITHUB_BRANCH || "main";
 
-  if (!token || !repo) {
+  if (!token) {
     throw new GitHubError(
-      "Publishing is not configured: set GITHUB_TOKEN and GITHUB_REPO.",
+      "Publishing is not configured: the GITHUB_TOKEN secret is not set.",
       500
     );
+  }
+  if (!repo) {
+    // Normally supplied by `vars` in wrangler.jsonc; only missing when running
+    // outside the Worker without it.
+    throw new GitHubError("Publishing is not configured: GITHUB_REPO is not set.", 500);
   }
   if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) {
     throw new GitHubError('GITHUB_REPO must look like "owner/repo".', 500);

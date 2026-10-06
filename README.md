@@ -45,20 +45,28 @@ to run or pay for.
 
 ### Setup
 
-Four values, set as **secrets on the deployment** — never in the repository:
+Two **secrets** to set on the deployment — never in the repository:
 
-| Variable | Required | What it is |
+| Secret | What it is |
+| --- | --- |
+| `ADMIN_PASSWORD` | The password for `/admin`. Without it the editor refuses to sign anyone in. |
+| `GITHUB_TOKEN` | A fine-grained personal access token created by the account that owns the repo, scoped to **this repository only**, with **Contents: Read and write**. Nothing else. |
+
+Set them with `npx wrangler secret put ADMIN_PASSWORD` (and `GITHUB_TOKEN`), or
+in the Cloudflare dashboard under the Worker's **Settings → Variables and
+Secrets**, with the type set to **Secret**. Secrets survive redeploys, which
+matters because every post saved from `/admin` triggers one.
+
+The non-secret settings are already in `wrangler.jsonc` under `vars`:
+
+| Variable | Value | Notes |
 | --- | --- | --- |
-| `ADMIN_PASSWORD` | yes | The password for `/admin`. Without it the editor refuses to sign anyone in. |
-| `GITHUB_TOKEN` | yes | A fine-grained personal access token, scoped to **this repository only**, with **Contents: Read and write**. Nothing else. |
-| `GITHUB_REPO` | yes | `owner/repo` to commit to, e.g. `SublimePlus/Sublime-landing-page`. |
-| `GITHUB_BRANCH` | no | Branch to commit to. Defaults to `main`. |
-| `ADMIN_SESSION_SECRET` | no | Signs the session cookie. Defaults to the password, which means changing the password signs every session out. |
+| `GITHUB_REPO` | `SublimePlus/Sublime-landing-page` | The repository posts are committed to. |
+| `GITHUB_BRANCH` | `main` | The branch posts are committed to, so they publish to the live site. |
+| `ADMIN_SESSION_SECRET` | *(not set)* | Optional secret that signs the session cookie. Defaults to the password, so changing the password signs everyone out. |
 
-On Cloudflare, set them with `npx wrangler secret put ADMIN_PASSWORD` (and so
-on), or in the Worker's settings in the dashboard. They arrive as
-`process.env.*`. For a local `opennextjs-cloudflare preview`, put them in
-`.dev.vars` instead — it is gitignored. `.env.example` lists them all.
+For a local `opennextjs-cloudflare preview`, put the secrets in `.dev.vars` —
+it is gitignored. `.env.example` lists every variable.
 
 ### Notes
 

@@ -39,8 +39,7 @@ export default async function AdminPage() {
       {!isPublishingConfigured() && (
         <p className="mt-6 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 text-sm text-pine dark:text-white">
           Publishing is not configured on this deployment. Set the{" "}
-          <code className="font-mono">GITHUB_TOKEN</code> and{" "}
-          <code className="font-mono">GITHUB_REPO</code> secrets to load and save posts.
+          <code className="font-mono">GITHUB_TOKEN</code> secret to load and save posts.
         </p>
       )}
 
