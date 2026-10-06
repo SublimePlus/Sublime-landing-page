@@ -12,7 +12,8 @@ import { RAW_POSTS } from "./blog-data";
  */
 
 /** Tone picks the generated cover's gradient. There is no cover photography. */
-export type PostTone = "teal" | "pine" | "lime";
+export const TONES = ["teal", "pine", "lime"] as const;
+export type PostTone = (typeof TONES)[number];
 
 /** The shape the generator emits. */
 export type RawPost = {
