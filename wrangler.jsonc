@@ -15,5 +15,14 @@
   },
   "observability": {
     "enabled": true
+  },
+  // Non-secret settings for the blog admin (/admin). They live here rather
+  // than in the dashboard because every post saved from /admin triggers a
+  // redeploy, and a deploy replaces dashboard-set text variables with what is
+  // in this file. ADMIN_PASSWORD and GITHUB_TOKEN are secrets and must NOT go
+  // here — set them with `wrangler secret put` or as Secrets in the dashboard.
+  "vars": {
+    "GITHUB_REPO": "SublimePlus/Sublime-landing-page",
+    "GITHUB_BRANCH": "main"
   }
 }

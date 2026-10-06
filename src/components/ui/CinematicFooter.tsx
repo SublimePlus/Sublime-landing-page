@@ -23,10 +23,12 @@ const MARQUEE_PHRASES = [
   "Live in 7 to 10 business days",
 ];
 
+/** Same order as the nav and the page sections. */
 const QUICK_LINKS = [
   { href: "/#services", label: "Services" },
   { href: "/#ugc", label: "UGC" },
   { href: "/#plans", label: "Plans" },
+  { href: "/blog", label: "Blogs" },
   { href: "/#faq", label: "FAQ" },
 ];
 

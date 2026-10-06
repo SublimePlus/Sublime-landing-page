@@ -194,6 +194,13 @@ because that clause does not break them down by package.
 | Nothing We Write Goes Live Without Your Written Approval | SOP-002 §5–10; SOP-004 §5–7 |
 | How We Use AI — And Where a Human Always Steps In | SOP-009 in full; SOP-007 §4; SOP-U01 §4.4 |
 
+The homepage carries a Blog section showing the three newest posts with a link
+through to the index. It sits between Plans and the FAQ, so the FAQ keeps its
+place directly before the final call to action. The section renders nothing
+when there are no posts, and its copy introduces the posts rather than making
+claims of its own, so there is nothing here to trace to an SOP beyond the posts
+already listed above.
+
 **Removed in this pass:** all three previous posts. "Why a Consistent Posting
 Schedule Beats Viral Luck" asserted a monthly-arc planning method with no SOP
 source; "How to Build a Brand Voice…" described sitting with founders, reading
@@ -266,8 +273,15 @@ most to a buyer, turnaround and the approval gate, are in the FAQ.
   `@sublimeplus_`, Facebook page `61592610954773`. They are linked in the
   footer and emitted as Organization `sameAs`, and listed in `llms.txt`.
 - The contact email `try.sublime.plus@gmail.com` is a `mailto:` link.
-- The blog has been removed entirely (route, components, content, sitemap
-  entries and BlogPosting/Breadcrumb schema) by request.
+- The blog was removed in the "new hero copy" pass by request, and has since
+  been restored by request: the `/blog` index and article routes, the three
+  posts in `content/blog/`, the sitemap entries, the BlogPosting/Breadcrumb
+  schema, and the nav and footer links. The posts are the same SOP-sourced
+  three listed under "Blog" above; their copy is unchanged.
+- Post covers are generated brand gradients, not photography. The earlier
+  version hot-linked Unsplash placeholders, which no longer fits the site:
+  `images.unoptimized` is set because Cloudflare Workers has no image
+  optimizer, so a remote photo would be fetched at full size on every view.
 
 ## Buttons
 

@@ -32,6 +32,13 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# ...but the documented template carries no secrets and belongs in git.
+!.env.example
+
+# wrangler local secrets for `opennextjs-cloudflare preview` — real values,
+# never committed. Production uses Worker secrets instead.
+.dev.vars
+.dev.vars.*
 
 # vercel
 .vercel

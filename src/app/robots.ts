@@ -23,8 +23,14 @@ const AI_CRAWLERS = [
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
-      { userAgent: "*", allow: "/" },
-      ...AI_CRAWLERS.map((userAgent) => ({ userAgent, allow: "/" })),
+      // /admin and its API are the editor, not content. They are behind a
+      // password either way; this keeps them out of indexes as well.
+      { userAgent: "*", allow: "/", disallow: ["/admin", "/api/"] },
+      ...AI_CRAWLERS.map((userAgent) => ({
+        userAgent,
+        allow: "/",
+        disallow: ["/admin", "/api/"],
+      })),
     ],
     sitemap: absoluteUrl("/sitemap.xml"),
     host: absoluteUrl("/").replace(/\/$/, ""),
