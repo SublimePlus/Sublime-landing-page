@@ -11,7 +11,10 @@
     "lint": "eslint",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "blog:data": "node scripts/build-blog-data.mjs",
+    "predev": "npm run blog:data",
+    "prebuild:next": "npm run blog:data"
   },
   "dependencies": {
     "@calcom/embed-react": "^1.5.3",
@@ -19,10 +22,10 @@
     "framer-motion": "^12.42.2",
     "gray-matter": "^4.0.3",
     "next": "^16.2.12",
-    "next-mdx-remote": "^6.0.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "reading-time": "^1.5.0"
+    "reading-time": "^1.5.0",
+    "rehype-stringify": "^10.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

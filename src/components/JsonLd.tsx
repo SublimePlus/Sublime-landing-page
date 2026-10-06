@@ -1,5 +1,6 @@
 import { absoluteUrl, site, siteUrl, socialLinks } from "@/lib/site";
 import type { FaqItem } from "@/lib/faq";
+import type { PostMeta } from "@/lib/blog";
 
 /**
  * Structured data.
@@ -79,6 +80,43 @@ export function faqSchema(items: FaqItem[]) {
       name: item.question,
       acceptedAnswer: { "@type": "Answer", text: item.answer },
     })),
+  };
+}
+
+/**
+ * A blog article. `author` and `publisher` both resolve to the organization:
+ * posts are written as the company rather than bylined, and inventing a person
+ * to fill the slot would be asserting an author who does not exist.
+ *
+ * `image` points at the post's generated Open Graph card — a real, resolvable
+ * image for this specific article, not the shared homepage one.
+ */
+export function blogPostingSchema(post: PostMeta) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": absoluteUrl(`/blog/${post.slug}#article`),
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.date,
+    dateModified: post.date,
+    image: absoluteUrl(`/blog/${post.slug}/opengraph-image`),
+    mainEntityOfPage: absoluteUrl(`/blog/${post.slug}`),
+    author: { "@id": ORGANIZATION_ID },
+    publisher: { "@id": ORGANIZATION_ID },
+    inLanguage: "en",
+  };
+}
+
+export function breadcrumbSchema(post: PostMeta) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+      { "@type": "ListItem", position: 2, name: "Blog", item: absoluteUrl("/blog") },
+      { "@type": "ListItem", position: 3, name: post.title },
+    ],
   };
 }
 

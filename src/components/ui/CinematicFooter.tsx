@@ -28,6 +28,7 @@ const QUICK_LINKS = [
   { href: "/#ugc", label: "UGC" },
   { href: "/#plans", label: "Plans" },
   { href: "/#faq", label: "FAQ" },
+  { href: "/blog", label: "Blog" },
 ];
 
 export function CinematicFooter() {

@@ -266,8 +266,15 @@ most to a buyer, turnaround and the approval gate, are in the FAQ.
   `@sublimeplus_`, Facebook page `61592610954773`. They are linked in the
   footer and emitted as Organization `sameAs`, and listed in `llms.txt`.
 - The contact email `try.sublime.plus@gmail.com` is a `mailto:` link.
-- The blog has been removed entirely (route, components, content, sitemap
-  entries and BlogPosting/Breadcrumb schema) by request.
+- The blog was removed in the "new hero copy" pass by request, and has since
+  been restored by request: the `/blog` index and article routes, the three
+  posts in `content/blog/`, the sitemap entries, the BlogPosting/Breadcrumb
+  schema, and the nav and footer links. The posts are the same SOP-sourced
+  three listed under "Blog" above; their copy is unchanged.
+- Post covers are generated brand gradients, not photography. The earlier
+  version hot-linked Unsplash placeholders, which no longer fits the site:
+  `images.unoptimized` is set because Cloudflare Workers has no image
+  optimizer, so a remote photo would be fetched at full size on every view.
 
 ## Buttons
 
