@@ -127,7 +127,7 @@ continuation. Service begins once payment is confirmed.
 
 ## Pages
 
-- [Home](/): services, UGC product lines, process, packages, FAQ and booking.
+- [Home](/): services, UGC product lines, process, packages, latest blog posts, FAQ and booking.
 - [Blog](/blog): articles on how Sublime Plus works, written up from the SOPs.
 
 ## Notes for automated readers
