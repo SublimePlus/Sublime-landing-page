@@ -9,16 +9,20 @@ import { BookMeetingButton } from "./booking/BookMeetingButton";
 import { ThemeToggle } from "./theme/ThemeToggle";
 
 /**
- * `id` ties a link to a homepage section for the scroll-spy underline. Blog is
- * a route rather than a section, so it carries no id and is highlighted from
- * the pathname instead.
+ * Order matches the order the sections appear on the page, so the underline
+ * moves along the nav in step with the scroll rather than jumping about.
+ *
+ * `id` ties a link to a homepage section for the scroll-spy underline. `route`
+ * keeps a link highlighted while you are on its own page. Blogs carries both:
+ * it underlines as the homepage section passes, and stays underlined on
+ * /blog itself — which is still where clicking it goes.
  */
-const links: { href: string; label: string; id: string | null }[] = [
+const links: { href: string; label: string; id?: string; route?: string }[] = [
   { href: "/#services", label: "Services", id: "services" },
   { href: "/#ugc", label: "UGC", id: "ugc" },
   { href: "/#plans", label: "Plans", id: "plans" },
+  { href: "/blog", label: "Blogs", id: "blog", route: "/blog" },
   { href: "/#faq", label: "FAQ", id: "faq" },
-  { href: "/blog", label: "Blogs", id: null },
 ];
 
 export function Nav() {
@@ -61,9 +65,9 @@ export function Nav() {
         </Link>
         <div className="hidden items-center gap-8 md:flex">
           {links.map((link) => {
-            const active = link.id
-              ? link.id === activeId
-              : pathname.startsWith(link.href);
+            const active =
+              (link.route !== undefined && pathname.startsWith(link.route)) ||
+              (link.id !== undefined && link.id === activeId);
 
             return (
               <Link
