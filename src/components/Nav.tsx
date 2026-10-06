@@ -18,7 +18,7 @@ const links: { href: string; label: string; id: string | null }[] = [
   { href: "/#ugc", label: "UGC", id: "ugc" },
   { href: "/#plans", label: "Plans", id: "plans" },
   { href: "/#faq", label: "FAQ", id: "faq" },
-  { href: "/blog", label: "Blog", id: null },
+  { href: "/blog", label: "Blogs", id: null },
 ];
 
 export function Nav() {

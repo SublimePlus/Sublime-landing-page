@@ -27,7 +27,7 @@ export function Blog() {
       <div className="relative mx-auto max-w-6xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal-ink">
-            From the blog
+            Blogs
           </p>
           {/* Deliberately not the blog index's own heading and intro. Running
               identical copy on / and /blog would be duplicate content on the
