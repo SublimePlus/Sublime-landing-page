@@ -50,7 +50,7 @@ Two **secrets** to set on the deployment — never in the repository:
 | Secret | What it is |
 | --- | --- |
 | `ADMIN_PASSWORD` | The password for `/admin`. Without it the editor refuses to sign anyone in. |
-| `GITHUB_TOKEN` | A fine-grained personal access token with **Resource owner** set to the `SublimePlus` organization (not a personal account), scoped to **this repository only**, with **Contents: Read and write**. Nothing else. |
+| `GITHUB_TOKEN` | A fine-grained personal access token with **Resource owner** set to `SublimePlus`, the account that owns the repo, scoped to **this repository only**, with **Contents: Read and write**. Nothing else. |
 
 Set them with `npx wrangler secret put ADMIN_PASSWORD` (and `GITHUB_TOKEN`), or
 in the Cloudflare dashboard under the Worker's **Settings → Variables and
@@ -59,10 +59,11 @@ matters because every post saved from `/admin` triggers one.
 
 If `/admin` shows **"Resource not accessible by personal access token"** (or the
 fuller message pointing here), the token can read but not write. Usual causes:
-the token's resource owner is a personal account rather than `SublimePlus`; it
+the token's resource owner is some other account rather than `SublimePlus`; it
 was given Contents **Read-only**; the repository was not selected; or the
-organization requires approval for fine-grained tokens and it is still pending
-(Organization **Settings → Personal access tokens → Pending requests**). Fix the
+owner is an organization that requires approval for fine-grained tokens and it
+is still pending (Organization **Settings → Personal access tokens → Pending
+requests**). Fix the
 token, then replace the `GITHUB_TOKEN` secret — no redeploy of code is needed.
 
 The non-secret settings are already in `wrangler.jsonc` under `vars`:

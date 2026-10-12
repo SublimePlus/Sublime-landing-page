@@ -85,9 +85,9 @@ async function request(path: string, init: RequestInit = {}) {
     if (response.status === 403 && /not accessible by personal access token/i.test(detail)) {
       throw new GitHubError(
         `GitHub refused the write: the GITHUB_TOKEN lacks access. Create a fine-grained ` +
-          `token with Resource owner set to "${config().repo.split("/")[0]}" (not your ` +
-          `personal account), this repository only, Contents: Read and write; get it ` +
-          `approved under the organization's Personal access tokens settings if required; ` +
+          `token with Resource owner set to "${config().repo.split("/")[0]}", this ` +
+          `repository only, Contents: Read and write; if that owner is an organization ` +
+          `that requires approval, approve it under its Personal access tokens settings; ` +
           `then replace the GITHUB_TOKEN secret in Cloudflare.`,
         response.status
       );
