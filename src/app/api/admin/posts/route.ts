@@ -1,7 +1,19 @@
 import { NextResponse } from "next/server";
 import { isLoggedIn } from "@/lib/admin/auth";
-import { GitHubError, getPostFile, listPosts, savePostFile } from "@/lib/admin/github";
-import { parsePost, serializePost, validatePost, type PostInput } from "@/lib/admin/posts";
+import {
+  GitHubError,
+  getOrderFile,
+  getPostFile,
+  listPosts,
+  savePostFile,
+} from "@/lib/admin/github";
+import {
+  applyOrder,
+  parsePost,
+  serializePost,
+  validatePost,
+  type PostInput,
+} from "@/lib/admin/posts";
 
 export const dynamic = "force-dynamic";
 
@@ -24,25 +36,22 @@ export async function GET() {
   if (!(await isLoggedIn())) return unauthorized();
 
   try {
-    const files = await listPosts();
+    const [files, order] = await Promise.all([listPosts(), getOrderFile()]);
     const posts = await Promise.all(
       files.map(async (file) => {
         const stored = await getPostFile(file.slug);
-        const parsed = stored
-          ? parsePost(file.slug, stored.markdown)
-          : { slug: file.slug, title: file.slug, excerpt: "", date: "", tone: "teal" as const, body: "" };
+        const parsed = stored ? parsePost(file.slug, stored.markdown) : null;
         return {
-          slug: parsed.slug,
-          title: parsed.title,
-          excerpt: parsed.excerpt,
-          date: parsed.date,
-          tone: parsed.tone,
+          slug: file.slug,
+          title: parsed?.title ?? file.slug,
+          date: parsed?.date ?? "",
+          author: parsed?.author ?? "",
+          archived: parsed?.archived ?? false,
         };
       })
     );
 
-    posts.sort((a, b) => (a.date < b.date ? 1 : -1));
-    return NextResponse.json({ posts });
+    return NextResponse.json({ posts: applyOrder(posts, order.slugs) });
   } catch (error) {
     return fromGitHubError(error);
   }
@@ -62,7 +71,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ errors }, { status: 400 });
   }
 
-  const input = body as PostInput;
+  const input: PostInput = {
+    ...(body as PostInput),
+    author: body.author ?? "",
+    cover: body.cover ?? "",
+    archived: body.archived === true,
+  };
 
   try {
     const existing = await getPostFile(input.slug);

@@ -79,6 +79,16 @@ it is gitignored. `.env.example` lists every variable.
 
 ### Notes
 
+- **Images**: a post can have an uploaded cover (otherwise it uses the
+  generated gradient), and *Insert image* adds images to the body. Uploads are
+  PNG/JPEG/WebP/GIF up to 3 MB, committed to `public/blog-images/`, and appear
+  once the deploy their commit triggers finishes.
+- **Author**: optional `author` frontmatter, shown as "By …" and used as the
+  article's schema.org author.
+- **Order**: ↑/↓ and *Save order* write `content/blog/order.json`. Posts not in
+  it (e.g. new ones) come first, newest first.
+- **Archive**: `archived: true` keeps the file but leaves the post off the site,
+  sitemap and listings; *Restore* brings it back. Delete is permanent.
 - The editor writes Markdown, not MDX. HTML and JSX in a post body are escaped,
   not rendered.
 - Posts are validated before anything is committed — a malformed post would

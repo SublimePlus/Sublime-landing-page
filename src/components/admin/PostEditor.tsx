@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TONES, type PostTone } from "@/lib/blog";
 import { slugify } from "@/lib/admin/posts";
 
@@ -12,6 +12,9 @@ type Draft = {
   excerpt: string;
   date: string;
   tone: PostTone;
+  author: string;
+  cover: string;
+  archived: boolean;
   body: string;
 };
 
@@ -21,8 +24,34 @@ const BLANK: Draft = {
   excerpt: "",
   date: new Date().toISOString().slice(0, 10),
   tone: "teal",
+  author: "",
+  cover: "",
+  archived: false,
   body: "",
 };
+
+/**
+ * Reads a file as base64 and commits it through /api/admin/images. Returns the
+ * public path. The file only exists on the live site after the deploy that
+ * commit triggers, so callers preview it from the local file meanwhile.
+ */
+async function uploadImage(file: File): Promise<string> {
+  const data = await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).replace(/^data:[^,]*,/, ""));
+    reader.onerror = () => reject(new Error("Could not read that file."));
+    reader.readAsDataURL(file);
+  });
+
+  const response = await fetch("/api/admin/images", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: file.name, type: file.type, data }),
+  });
+  const result = (await response.json().catch(() => ({}))) as { path?: string; error?: string };
+  if (!response.ok || !result.path) throw new Error(result.error ?? "Could not upload the image.");
+  return result.path;
+}
 
 const FIELD =
   "mt-2 w-full rounded-xl border border-pine/15 bg-white px-4 py-3 text-pine outline-none focus:border-teal dark:border-white/15 dark:bg-night/60 dark:text-white";
@@ -41,6 +70,11 @@ export function PostEditor({ slug }: { slug?: string }) {
   // Only auto-fill the slug until the author types one; silently rewriting a
   // slug they chose would change a published URL under them.
   const [slugTouched, setSlugTouched] = useState(!isNew);
+  const [uploading, setUploading] = useState<"cover" | "body" | null>(null);
+  // A just-uploaded image is not on the live site until the deploy finishes, so
+  // the cover preview shows the local file until then.
+  const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  const bodyRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (isNew) return;
@@ -55,7 +89,7 @@ export function PostEditor({ slug }: { slug?: string }) {
           setError(data.error ?? "Could not load the post.");
           return;
         }
-        if (data.post) setDraft(data.post);
+        if (data.post) setDraft({ ...BLANK, ...data.post });
       } catch {
         if (!cancelled) setError("Could not reach the server.");
       } finally {
@@ -75,6 +109,39 @@ export function PostEditor({ slug }: { slug?: string }) {
       if (key === "title" && !slugTouched) next.slug = slugify(String(value));
       return next;
     });
+  }
+
+  async function onCoverFile(file: File | undefined) {
+    if (!file) return;
+    setUploading("cover");
+    setError(null);
+    try {
+      const path = await uploadImage(file);
+      setCoverPreview(URL.createObjectURL(file));
+      update("cover", path);
+    } catch (uploadError) {
+      setError((uploadError as Error).message);
+    } finally {
+      setUploading(null);
+    }
+  }
+
+  async function onBodyImage(file: File | undefined) {
+    if (!file) return;
+    setUploading("body");
+    setError(null);
+    try {
+      const path = await uploadImage(file);
+      const alt = file.name.replace(/\.[^.]+$/, "").replace(/[[\]]/g, "");
+      const snippet = `\n\n![${alt}](${path})\n\n`;
+      const textarea = bodyRef.current;
+      const at = textarea ? textarea.selectionStart : draft.body.length;
+      update("body", draft.body.slice(0, at) + snippet + draft.body.slice(at));
+    } catch (uploadError) {
+      setError((uploadError as Error).message);
+    } finally {
+      setUploading(null);
+    }
   }
 
   async function onSave(event: React.FormEvent) {
@@ -168,6 +235,64 @@ export function PostEditor({ slug }: { slug?: string }) {
           <FieldError message={fieldErrors.excerpt} />
         </label>
 
+        <label className={LABEL}>
+          Author
+          <input
+            value={draft.author}
+            onChange={(event) => update("author", event.target.value)}
+            placeholder="e.g. Mayar"
+            className={FIELD}
+          />
+          <span className="mt-1 block text-xs text-stone dark:text-white/50">
+            Optional. Shown as &ldquo;By …&rdquo; on the post and its card.
+          </span>
+          <FieldError message={fieldErrors.author} />
+        </label>
+
+        <div className={LABEL}>
+          Cover image
+          <div className="mt-2 flex flex-wrap items-center gap-4">
+            {(coverPreview || draft.cover) && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={coverPreview ?? draft.cover}
+                alt="Cover preview"
+                className="h-24 w-40 rounded-xl border border-pine/15 object-cover dark:border-white/15"
+              />
+            )}
+            <label className="cursor-pointer rounded-full border border-pine/15 px-4 py-2 text-sm font-semibold text-pine hover:border-teal dark:border-white/15 dark:text-white">
+              {uploading === "cover" ? "Uploading…" : draft.cover ? "Replace image" : "Upload image"}
+              <input
+                type="file"
+                accept="image/png,image/jpeg,image/webp,image/gif"
+                className="sr-only"
+                disabled={uploading !== null}
+                onChange={(event) => {
+                  void onCoverFile(event.target.files?.[0]);
+                  event.target.value = "";
+                }}
+              />
+            </label>
+            {draft.cover && (
+              <button
+                type="button"
+                onClick={() => {
+                  setCoverPreview(null);
+                  update("cover", "");
+                }}
+                className="text-sm font-semibold text-red-600 dark:text-red-400"
+              >
+                Remove
+              </button>
+            )}
+          </div>
+          <span className="mt-1 block text-xs font-normal text-stone dark:text-white/50">
+            Optional. PNG, JPEG, WebP or GIF, up to 3 MB; a 16:9 image works best.
+            Without one, the post uses the generated cover below.
+          </span>
+          <FieldError message={fieldErrors.cover} />
+        </div>
+
         <div className="grid gap-5 sm:grid-cols-2">
           <label className={LABEL}>
             Date
@@ -199,12 +324,44 @@ export function PostEditor({ slug }: { slug?: string }) {
             </span>
           </label>
         </div>
+
+        <label className="flex items-start gap-3 text-sm text-pine dark:text-white">
+          <input
+            type="checkbox"
+            checked={draft.archived}
+            onChange={(event) => update("archived", event.target.checked)}
+            className="mt-1 h-4 w-4 accent-teal"
+          />
+          <span>
+            <span className="font-medium">Archived</span>
+            <span className="block text-xs text-stone dark:text-white/50">
+              Hidden from the site but kept here, so it can be restored later.
+            </span>
+          </span>
+        </label>
       </div>
 
       <div className="glass-panel rounded-2xl p-6">
-        <label className={LABEL}>
-          Body (Markdown)
+        <div className={LABEL}>
+          <span className="flex flex-wrap items-center justify-between gap-2">
+            Body (Markdown)
+            <label className="cursor-pointer rounded-full border border-pine/15 px-3 py-1 text-xs font-semibold hover:border-teal dark:border-white/15">
+              {uploading === "body" ? "Uploading…" : "Insert image"}
+              <input
+                type="file"
+                accept="image/png,image/jpeg,image/webp,image/gif"
+                className="sr-only"
+                disabled={uploading !== null}
+                onChange={(event) => {
+                  void onBodyImage(event.target.files?.[0]);
+                  event.target.value = "";
+                }}
+              />
+            </label>
+          </span>
           <textarea
+            ref={bodyRef}
+            aria-label="Body (Markdown)"
             value={draft.body}
             onChange={(event) => update("body", event.target.value)}
             rows={22}
@@ -213,10 +370,11 @@ export function PostEditor({ slug }: { slug?: string }) {
           />
           <span className="mt-1 block text-xs text-stone dark:text-white/50">
             Markdown: <code>## Heading</code>, <code>**bold**</code>, <code>*italic*</code>,{" "}
-            <code>- list</code>, <code>[link](url)</code>. HTML is escaped, not rendered.
+            <code>- list</code>, <code>[link](url)</code>, <code>![alt](image)</code>. HTML is
+            escaped, not rendered. Uploaded images appear once the deploy finishes.
           </span>
           <FieldError message={fieldErrors.body} />
-        </label>
+        </div>
       </div>
 
       {error && (
@@ -235,7 +393,7 @@ export function PostEditor({ slug }: { slug?: string }) {
       <div className="flex items-center gap-3">
         <button
           type="submit"
-          disabled={saving}
+          disabled={saving || uploading !== null}
           className="neon-teal-btn rounded-full bg-pine px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-teal disabled:opacity-50 dark:bg-teal dark:hover:bg-teal-dark"
         >
           {saving ? "Saving…" : isNew ? "Publish post" : "Save changes"}

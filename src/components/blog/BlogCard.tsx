@@ -14,11 +14,13 @@ export function BlogCard({ post }: { post: PostMeta }) {
     >
       <BlogCover
         tone={post.tone}
+        image={post.cover}
         className="aspect-[16/10] transition-transform duration-500 group-hover:scale-[1.03]"
       />
       <div className="flex flex-1 flex-col p-5">
         <p className="text-xs font-medium text-stone dark:text-white/50">
           {formatPostDate(post.date)} · {post.readingTime}
+          {post.author && <> · {post.author}</>}
         </p>
         <h3 className="mt-2 text-lg font-semibold text-pine group-hover:text-teal-ink dark:text-white dark:group-hover:text-lime">
           {post.title}

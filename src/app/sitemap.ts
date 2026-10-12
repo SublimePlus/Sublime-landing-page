@@ -14,8 +14,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: absoluteUrl("/blog"),
-      // The index is only as fresh as its newest post.
-      lastModified: posts[0] ? new Date(posts[0].date) : new Date(),
+      // The index is only as fresh as its newest post. Posts can be re-ordered,
+      // so the newest is not necessarily the first.
+      lastModified: posts.length
+        ? new Date(posts.reduce((newest, post) => (post.date > newest ? post.date : newest), ""))
+        : new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
     },

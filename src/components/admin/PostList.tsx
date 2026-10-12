@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { formatPostDate } from "@/lib/blog";
 
-type Row = { slug: string; title: string; excerpt: string; date: string };
+type Row = { slug: string; title: string; date: string; author: string; archived: boolean };
 
 /** Unauthorised is signalled rather than thrown: it means "re-render the gate". */
 type FetchResult =
@@ -40,7 +40,12 @@ export function PostList() {
   const router = useRouter();
   const [posts, setPosts] = useState<Row[] | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [deleting, setDeleting] = useState<string | null>(null);
+  // The slug a row action (delete, archive) is running for.
+  const [busy, setBusy] = useState<string | null>(null);
+  // Moving rows is local until "Save order"; this is the list as last loaded.
+  const [savedOrder, setSavedOrder] = useState<string[]>([]);
+  const [savingOrder, setSavingOrder] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
   const [reloadToken, setReloadToken] = useState(0);
 
   useEffect(() => {
@@ -60,6 +65,7 @@ export function PostList() {
       }
       setError(null);
       setPosts(result.posts);
+      setSavedOrder(result.posts.map((post) => post.slug));
     })();
 
     return () => {
@@ -70,13 +76,85 @@ export function PostList() {
   /** Bumping the token re-runs the effect; nothing else re-fetches. */
   const reload = () => setReloadToken((token) => token + 1);
 
+  const orderChanged =
+    posts !== null && posts.map((post) => post.slug).join() !== savedOrder.join();
+
+  function move(index: number, by: -1 | 1) {
+    setNotice(null);
+    setPosts((current) => {
+      if (!current) return current;
+      const target = index + by;
+      if (target < 0 || target >= current.length) return current;
+      const next = [...current];
+      [next[index], next[target]] = [next[target], next[index]];
+      return next;
+    });
+  }
+
+  async function onSaveOrder() {
+    if (!posts) return;
+    setSavingOrder(true);
+    setError(null);
+    try {
+      const response = await fetch("/api/admin/order", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slugs: posts.map((post) => post.slug) }),
+      });
+      if (!response.ok) {
+        const data = (await response.json().catch(() => ({}))) as { error?: string };
+        setError(data.error ?? "Could not save the order.");
+        return;
+      }
+      setSavedOrder(posts.map((post) => post.slug));
+      setNotice("Order saved. The site updates once the deploy finishes, usually a minute or two.");
+    } catch {
+      setError("Could not reach the server.");
+    } finally {
+      setSavingOrder(false);
+    }
+  }
+
+  async function onArchive(slug: string, archived: boolean) {
+    setBusy(slug);
+    setError(null);
+    setNotice(null);
+    try {
+      const response = await fetch(`/api/admin/posts/${slug}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ archived }),
+      });
+      if (!response.ok) {
+        const data = (await response.json().catch(() => ({}))) as { error?: string };
+        setError(data.error ?? "Could not update the post.");
+        return;
+      }
+      setNotice(
+        archived
+          ? "Archived. It disappears from the site after the deploy; restore it any time."
+          : "Restored. It reappears on the site after the deploy."
+      );
+      reload();
+    } catch {
+      setError("Could not reach the server.");
+    } finally {
+      setBusy(null);
+    }
+  }
+
   async function onDelete(slug: string, title: string) {
-    if (!window.confirm(`Delete "${title}"? This commits the deletion to the repository.`)) {
+    if (
+      !window.confirm(
+        `Delete "${title}" permanently? To hide it without losing it, use Archive instead.`
+      )
+    ) {
       return;
     }
 
-    setDeleting(slug);
+    setBusy(slug);
     setError(null);
+    setNotice(null);
     try {
       const response = await fetch(`/api/admin/posts/${slug}`, { method: "DELETE" });
       if (!response.ok) {
@@ -88,7 +166,7 @@ export function PostList() {
     } catch {
       setError("Could not reach the server.");
     } finally {
-      setDeleting(null);
+      setBusy(null);
     }
   }
 
@@ -121,38 +199,107 @@ export function PostList() {
     );
   }
 
+  const ROW_BUTTON =
+    "rounded-full border border-pine/15 px-4 py-2 text-sm font-semibold text-pine hover:border-teal disabled:opacity-50 dark:border-white/15 dark:text-white";
+  const ARROW =
+    "flex h-8 w-8 items-center justify-center rounded-full border border-pine/15 text-pine hover:border-teal disabled:opacity-30 dark:border-white/15 dark:text-white";
+
   return (
-    <ul className="space-y-3">
-      {posts.map((post) => (
-        <li
-          key={post.slug}
-          className="glass-panel flex flex-col gap-4 rounded-2xl p-5 sm:flex-row sm:items-center sm:justify-between"
-        >
-          <div className="min-w-0">
-            <p className="text-xs font-medium text-stone dark:text-white/50">
-              {post.date ? formatPostDate(post.date) : "No date"} · /blog/{post.slug}
-            </p>
-            <h2 className="mt-1 truncate text-base font-semibold text-pine dark:text-white">
-              {post.title || post.slug}
-            </h2>
-          </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <Link
-              href={`/admin/edit/${post.slug}`}
-              className="rounded-full border border-pine/15 px-4 py-2 text-sm font-semibold text-pine hover:border-teal dark:border-white/15 dark:text-white"
-            >
-              Edit
-            </Link>
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-stone dark:text-white/60">
+          Use ↑ ↓ to set the order posts appear in on the site, then save.
+        </p>
+        {orderChanged && (
+          <div className="flex items-center gap-2">
             <button
-              onClick={() => void onDelete(post.slug, post.title || post.slug)}
-              disabled={deleting === post.slug}
-              className="rounded-full border border-red-500/30 px-4 py-2 text-sm font-semibold text-red-600 hover:border-red-500 disabled:opacity-50 dark:text-red-400"
+              onClick={() => reload()}
+              disabled={savingOrder}
+              className={ROW_BUTTON}
             >
-              {deleting === post.slug ? "Deleting…" : "Delete"}
+              Undo
+            </button>
+            <button
+              onClick={() => void onSaveOrder()}
+              disabled={savingOrder}
+              className="neon-teal-btn rounded-full bg-pine px-5 py-2 text-sm font-semibold text-white hover:bg-teal disabled:opacity-50 dark:bg-teal dark:hover:bg-teal-dark"
+            >
+              {savingOrder ? "Saving…" : "Save order"}
             </button>
           </div>
-        </li>
-      ))}
-    </ul>
+        )}
+      </div>
+
+      {notice && (
+        <p className="rounded-xl border border-teal/40 bg-teal/10 p-4 text-sm text-pine dark:text-white">
+          {notice}
+        </p>
+      )}
+
+      <ul className="space-y-3">
+        {posts.map((post, index) => (
+          <li
+            key={post.slug}
+            className={`glass-panel flex flex-col gap-4 rounded-2xl p-5 sm:flex-row sm:items-center sm:justify-between ${
+              post.archived ? "opacity-60" : ""
+            }`}
+          >
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="flex shrink-0 flex-col gap-1">
+                <button
+                  onClick={() => move(index, -1)}
+                  disabled={index === 0 || savingOrder}
+                  aria-label={`Move "${post.title || post.slug}" up`}
+                  className={ARROW}
+                >
+                  ↑
+                </button>
+                <button
+                  onClick={() => move(index, 1)}
+                  disabled={index === posts.length - 1 || savingOrder}
+                  aria-label={`Move "${post.title || post.slug}" down`}
+                  className={ARROW}
+                >
+                  ↓
+                </button>
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-medium text-stone dark:text-white/50">
+                  {post.date ? formatPostDate(post.date) : "No date"} · /blog/{post.slug}
+                  {post.author && <> · {post.author}</>}
+                </p>
+                <h2 className="mt-1 truncate text-base font-semibold text-pine dark:text-white">
+                  {post.archived && (
+                    <span className="mr-2 rounded-full bg-amber-500/20 px-2 py-0.5 align-middle text-xs font-semibold text-amber-700 dark:text-amber-300">
+                      Archived
+                    </span>
+                  )}
+                  {post.title || post.slug}
+                </h2>
+              </div>
+            </div>
+            <div className="flex shrink-0 flex-wrap items-center gap-2">
+              <Link href={`/admin/edit/${post.slug}`} className={ROW_BUTTON}>
+                Edit
+              </Link>
+              <button
+                onClick={() => void onArchive(post.slug, !post.archived)}
+                disabled={busy === post.slug}
+                className={ROW_BUTTON}
+              >
+                {post.archived ? "Restore" : "Archive"}
+              </button>
+              <button
+                onClick={() => void onDelete(post.slug, post.title || post.slug)}
+                disabled={busy === post.slug}
+                className="rounded-full border border-red-500/30 px-4 py-2 text-sm font-semibold text-red-600 hover:border-red-500 disabled:opacity-50 dark:text-red-400"
+              >
+                Delete
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
