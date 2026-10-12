@@ -13,6 +13,11 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
+  // Workers AI, used by /admin to suggest cover images. Generation draws on the
+  // account's free daily allowance; nothing is generated unless an admin asks.
+  "ai": {
+    "binding": "AI"
+  },
   "observability": {
     "enabled": true
   },
