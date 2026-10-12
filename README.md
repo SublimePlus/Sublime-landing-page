@@ -83,6 +83,10 @@ it is gitignored. `.env.example` lists every variable.
   generated gradient), and *Insert image* adds images to the body. Uploads are
   PNG/JPEG/WebP/GIF up to 3 MB, committed to `public/blog-images/`, and appear
   once the deploy their commit triggers finishes.
+- **AI cover suggestions**: when a post has no cover, the editor generates one
+  from the title and excerpt with Workers AI (`ai` binding in `wrangler.jsonc`,
+  free daily allowance). Nothing is committed until *Use this image*; *Try
+  another* regenerates. Only works on the deployed Worker, not `next dev`.
 - **Author**: optional `author` frontmatter, shown as "By …" and used as the
   article's schema.org author.
 - **Order**: ↑/↓ and *Save order* write `content/blog/order.json`. Posts not in

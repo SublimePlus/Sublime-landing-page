@@ -42,15 +42,46 @@ async function uploadImage(file: File): Promise<string> {
     reader.onerror = () => reject(new Error("Could not read that file."));
     reader.readAsDataURL(file);
   });
+  return uploadImageData(file.name, file.type, data);
+}
 
+/** Same as `uploadImage`, for bytes already in base64 (a generated suggestion). */
+async function uploadImageData(name: string, type: string, data: string): Promise<string> {
   const response = await fetch("/api/admin/images", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name: file.name, type: file.type, data }),
+    body: JSON.stringify({ name, type, data }),
   });
   const result = (await response.json().catch(() => ({}))) as { path?: string; error?: string };
   if (!response.ok || !result.path) throw new Error(result.error ?? "Could not upload the image.");
   return result.path;
+}
+
+type Suggestion = { type: string; data: string };
+
+/** Asks Workers AI for a cover. Pure fetch, so effects can call it directly. */
+async function fetchSuggestion(
+  title: string,
+  excerpt: string
+): Promise<{ suggestion: Suggestion } | { error: string }> {
+  try {
+    const response = await fetch("/api/admin/images/suggest", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, excerpt }),
+    });
+    const result = (await response.json().catch(() => ({}))) as {
+      type?: string;
+      data?: string;
+      error?: string;
+    };
+    if (!response.ok || !result.data || !result.type) {
+      return { error: result.error ?? "Could not generate an image." };
+    }
+    return { suggestion: { type: result.type, data: result.data } };
+  } catch {
+    return { error: "Could not reach the server." };
+  }
 }
 
 const FIELD =
@@ -75,6 +106,14 @@ export function PostEditor({ slug }: { slug?: string }) {
   // the cover preview shows the local file until then.
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const bodyRef = useRef<HTMLTextAreaElement>(null);
+  // A generated cover waiting for the admin to accept or reject it. It exists
+  // only in this tab until accepted; nothing is committed before that.
+  const [suggestion, setSuggestion] = useState<Suggestion | null>(null);
+  const [suggesting, setSuggesting] = useState(false);
+  const [suggestError, setSuggestError] = useState<string | null>(null);
+  // Auto-suggest at most once per editor visit, so the free allowance is spent
+  // only when someone asks for another.
+  const autoSuggested = useRef(false);
 
   useEffect(() => {
     if (isNew) return;
@@ -89,7 +128,20 @@ export function PostEditor({ slug }: { slug?: string }) {
           setError(data.error ?? "Could not load the post.");
           return;
         }
-        if (data.post) setDraft({ ...BLANK, ...data.post });
+        if (data.post) {
+          const post = { ...BLANK, ...data.post };
+          setDraft(post);
+          if (!post.cover && post.title && !autoSuggested.current) {
+            autoSuggested.current = true;
+            setSuggesting(true);
+            void fetchSuggestion(post.title, post.excerpt).then((result) => {
+              if (cancelled) return;
+              setSuggesting(false);
+              if ("error" in result) setSuggestError(result.error);
+              else setSuggestion(result.suggestion);
+            });
+          }
+        }
       } catch {
         if (!cancelled) setError("Could not reach the server.");
       } finally {
@@ -111,6 +163,36 @@ export function PostEditor({ slug }: { slug?: string }) {
     });
   }
 
+  async function suggestCover(title = draft.title, excerpt = draft.excerpt) {
+    if (!title.trim()) {
+      setSuggestError("Write a title first; the image is generated from it.");
+      return;
+    }
+    setSuggesting(true);
+    setSuggestError(null);
+    const result = await fetchSuggestion(title, excerpt);
+    setSuggesting(false);
+    if ("error" in result) setSuggestError(result.error);
+    else setSuggestion(result.suggestion);
+  }
+
+  async function acceptSuggestion() {
+    if (!suggestion) return;
+    setUploading("cover");
+    setError(null);
+    try {
+      const name = `${draft.slug || slugify(draft.title) || "cover"}-ai`;
+      const path = await uploadImageData(name, suggestion.type, suggestion.data);
+      setCoverPreview(`data:${suggestion.type};base64,${suggestion.data}`);
+      setSuggestion(null);
+      update("cover", path);
+    } catch (uploadError) {
+      setError((uploadError as Error).message);
+    } finally {
+      setUploading(null);
+    }
+  }
+
   async function onCoverFile(file: File | undefined) {
     if (!file) return;
     setUploading("cover");
@@ -118,6 +200,7 @@ export function PostEditor({ slug }: { slug?: string }) {
     try {
       const path = await uploadImage(file);
       setCoverPreview(URL.createObjectURL(file));
+      setSuggestion(null);
       update("cover", path);
     } catch (uploadError) {
       setError((uploadError as Error).message);
@@ -194,6 +277,13 @@ export function PostEditor({ slug }: { slug?: string }) {
           <input
             value={draft.title}
             onChange={(event) => update("title", event.target.value)}
+            onBlur={() => {
+              // New posts: suggest a cover once the title is written.
+              if (isNew && !draft.cover && draft.title.trim() && !autoSuggested.current) {
+                autoSuggested.current = true;
+                void suggestCover();
+              }
+            }}
             className={FIELD}
             required
           />
@@ -291,6 +381,63 @@ export function PostEditor({ slug }: { slug?: string }) {
             Without one, the post uses the generated cover below.
           </span>
           <FieldError message={fieldErrors.cover} />
+
+          {!draft.cover && (
+            <div className="mt-4 rounded-xl border border-dashed border-teal/50 p-4 font-normal">
+              <p className="text-sm font-medium text-pine dark:text-white">
+                Suggested cover (AI-generated from the title)
+              </p>
+              {suggesting && (
+                <p className="mt-2 text-sm text-stone dark:text-white/60">
+                  Generating an image for this post… this takes a few seconds.
+                </p>
+              )}
+              {suggestError && !suggesting && (
+                <p className="mt-2 text-sm text-red-600 dark:text-red-400">{suggestError}</p>
+              )}
+              {suggestion && !suggesting && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={`data:${suggestion.type};base64,${suggestion.data}`}
+                  alt="Suggested cover"
+                  className="mt-3 aspect-[16/9] w-full max-w-md rounded-xl object-cover"
+                />
+              )}
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                {suggestion && !suggesting && (
+                  <button
+                    type="button"
+                    onClick={() => void acceptSuggestion()}
+                    disabled={uploading !== null}
+                    className="neon-teal-btn rounded-full bg-pine px-4 py-2 text-sm font-semibold text-white hover:bg-teal disabled:opacity-50 dark:bg-teal dark:hover:bg-teal-dark"
+                  >
+                    {uploading === "cover" ? "Uploading…" : "Use this image"}
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => void suggestCover()}
+                  disabled={suggesting || uploading !== null}
+                  className="rounded-full border border-pine/15 px-4 py-2 text-sm font-semibold text-pine hover:border-teal disabled:opacity-50 dark:border-white/15 dark:text-white"
+                >
+                  {suggestion ? "Try another" : "Generate an image"}
+                </button>
+                {suggestion && !suggesting && (
+                  <button
+                    type="button"
+                    onClick={() => setSuggestion(null)}
+                    className="text-sm font-semibold text-stone hover:text-pine dark:text-white/60 dark:hover:text-white"
+                  >
+                    Dismiss
+                  </button>
+                )}
+              </div>
+              <p className="mt-2 text-xs text-stone dark:text-white/50">
+                Nothing is saved until you click &ldquo;Use this image&rdquo;, then save the post.
+                Or upload your own above.
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="grid gap-5 sm:grid-cols-2">
