@@ -80,6 +80,19 @@ async function request(path: string, init: RequestInit = {}) {
     } catch {
       // A non-JSON error body is not worth surfacing verbatim.
     }
+    // GitHub's wording names the cause but not the fix, and the fix lives in
+    // GitHub settings rather than anywhere on this site.
+    if (response.status === 403 && /not accessible by personal access token/i.test(detail)) {
+      throw new GitHubError(
+        `GitHub refused the write: the GITHUB_TOKEN lacks access. Create a fine-grained ` +
+          `token with Resource owner set to "${config().repo.split("/")[0]}" (not your ` +
+          `personal account), this repository only, Contents: Read and write; get it ` +
+          `approved under the organization's Personal access tokens settings if required; ` +
+          `then replace the GITHUB_TOKEN secret in Cloudflare.`,
+        response.status
+      );
+    }
+
     throw new GitHubError(
       detail || `GitHub responded ${response.status}.`,
       response.status
