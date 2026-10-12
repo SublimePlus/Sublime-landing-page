@@ -30,13 +30,35 @@ const MARKS = Array.from({ length: 14 }, (_, i) => ({
 
 export function BlogCover({
   tone,
+  image,
+  alt = "",
   className = "",
   badgeSize = "sm",
 }: {
   tone: PostTone;
+  /** An uploaded cover from /admin; when set it replaces the generated art. */
+  image?: string;
+  alt?: string;
   className?: string;
   badgeSize?: "sm" | "lg";
 }) {
+  if (image) {
+    return (
+      <div className={`relative overflow-hidden bg-pine ${className}`}>
+        {/* Plain <img>: images are unoptimised on Workers (see next.config.ts),
+            so next/image would add nothing but wrapper markup. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={image}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      </div>
+    );
+  }
+
   return (
     <div
       className={`relative overflow-hidden bg-gradient-to-br ${GRADIENTS[tone]} ${className}`}

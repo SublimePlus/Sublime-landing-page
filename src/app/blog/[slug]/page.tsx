@@ -52,6 +52,7 @@ export async function generateMetadata({
       description: meta.excerpt,
       url,
       publishedTime: meta.date,
+      ...(meta.author ? { authors: [meta.author] } : {}),
     },
     twitter: {
       card: "summary_large_image",
@@ -72,6 +73,10 @@ export default async function BlogPost({
 
   const { html, ...meta } = post;
   const more = getOtherPosts(slug);
+  // The first two get full cards; the rest are a compact list of links, so the
+  // block stays short however many posts there are.
+  const featured = more.slice(0, 2);
+  const linked = more.slice(2);
 
   return (
     /**
@@ -94,6 +99,11 @@ export default async function BlogPost({
             ← All posts
           </Link>
           <p className="mt-6 mb-3 text-sm font-medium text-stone dark:text-white/60">
+            {meta.author && (
+              <>
+                By <span className="text-pine dark:text-white">{meta.author}</span> ·{" "}
+              </>
+            )}
             {formatPostDate(meta.date, "long")} · {meta.readingTime}
           </p>
           <h1 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
@@ -107,6 +117,8 @@ export default async function BlogPost({
         <Reveal delay={0.1}>
           <BlogCover
             tone={meta.tone}
+            image={meta.cover}
+            alt={meta.title}
             badgeSize="lg"
             className="mt-8 aspect-[16/9] rounded-2xl"
           />
@@ -143,11 +155,47 @@ export default async function BlogPost({
               Keep reading
             </h2>
             <div className="mt-6 grid gap-6 sm:grid-cols-2">
-              {more.map((other, i) => (
+              {featured.map((other, i) => (
                 <Reveal key={other.slug} delay={i * 0.08}>
                   <BlogCard post={other} />
                 </Reveal>
               ))}
+            </div>
+
+            {linked.length > 0 && (
+              <Reveal delay={0.1}>
+                <nav aria-label="More articles" className="mt-10">
+                  <h3 className="text-base font-semibold text-pine dark:text-white">
+                    If you are interested in more, read these too
+                  </h3>
+                  <ul className="mt-4 divide-y divide-pine/10 border-y border-pine/10 dark:divide-white/10 dark:border-white/10">
+                    {linked.map((other) => (
+                      <li key={other.slug}>
+                        <Link
+                          href={`/blog/${other.slug}`}
+                          className="group flex items-baseline justify-between gap-4 py-3"
+                        >
+                          <span className="font-medium text-pine group-hover:text-teal-ink dark:text-white dark:group-hover:text-lime">
+                            {other.title}
+                          </span>
+                          <span className="shrink-0 text-xs text-stone dark:text-white/50">
+                            {formatPostDate(other.date)}
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              </Reveal>
+            )}
+
+            <div className="mt-8">
+              <Link
+                href="/blog"
+                className="text-sm font-semibold text-teal-ink transition-colors hover:text-pine dark:hover:text-lime"
+              >
+                See all posts →
+              </Link>
             </div>
           </div>
         )}

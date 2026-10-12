@@ -20,6 +20,12 @@ export type PostInput = {
   excerpt: string;
   date: string;
   tone: PostTone;
+  /** Optional byline; empty means "no author shown". */
+  author: string;
+  /** Optional cover image path under /blog-images/; empty means the generated cover. */
+  cover: string;
+  /** Archived posts stay in the repository but are left out of the site. */
+  archived: boolean;
   body: string;
 };
 
@@ -28,6 +34,8 @@ export type ValidationError = { field: string; message: string };
 /** Mirrors the slug rule in `getPostBySlug`, and what a filename may contain. */
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+/** Same rule as `scripts/build-blog-data.mjs`: only images uploaded through /admin. */
+export const COVER_RE = /^\/blog-images\/[a-z0-9-]+\.(?:png|jpe?g|webp|gif)$/;
 
 export function slugify(title: string) {
   return title
@@ -65,6 +73,12 @@ export function validatePost(input: Partial<PostInput>): ValidationError[] {
   if (!input.tone || !TONES.includes(input.tone)) {
     errors.push({ field: "tone", message: `Tone must be one of ${TONES.join(", ")}.` });
   }
+  if (input.author && input.author.trim().length > 80) {
+    errors.push({ field: "author", message: "Keep the author name under 80 characters." });
+  }
+  if (input.cover && !COVER_RE.test(input.cover)) {
+    errors.push({ field: "cover", message: "Upload the cover image through the editor." });
+  }
   if (!input.body?.trim()) {
     errors.push({ field: "body", message: "The post body is empty." });
   }
@@ -84,6 +98,11 @@ export function serializePost(input: PostInput) {
     `excerpt: ${JSON.stringify(input.excerpt.trim())}`,
     `date: ${JSON.stringify(input.date)}`,
     `tone: ${JSON.stringify(input.tone)}`,
+    // Optional fields are written only when set, so posts that never use them
+    // keep the same frontmatter they always had.
+    ...(input.author?.trim() ? [`author: ${JSON.stringify(input.author.trim())}`] : []),
+    ...(input.cover ? [`cover: ${JSON.stringify(input.cover)}`] : []),
+    ...(input.archived ? ["archived: true"] : []),
     "---",
   ].join("\n");
 
@@ -98,7 +117,17 @@ export function serializePost(input: PostInput) {
 export function parsePost(slug: string, markdown: string): PostInput {
   const match = /^---\n([\s\S]*?)\n---\n?([\s\S]*)$/.exec(markdown);
   if (!match) {
-    return { slug, title: "", excerpt: "", date: "", tone: "teal", body: markdown.trim() };
+    return {
+      slug,
+      title: "",
+      excerpt: "",
+      date: "",
+      tone: "teal",
+      author: "",
+      cover: "",
+      archived: false,
+      body: markdown.trim(),
+    };
   }
 
   const [, rawFrontmatter, body] = match;
@@ -122,6 +151,30 @@ export function parsePost(slug: string, markdown: string): PostInput {
     excerpt: field("excerpt"),
     date: field("date"),
     tone: TONES.includes(tone) ? tone : "teal",
+    author: field("author"),
+    cover: field("cover"),
+    archived: field("archived") === "true",
     body: body.trim(),
   };
+}
+
+/**
+ * Display order: posts missing from `order` (new ones, or every post before
+ * anyone re-orders) come first, newest first; the rest follow in `order`.
+ * `scripts/build-blog-data.mjs` applies the same rule — keep the two in step.
+ */
+export function applyOrder<T extends { slug: string; date: string }>(posts: T[], order: string[]) {
+  const rank = new Map(order.map((slug, i) => [slug, i]));
+  return [...posts].sort((a, b) => {
+    const ra = rank.get(a.slug);
+    const rb = rank.get(b.slug);
+    if (ra === undefined && rb === undefined) return a.date < b.date ? 1 : a.date > b.date ? -1 : 0;
+    if (ra === undefined) return -1;
+    if (rb === undefined) return 1;
+    return ra - rb;
+  });
+}
+
+export function isValidSlug(slug: unknown): slug is string {
+  return typeof slug === "string" && SLUG_RE.test(slug);
 }

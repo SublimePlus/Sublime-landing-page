@@ -23,6 +23,10 @@ export type RawPost = {
   date: string;
   tone: PostTone;
   readingTime: string;
+  /** Byline, when the post names one. */
+  author?: string;
+  /** Uploaded cover image (a /blog-images/ path); otherwise a generated cover. */
+  cover?: string;
   /** Compiled at build time from the post's Markdown body. */
   html: string;
 };
@@ -30,7 +34,8 @@ export type RawPost = {
 export type PostMeta = Omit<RawPost, "html">;
 
 /**
- * Newest first — the generator emits them in that order.
+ * In display order — newest first unless re-ordered from /admin. The generator
+ * emits them in that order and leaves archived posts out entirely.
  *
  * `html` is dropped rather than carried along: the index renders cards, and
  * every field returned here is serialised into that page's payload.
@@ -43,6 +48,8 @@ export function getAllPosts(): PostMeta[] {
     date: post.date,
     tone: post.tone,
     readingTime: post.readingTime,
+    author: post.author,
+    cover: post.cover,
   }));
 }
 
@@ -50,8 +57,12 @@ export function getPostBySlug(slug: string): RawPost | null {
   return RAW_POSTS.find((post) => post.slug === slug) ?? null;
 }
 
-/** Other posts, newest first, for the "keep reading" row under an article. */
-export function getOtherPosts(slug: string, limit = 2): PostMeta[] {
+/**
+ * Other posts, in display order, for the "keep reading" block under an
+ * article. Linking widely between posts is deliberate: it helps readers move
+ * on and gives search engines a path to every article.
+ */
+export function getOtherPosts(slug: string, limit = 15): PostMeta[] {
   return getAllPosts()
     .filter((post) => post.slug !== slug)
     .slice(0, limit);

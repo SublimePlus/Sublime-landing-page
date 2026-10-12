@@ -102,7 +102,8 @@ export function blogPostingSchema(post: PostMeta) {
     dateModified: post.date,
     image: absoluteUrl(`/blog/${post.slug}/opengraph-image`),
     mainEntityOfPage: absoluteUrl(`/blog/${post.slug}`),
-    author: { "@id": ORGANIZATION_ID },
+    author: post.author ? { "@type": "Person", name: post.author } : { "@id": ORGANIZATION_ID },
+    ...(post.cover ? { image: absoluteUrl(post.cover) } : {}),
     publisher: { "@id": ORGANIZATION_ID },
     inLanguage: "en",
   };
