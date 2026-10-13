@@ -35,14 +35,55 @@ const BLANK: Draft = {
  * public path. The file only exists on the live site after the deploy that
  * commit triggers, so callers preview it from the local file meanwhile.
  */
-async function uploadImage(file: File): Promise<string> {
-  const data = await new Promise<string>((resolve, reject) => {
+/** Covers display at most ~1200px wide; 1600 leaves room for sharp screens. */
+const MAX_IMAGE_WIDTH = 1600;
+
+function blobToBase64(blob: Blob) {
+  return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(String(reader.result).replace(/^data:[^,]*,/, ""));
     reader.onerror = () => reject(new Error("Could not read that file."));
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(blob);
   });
-  return uploadImageData(file.name, file.type, data);
+}
+
+/**
+ * Shrinks an image in the browser before it is uploaded: scaled to at most
+ * MAX_IMAGE_WIDTH and re-encoded as WebP (JPEG where WebP encoding is missing).
+ *
+ * This matters twice over. Uploads travel as base64 JSON, and parsing a
+ * multi-megabyte body can exceed the Worker's per-request CPU limit (error
+ * 1102). And every visitor downloads the cover, so a 2 MB PNG is a slow page.
+ * GIFs are left alone so animations survive.
+ */
+async function compressImage(blob: Blob): Promise<{ type: string; data: string }> {
+  if (blob.type === "image/gif") return { type: blob.type, data: await blobToBase64(blob) };
+
+  try {
+    const bitmap = await createImageBitmap(blob);
+    const scale = Math.min(1, MAX_IMAGE_WIDTH / bitmap.width);
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    canvas.getContext("2d")?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close();
+
+    const encode = (type: string) =>
+      new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, 0.82));
+    let out = await encode("image/webp");
+    // Browsers that cannot encode WebP silently hand back a PNG instead.
+    if (!out || out.type !== "image/webp") out = await encode("image/jpeg");
+    // Keep the original if re-encoding somehow made it bigger.
+    if (out && out.size < blob.size) return { type: out.type, data: await blobToBase64(out) };
+  } catch {
+    // Undecodable here (rare); fall through and let the server validate it.
+  }
+  return { type: blob.type, data: await blobToBase64(blob) };
+}
+
+async function uploadImage(file: File): Promise<string> {
+  const { type, data } = await compressImage(file);
+  return uploadImageData(file.name, type, data);
 }
 
 /** Same as `uploadImage`, for bytes already in base64 (a generated suggestion). */
@@ -182,7 +223,9 @@ export function PostEditor({ slug }: { slug?: string }) {
     setError(null);
     try {
       const name = `${draft.slug || slugify(draft.title) || "cover"}-ai`;
-      const path = await uploadImageData(name, suggestion.type, suggestion.data);
+      const original = await (await fetch(`data:${suggestion.type};base64,${suggestion.data}`)).blob();
+      const compressed = await compressImage(original);
+      const path = await uploadImageData(name, compressed.type, compressed.data);
       setCoverPreview(`data:${suggestion.type};base64,${suggestion.data}`);
       setSuggestion(null);
       update("cover", path);
@@ -377,7 +420,7 @@ export function PostEditor({ slug }: { slug?: string }) {
             )}
           </div>
           <span className="mt-1 block text-xs font-normal text-stone dark:text-white/50">
-            Optional. PNG, JPEG, WebP or GIF, up to 3 MB; a 16:9 image works best.
+            Optional. PNG, JPEG, WebP or GIF; large images are shrunk automatically. 16:9 works best.
             Without one, the post uses the generated cover below.
           </span>
           <FieldError message={fieldErrors.cover} />
