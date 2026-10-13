@@ -9,7 +9,10 @@ export const dynamic = "force-dynamic";
  * back to the editor and is only committed if the admin accepts it.
  *
  * Providers, best first, each used only when configured:
- *   1. Google Gemini  — secret GEMINI_API_KEY (free key from Google AI Studio)
+ *   0. Kie.ai         — secret KIE_API_KEY (paid credits). Asynchronous: POST
+ *                       starts a task, GET polls it, GET &download=1 streams
+ *                       the finished image. Exactly one task per click.
+ *   1. Google Gemini  — secret GEMINI_API_KEY (needs billing on the key)
  *   2. OpenAI         — secret OPENAI_API_KEY (paid per image)
  *   3. Workers AI     — the `ai` binding; free daily allowance, lower quality
  * If a provider fails (quota, outage) the next one is tried, and the editor is
@@ -24,6 +27,8 @@ export const dynamic = "force-dynamic";
 type AiBinding = { run(model: string, input: Record<string, unknown>): Promise<unknown> };
 type Env = {
   AI?: AiBinding;
+  KIE_API_KEY?: string;
+  KIE_IMAGE_MODEL?: string;
   GEMINI_API_KEY?: string;
   GEMINI_IMAGE_MODEL?: string;
   OPENAI_API_KEY?: string;
@@ -56,6 +61,117 @@ function plainText(markdown: string) {
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 1200);
+}
+
+/**
+ * Turns the post into a specific image prompt with a free Workers AI text
+ * model, so the paid image model gets one well-aimed attempt instead of
+ * several vague ones. Falls back to the fixed template if that fails.
+ */
+async function writePrompt(env: Env, title: string, excerpt: string, body: string) {
+  const fallback = buildPrompt(title, excerpt, body);
+  if (!env.AI) return fallback;
+  try {
+    const result = (await env.AI.run("@cf/meta/llama-3.1-8b-instruct", {
+      max_tokens: 220,
+      messages: [
+        {
+          role: "system",
+          content:
+            "You write prompts for an AI image generator. Given a blog post, reply with ONE prompt " +
+            "of 60-90 words describing a single concrete, realistic scene that makes the post's " +
+            "specific subject obvious at a glance: subject, setting, objects, composition, lighting. " +
+            "Style: high-quality editorial photograph. Palette: deep forest green and teal with small " +
+            "lime-green accents. Wide 16:9. The image must contain no text, letters, numbers, logos, " +
+            "screens with readable UI, or watermarks. Reply with the prompt only.",
+        },
+        {
+          role: "user",
+          content: `Title: ${title}\nSummary: ${excerpt}\nPost: ${body}`,
+        },
+      ],
+    })) as { response?: string };
+    const prompt = result?.response?.trim().replace(/^["']|["']$/g, "");
+    return prompt && prompt.length > 40 ? `${prompt} No text, letters or logos anywhere.` : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+const KIE_API = "https://api.kie.ai/api/v1/jobs";
+
+type KieRecord = {
+  code?: number;
+  msg?: string;
+  data?: { state?: string; resultJson?: string; failMsg?: string };
+};
+
+async function kieRecord(env: Env, taskId: string): Promise<KieRecord> {
+  const response = await fetch(`${KIE_API}/recordInfo?taskId=${encodeURIComponent(taskId)}`, {
+    headers: { Authorization: `Bearer ${env.KIE_API_KEY}` },
+  });
+  return (await response.json().catch(() => ({}))) as KieRecord;
+}
+
+function kieResultUrl(record: KieRecord) {
+  try {
+    const parsed = JSON.parse(record.data?.resultJson ?? "{}") as { resultUrls?: string[] };
+    const url = parsed.resultUrls?.[0];
+    return url && url.startsWith("https://") ? url : null;
+  } catch {
+    return null;
+  }
+}
+
+function readEnv(): Env {
+  try {
+    return getCloudflareContext().env as Env;
+  } catch {
+    // Plain `next dev`: fall back to process.env for the keys.
+    return process.env as Env;
+  }
+}
+
+/**
+ * Polls a Kie task: `?taskId=…` returns `{ state, url? }`. With `&download=1`
+ * it streams the finished image itself, so the browser can shrink and upload
+ * it without needing CORS access to Kie's file host. Polling costs no credits.
+ */
+export async function GET(request: Request) {
+  if (!(await isLoggedIn())) {
+    return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+  }
+  const env = readEnv();
+  const params = new URL(request.url).searchParams;
+  const taskId = params.get("taskId") ?? "";
+  if (!env.KIE_API_KEY || !/^[\w-]{1,128}$/.test(taskId)) {
+    return NextResponse.json({ error: "Unknown image task." }, { status: 400 });
+  }
+
+  try {
+    const record = await kieRecord(env, taskId);
+    const state = record.data?.state ?? "unknown";
+    if (state === "fail") {
+      return NextResponse.json({ state, error: record.data?.failMsg || "Kie could not make this image." });
+    }
+    const url = state === "success" ? kieResultUrl(record) : null;
+    if (params.get("download") === "1") {
+      if (!url) return NextResponse.json({ error: "The image is not ready." }, { status: 409 });
+      const file = await fetch(url);
+      if (!file.ok || !file.body) {
+        return NextResponse.json({ error: "Could not download the image." }, { status: 502 });
+      }
+      return new Response(file.body, {
+        headers: {
+          "Content-Type": file.headers.get("Content-Type") || "image/png",
+          "Cache-Control": "no-store",
+        },
+      });
+    }
+    return NextResponse.json({ state, url });
+  } catch {
+    return NextResponse.json({ error: "Could not reach Kie." }, { status: 502 });
+  }
 }
 
 /** Error bodies are small, so reading one costs nothing worth worrying about. */
@@ -101,17 +217,44 @@ export async function POST(request: Request) {
     );
   }
 
-  let env: Env = {};
-  try {
-    env = getCloudflareContext().env as Env;
-  } catch {
-    // Plain `next dev`: fall back to process.env for the keys.
-    env = process.env as Env;
+  const env = readEnv();
+  // Reasons earlier providers were skipped, shown under the image.
+  const note: string[] = [];
+
+  if (env.KIE_API_KEY) {
+    const kiePrompt = await writePrompt(env, title, excerpt, body);
+    try {
+      const response = await fetch(`${KIE_API}/createTask`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${env.KIE_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: env.KIE_IMAGE_MODEL || "google/nano-banana",
+          input: { prompt: kiePrompt, output_format: "jpeg", image_size: "16:9" },
+        }),
+      });
+      const data = (await response.json().catch(() => ({}))) as {
+        code?: number;
+        msg?: string;
+        data?: { taskId?: string };
+      };
+      const taskId = data.data?.taskId;
+      if (response.ok && data.code === 200 && taskId) {
+        return NextResponse.json(
+          { taskId, prompt: kiePrompt },
+          { headers: { "X-Image-Provider": "kie" } }
+        );
+      }
+      // Kie answers 200 with an error code in the body (e.g. 402: no credits).
+      note.push(`Kie failed (${data.msg || `code ${data.code ?? response.status}`}).`);
+    } catch {
+      note.push("Kie could not be reached.");
+    }
   }
 
   const prompt = buildPrompt(title, excerpt, body);
-  // Reasons earlier providers were skipped, shown under the image.
-  const note: string[] = [];
 
   if (env.GEMINI_API_KEY) {
     const model = env.GEMINI_IMAGE_MODEL || "gemini-2.5-flash-image";

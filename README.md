@@ -83,12 +83,14 @@ it is gitignored. `.env.example` lists every variable.
   generated gradient), and *Insert image* adds images to the body. Uploads are
   PNG/JPEG/WebP/GIF up to 3 MB, committed to `public/blog-images/`, and appear
   once the deploy their commit triggers finishes.
-- **AI cover suggestions**: when a post has no cover, the editor generates one
-  from the title, excerpt and opening of the post. It uses Google Gemini when
-  the `GEMINI_API_KEY` secret is set (free key from Google AI Studio; model
-  override `GEMINI_IMAGE_MODEL`), then OpenAI when `OPENAI_API_KEY` is set
-  (paid), then Workers AI (`ai` binding, free daily allowance, lower quality).
-  Nothing is committed until *Use this image*; *Try another* regenerates.
+- **AI cover suggestions**: *Generate an image* (never automatic, so no
+  credits are spent just by opening a post) makes one cover from the post's
+  title, excerpt and opening. Provider order, each used only when its secret is
+  set: Kie.ai `KIE_API_KEY` (default model `google/nano-banana`, override with
+  `KIE_IMAGE_MODEL`; one task per click, and a free Workers AI text model first
+  writes the image prompt from the post), Google Gemini `GEMINI_API_KEY` (needs
+  billing), OpenAI `OPENAI_API_KEY`, then Workers AI (free, lower quality).
+  Nothing is committed until *Use this image*.
 - **Author**: optional `author` frontmatter, shown as "By …" and used as the
   article's schema.org author.
 - **Order**: ↑/↓ and *Save order* write `content/blog/order.json`. Posts not in
