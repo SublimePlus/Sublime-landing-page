@@ -3,6 +3,7 @@ title: "Nothing We Write Goes Live Without Your Written Approval"
 excerpt: "The approval gate is the least glamorous part of how we work and the one clients care about most. Here is exactly how a deliverable travels from draft to live."
 date: "2026-05-30"
 tone: "pine"
+cover: "/blog-images/nothing-posts-without-approval-ai-2493a9ef.webp"
 ---
 
 The single question we are asked most often in sales calls is some version of: *what stops you posting something I would hate?*
