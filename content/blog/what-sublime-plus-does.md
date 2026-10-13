@@ -3,6 +3,7 @@ title: "What Sublime Plus Does: Reddit, SEO and Getting Your Brand Into AI Answe
 excerpt: "Why I started Sublime Plus, and how we help brands get found on Google, on Reddit and inside AI answers from ChatGPT, Gemini and Perplexity."
 date: "2026-10-12"
 tone: "lime"
+cover: "/blog-images/what-sublime-plus-does-ai-775dfa41.webp"
 ---
 
 I get asked some version of the same question almost every week: "So what does Sublime actually do?" Sometimes it comes from a founder who stumbled on one of our Reddit threads. Sometimes it's a marketing lead who heard the name on a call and wanted to understand us before booking time.
