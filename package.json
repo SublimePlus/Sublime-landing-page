@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "opennextjs-cloudflare build",
+    "build": "opennextjs-cloudflare build && node scripts/copy-static-cache.mjs",
     "build:next": "next build",
-    "cf-build": "opennextjs-cloudflare build",
+    "cf-build": "opennextjs-cloudflare build && node scripts/copy-static-cache.mjs",
     "start": "next start",
     "lint": "eslint",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",

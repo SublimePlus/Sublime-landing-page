@@ -1,4 +1,5 @@
 import { defineCloudflareConfig } from "@opennextjs/cloudflare";
+import staticAssetsIncrementalCache from "@opennextjs/cloudflare/overrides/incremental-cache/static-assets-incremental-cache";
 
 /**
  * Cloudflare is the only deploy target, so `npm run build` produces the Worker
@@ -10,11 +11,21 @@ import { defineCloudflareConfig } from "@opennextjs/cloudflare";
  * Pointing it at `build:next` breaks the cycle, so `build` and `cf-build` both
  * emit a deployable Worker and the dashboard can call either one.
  *
- * Caching options would go here too; there is no ISR or server-side data
- * fetching on this site. See https://opennext.js.org/cloudflare/caching
+ * Caching: pages are served from the HTML prerendered at build time instead
+ * of being re-rendered in the Worker on every request. Rendering React per
+ * request costs more CPU than the Workers free plan allows (~10ms), which
+ * surfaced as intermittent error 1102 "Worker exceeded resource limits".
+ *
+ * The static-assets cache is read-only, which fits this site exactly: there
+ * is no ISR or revalidation, and blog edits from /admin are commits that
+ * trigger a fresh build. Cache interception answers a cached page before the
+ * Next.js server is even loaded. See https://opennext.js.org/cloudflare/caching
  */
 const config = {
-  ...defineCloudflareConfig(),
+  ...defineCloudflareConfig({
+    incrementalCache: staticAssetsIncrementalCache,
+    enableCacheInterception: true,
+  }),
   buildCommand: "npm run build:next",
 };
 
