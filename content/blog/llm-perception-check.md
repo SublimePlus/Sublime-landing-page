@@ -3,7 +3,6 @@ title: "What an LLM Perception Check Tells You About Your Brand"
 excerpt: "Before we write anything for a client, we ask four AI models what they already say about them. Here is why that answer matters, and what we do with it."
 date: "2026-06-18"
 tone: "teal"
-archived: true
 ---
 
 Buyers no longer start every search on Google. A growing share of them open ChatGPT, Claude, Gemini or Perplexity and ask a question in plain language: *who makes a good one of these?* *is this company any good?* *what should I use instead?*
