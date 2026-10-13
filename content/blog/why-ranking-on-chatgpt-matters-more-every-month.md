@@ -3,7 +3,7 @@ title: "Why Ranking on ChatGPT Matters More Every Month"
 excerpt: "More buyers ask ChatGPT before they ever open Google. Why showing up in AI answers matters for your brand, and what you can do about it now."
 date: "2026-10-13"
 tone: "teal"
-cover: "/blog-images/ai-powered-green-product-discovery-bff376dc.png"
+cover: "/blog-images/ai-powered-green-product-discovery-bff376dc.webp"
 ---
 
 Try something before you read the rest of this post. Open ChatGPT and ask it to recommend the best option in your category. Something like "best project management tool for a small agency" or "best family dentist in Toronto." Read the list it gives you.
@@ -60,4 +60,4 @@ This is the work we do every day at Sublime Plus. We help brands show up in the 
 
 If you ran the test at the top of this post and didn't like what you saw, you can find us at [sublime-plus.com](https://sublime-plus.com/). Tell us your category, and we'll tell you honestly where you stand.
 
-![AI-Powered Green Product Discovery](/blog-images/ai-powered-green-product-discovery-1c95005e.png)
+![AI-Powered Green Product Discovery](/blog-images/ai-powered-green-product-discovery-bff376dc.webp)
