@@ -98,28 +98,99 @@ async function uploadImageData(name: string, type: string, data: string): Promis
   return result.path;
 }
 
-type Suggestion = { type: string; data: string };
+/**
+ * A suggested cover. Synchronous providers return the bytes (`data`); Kie
+ * returns a hosted `url` plus the `taskId` the server downloads it through.
+ */
+type Suggestion = {
+  provider: string;
+  type?: string;
+  data?: string;
+  url?: string;
+  taskId?: string;
+  prompt?: string;
+  note?: string;
+};
 
-/** Asks Workers AI for a cover. Pure fetch, so effects can call it directly. */
+const PROVIDER_NAMES: Record<string, string> = {
+  kie: "Kie.ai (nano-banana)",
+  gemini: "Google Gemini",
+  openai: "ChatGPT (OpenAI)",
+  cloudflare: "Cloudflare Workers AI",
+};
+
+/**
+ * Pulls the image out of whichever provider answered. Gemini and OpenAI
+ * responses arrive untouched (see the route for why), so they are parsed here.
+ */
+function extractImage(provider: string, json: unknown): { type: string; data: string } | null {
+  if (provider === "gemini") {
+    type Part = { inlineData?: { mimeType?: string; data?: string }; inline_data?: { mime_type?: string; data?: string } };
+    const parts =
+      (json as { candidates?: { content?: { parts?: Part[] } }[] }).candidates?.[0]?.content?.parts ?? [];
+    for (const part of parts) {
+      const inline = part.inlineData ?? (part.inline_data && { mimeType: part.inline_data.mime_type, data: part.inline_data.data });
+      if (inline?.data) return { type: inline.mimeType || "image/png", data: inline.data };
+    }
+    return null;
+  }
+  if (provider === "openai") {
+    const b64 = (json as { data?: { b64_json?: string }[] }).data?.[0]?.b64_json;
+    return b64 ? { type: "image/jpeg", data: b64 } : null;
+  }
+  const flat = json as { type?: string; data?: string };
+  return flat.data && flat.type ? { type: flat.type, data: flat.data } : null;
+}
+
+/** Asks the server for a cover. Pure fetch, so effects can call it directly. */
 async function fetchSuggestion(
   title: string,
-  excerpt: string
+  excerpt: string,
+  body: string
 ): Promise<{ suggestion: Suggestion } | { error: string }> {
   try {
     const response = await fetch("/api/admin/images/suggest", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, excerpt }),
+      body: JSON.stringify({ title, excerpt, body }),
     });
-    const result = (await response.json().catch(() => ({}))) as {
-      type?: string;
-      data?: string;
-      error?: string;
-    };
-    if (!response.ok || !result.data || !result.type) {
-      return { error: result.error ?? "Could not generate an image." };
+    const json = (await response.json().catch(() => ({}))) as { error?: string };
+    if (!response.ok) return { error: json.error ?? "Could not generate an image." };
+
+    const provider = response.headers.get("X-Image-Provider") ?? "cloudflare";
+    const rawNote = response.headers.get("X-Image-Note");
+
+    if (provider === "kie") {
+      const { taskId, prompt } = json as { taskId?: string; prompt?: string };
+      if (!taskId) return { error: "Kie did not start the image." };
+      // Kie works asynchronously. Polling is free; only the task costs credits.
+      for (let attempt = 0; attempt < 60; attempt++) {
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        const poll = await fetch(`/api/admin/images/suggest?taskId=${encodeURIComponent(taskId)}`, {
+          cache: "no-store",
+        });
+        const status = (await poll.json().catch(() => ({}))) as {
+          state?: string;
+          url?: string;
+          error?: string;
+        };
+        if (!poll.ok || status.state === "fail") {
+          return { error: status.error ?? "Kie could not make this image." };
+        }
+        if (status.state === "success" && status.url) {
+          return { suggestion: { provider, url: status.url, taskId, prompt } };
+        }
+      }
+      return { error: "Kie is taking too long. Try again in a minute." };
     }
-    return { suggestion: { type: result.type, data: result.data } };
+
+    const image = extractImage(provider, json);
+    if (!image) {
+      return { error: `${PROVIDER_NAMES[provider] ?? provider} returned no image. Try again.` };
+    }
+    return {
+      suggestion: { ...image, provider, note: rawNote ? decodeURIComponent(rawNote) : undefined },
+    };
   } catch {
     return { error: "Could not reach the server." };
   }
@@ -152,9 +223,8 @@ export function PostEditor({ slug }: { slug?: string }) {
   const [suggestion, setSuggestion] = useState<Suggestion | null>(null);
   const [suggesting, setSuggesting] = useState(false);
   const [suggestError, setSuggestError] = useState<string | null>(null);
-  // Auto-suggest at most once per editor visit, so the free allowance is spent
-  // only when someone asks for another.
-  const autoSuggested = useRef(false);
+  // Images are only generated on an explicit click: a paid provider spends
+  // credits per image, so nothing runs just because the editor opened.
 
   useEffect(() => {
     if (isNew) return;
@@ -172,16 +242,6 @@ export function PostEditor({ slug }: { slug?: string }) {
         if (data.post) {
           const post = { ...BLANK, ...data.post };
           setDraft(post);
-          if (!post.cover && post.title && !autoSuggested.current) {
-            autoSuggested.current = true;
-            setSuggesting(true);
-            void fetchSuggestion(post.title, post.excerpt).then((result) => {
-              if (cancelled) return;
-              setSuggesting(false);
-              if ("error" in result) setSuggestError(result.error);
-              else setSuggestion(result.suggestion);
-            });
-          }
         }
       } catch {
         if (!cancelled) setError("Could not reach the server.");
@@ -204,14 +264,14 @@ export function PostEditor({ slug }: { slug?: string }) {
     });
   }
 
-  async function suggestCover(title = draft.title, excerpt = draft.excerpt) {
+  async function suggestCover(title = draft.title, excerpt = draft.excerpt, body = draft.body) {
     if (!title.trim()) {
       setSuggestError("Write a title first; the image is generated from it.");
       return;
     }
     setSuggesting(true);
     setSuggestError(null);
-    const result = await fetchSuggestion(title, excerpt);
+    const result = await fetchSuggestion(title, excerpt, body);
     setSuggesting(false);
     if ("error" in result) setSuggestError(result.error);
     else setSuggestion(result.suggestion);
@@ -223,10 +283,18 @@ export function PostEditor({ slug }: { slug?: string }) {
     setError(null);
     try {
       const name = `${draft.slug || slugify(draft.title) || "cover"}-ai`;
-      const original = await (await fetch(`data:${suggestion.type};base64,${suggestion.data}`)).blob();
+      const original = suggestion.taskId
+        ? await (async () => {
+            const response = await fetch(
+              `/api/admin/images/suggest?taskId=${encodeURIComponent(suggestion.taskId!)}&download=1`
+            );
+            if (!response.ok) throw new Error("Could not download the generated image.");
+            return response.blob();
+          })()
+        : await (await fetch(`data:${suggestion.type};base64,${suggestion.data}`)).blob();
       const compressed = await compressImage(original);
       const path = await uploadImageData(name, compressed.type, compressed.data);
-      setCoverPreview(`data:${suggestion.type};base64,${suggestion.data}`);
+      setCoverPreview(suggestion.url ?? `data:${suggestion.type};base64,${suggestion.data}`);
       setSuggestion(null);
       update("cover", path);
     } catch (uploadError) {
@@ -320,13 +388,6 @@ export function PostEditor({ slug }: { slug?: string }) {
           <input
             value={draft.title}
             onChange={(event) => update("title", event.target.value)}
-            onBlur={() => {
-              // New posts: suggest a cover once the title is written.
-              if (isNew && !draft.cover && draft.title.trim() && !autoSuggested.current) {
-                autoSuggested.current = true;
-                void suggestCover();
-              }
-            }}
             className={FIELD}
             required
           />
@@ -428,11 +489,11 @@ export function PostEditor({ slug }: { slug?: string }) {
           {!draft.cover && (
             <div className="mt-4 rounded-xl border border-dashed border-teal/50 p-4 font-normal">
               <p className="text-sm font-medium text-pine dark:text-white">
-                Suggested cover (AI-generated from the title)
+                Suggested cover (AI-generated from the post)
               </p>
               {suggesting && (
                 <p className="mt-2 text-sm text-stone dark:text-white/60">
-                  Generating an image for this post… this takes a few seconds.
+                  Generating an image for this post… this can take up to a minute.
                 </p>
               )}
               {suggestError && !suggesting && (
@@ -441,10 +502,22 @@ export function PostEditor({ slug }: { slug?: string }) {
               {suggestion && !suggesting && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={`data:${suggestion.type};base64,${suggestion.data}`}
+                  src={suggestion.url ?? `data:${suggestion.type};base64,${suggestion.data}`}
                   alt="Suggested cover"
                   className="mt-3 aspect-[16/9] w-full max-w-md rounded-xl object-cover"
                 />
+              )}
+              {suggestion && !suggesting && (
+                <p className="mt-1 text-xs text-stone dark:text-white/50">
+                  Made with {PROVIDER_NAMES[suggestion.provider] ?? suggestion.provider}.
+                  {suggestion.note && <> {suggestion.note}</>}
+                </p>
+              )}
+              {suggestion?.prompt && !suggesting && (
+                <details className="mt-1 text-xs text-stone dark:text-white/50">
+                  <summary className="cursor-pointer">Prompt written from the post</summary>
+                  <p className="mt-1">{suggestion.prompt}</p>
+                </details>
               )}
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 {suggestion && !suggesting && (
@@ -476,8 +549,8 @@ export function PostEditor({ slug }: { slug?: string }) {
                 )}
               </div>
               <p className="mt-2 text-xs text-stone dark:text-white/50">
-                Nothing is saved until you click &ldquo;Use this image&rdquo;, then save the post.
-                Or upload your own above.
+                Each click makes one image (paid providers use credits per image). Nothing is
+                saved until you click &ldquo;Use this image&rdquo;, then save the post. Or upload your own above.
               </p>
             </div>
           )}
