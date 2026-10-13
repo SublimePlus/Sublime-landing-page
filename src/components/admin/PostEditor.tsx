@@ -98,28 +98,61 @@ async function uploadImageData(name: string, type: string, data: string): Promis
   return result.path;
 }
 
-type Suggestion = { type: string; data: string };
+type Suggestion = { type: string; data: string; provider: string; note?: string };
 
-/** Asks Workers AI for a cover. Pure fetch, so effects can call it directly. */
+const PROVIDER_NAMES: Record<string, string> = {
+  gemini: "Google Gemini",
+  openai: "ChatGPT (OpenAI)",
+  cloudflare: "Cloudflare Workers AI",
+};
+
+/**
+ * Pulls the image out of whichever provider answered. Gemini and OpenAI
+ * responses arrive untouched (see the route for why), so they are parsed here.
+ */
+function extractImage(provider: string, json: unknown): { type: string; data: string } | null {
+  if (provider === "gemini") {
+    type Part = { inlineData?: { mimeType?: string; data?: string }; inline_data?: { mime_type?: string; data?: string } };
+    const parts =
+      (json as { candidates?: { content?: { parts?: Part[] } }[] }).candidates?.[0]?.content?.parts ?? [];
+    for (const part of parts) {
+      const inline = part.inlineData ?? (part.inline_data && { mimeType: part.inline_data.mime_type, data: part.inline_data.data });
+      if (inline?.data) return { type: inline.mimeType || "image/png", data: inline.data };
+    }
+    return null;
+  }
+  if (provider === "openai") {
+    const b64 = (json as { data?: { b64_json?: string }[] }).data?.[0]?.b64_json;
+    return b64 ? { type: "image/jpeg", data: b64 } : null;
+  }
+  const flat = json as { type?: string; data?: string };
+  return flat.data && flat.type ? { type: flat.type, data: flat.data } : null;
+}
+
+/** Asks the server for a cover. Pure fetch, so effects can call it directly. */
 async function fetchSuggestion(
   title: string,
-  excerpt: string
+  excerpt: string,
+  body: string
 ): Promise<{ suggestion: Suggestion } | { error: string }> {
   try {
     const response = await fetch("/api/admin/images/suggest", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, excerpt }),
+      body: JSON.stringify({ title, excerpt, body }),
     });
-    const result = (await response.json().catch(() => ({}))) as {
-      type?: string;
-      data?: string;
-      error?: string;
-    };
-    if (!response.ok || !result.data || !result.type) {
-      return { error: result.error ?? "Could not generate an image." };
+    const json = (await response.json().catch(() => ({}))) as { error?: string };
+    if (!response.ok) return { error: json.error ?? "Could not generate an image." };
+
+    const provider = response.headers.get("X-Image-Provider") ?? "cloudflare";
+    const rawNote = response.headers.get("X-Image-Note");
+    const image = extractImage(provider, json);
+    if (!image) {
+      return { error: `${PROVIDER_NAMES[provider] ?? provider} returned no image. Try again.` };
     }
-    return { suggestion: { type: result.type, data: result.data } };
+    return {
+      suggestion: { ...image, provider, note: rawNote ? decodeURIComponent(rawNote) : undefined },
+    };
   } catch {
     return { error: "Could not reach the server." };
   }
@@ -175,7 +208,7 @@ export function PostEditor({ slug }: { slug?: string }) {
           if (!post.cover && post.title && !autoSuggested.current) {
             autoSuggested.current = true;
             setSuggesting(true);
-            void fetchSuggestion(post.title, post.excerpt).then((result) => {
+            void fetchSuggestion(post.title, post.excerpt, post.body).then((result) => {
               if (cancelled) return;
               setSuggesting(false);
               if ("error" in result) setSuggestError(result.error);
@@ -204,14 +237,14 @@ export function PostEditor({ slug }: { slug?: string }) {
     });
   }
 
-  async function suggestCover(title = draft.title, excerpt = draft.excerpt) {
+  async function suggestCover(title = draft.title, excerpt = draft.excerpt, body = draft.body) {
     if (!title.trim()) {
       setSuggestError("Write a title first; the image is generated from it.");
       return;
     }
     setSuggesting(true);
     setSuggestError(null);
-    const result = await fetchSuggestion(title, excerpt);
+    const result = await fetchSuggestion(title, excerpt, body);
     setSuggesting(false);
     if ("error" in result) setSuggestError(result.error);
     else setSuggestion(result.suggestion);
@@ -428,7 +461,7 @@ export function PostEditor({ slug }: { slug?: string }) {
           {!draft.cover && (
             <div className="mt-4 rounded-xl border border-dashed border-teal/50 p-4 font-normal">
               <p className="text-sm font-medium text-pine dark:text-white">
-                Suggested cover (AI-generated from the title)
+                Suggested cover (AI-generated from the post)
               </p>
               {suggesting && (
                 <p className="mt-2 text-sm text-stone dark:text-white/60">
@@ -445,6 +478,12 @@ export function PostEditor({ slug }: { slug?: string }) {
                   alt="Suggested cover"
                   className="mt-3 aspect-[16/9] w-full max-w-md rounded-xl object-cover"
                 />
+              )}
+              {suggestion && !suggesting && (
+                <p className="mt-1 text-xs text-stone dark:text-white/50">
+                  Made with {PROVIDER_NAMES[suggestion.provider] ?? suggestion.provider}.
+                  {suggestion.note && <> {suggestion.note}</>}
+                </p>
               )}
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 {suggestion && !suggesting && (
