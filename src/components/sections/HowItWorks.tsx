@@ -5,33 +5,14 @@ import { Reveal } from "../Reveal";
 import { TopoBackground } from "../TopoBackground";
 import { AnimatedSection } from "../AnimatedSection";
 import { PlusField } from "../PlusField";
+import { siteContent } from "@/lib/site-content";
 
-/** The onboarding-to-live pipeline exactly as SOP-001, SOP-002 and SOP-004
- *  define it. Timings below are the SOP's own committed timelines. */
-const steps = [
-  {
-    step: "01",
-    // SOP-001 §5 — the research phase, completed before the meeting.
-    title: "We do the homework",
-    description:
-      "Before we meet we audit your site, socials, reviews and SEO, then ask the AI models what they say about you. You get it all back as a deck.",
-  },
-  {
-    step: "02",
-    // SOP-001 §6 (30–45 min Google Meet, client alignment, Client Context
-    // Document) and SOP-002 §5 (content plan, Senior Manager approval).
-    title: "We agree on the plan",
-    description:
-      "One 30–45 minute call. You tell us what we got right and what we got wrong. That becomes your plan: subreddits, themes, schedule, tone.",
-  },
-  {
-    step: "03",
-    // SOP-001 §6.2.6 timeline; SOP-002 §8.3 approval gate; SOP-004 §6 verify.
-    title: "You approve. We post.",
-    description:
-      "First drafts land in 2–4 business days. Your first content is live in 7–10. And not a word of it posts before you sign off.",
-  },
-];
+/** Steps come from `content/site.json` (editable in /admin); numbers follow
+ *  their order. */
+const steps = siteContent.howItWorks.steps.map((step, i) => ({
+  ...step,
+  step: String(i + 1).padStart(2, "0"),
+}));
 
 export function HowItWorks() {
   return (
@@ -41,10 +22,10 @@ export function HowItWorks() {
       <div className="relative mx-auto max-w-5xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal-ink">
-            How it works
+            {siteContent.howItWorks.eyebrow}
           </p>
           <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
-            Live in 7–10 business days.
+            {siteContent.howItWorks.heading}
           </h2>
         </Reveal>
 

@@ -6,6 +6,7 @@ import { TopoBackground } from "../TopoBackground";
 import { AnimatedSection } from "../AnimatedSection";
 import { PlusField } from "../PlusField";
 import { useSpotlight, SpotlightOverlay } from "../SpotlightCard";
+import { siteContent } from "@/lib/site-content";
 
 type Service = {
   title: string;
@@ -14,54 +15,15 @@ type Service = {
 };
 
 /**
- * Every card below states a service that is documented in an SOP. Nothing here
- * is aspirational: the SOP reference on each entry is the source of truth, and
- * a service with no SOP behind it does not belong on this page.
+ * Copy comes from `content/site.json` (editable in /admin). Icons are matched
+ * by position and cycle if more services are added.
  */
-const services: Service[] = [
-  {
-    // SOP-002 §4 — Posts, Comments, Replies as the three content types.
-    title: "Reddit Posts, Comments & Replies",
-    description:
-      "Threads that rank in search and shift what AI says about you, plus comments and replies inside conversations already happening.",
-    icon: EditIcon,
-  },
-  {
-    // SOP-009 §6.1 and SOP-001 §4.1 both list blogs as a deliverable type.
-    title: "Blogs & Long-Form",
-    description:
-      "Long-form articles written from your approved plan, then read line by line before they reach you.",
-    icon: DocIcon,
-  },
-  {
-    // SOP-002 §5.1 — the content plan and everything it must contain.
-    title: "Content Planning",
-    description:
-      "Where to post, what to say, when, and in whose voice. Written down and approved before anything is made.",
-    icon: CalendarIcon,
-  },
-  {
-    // SOP-001 §5 — the pre-meeting research phase, item by item.
-    title: "Brand & Visibility Research",
-    description:
-      "Your site, socials, reviews and SEO, plus what ChatGPT, Claude, Gemini and Perplexity say about you today.",
-    icon: ChartIcon,
-  },
-  {
-    // SOP-004 §5–7 — posting, platform compliance and CM verification.
-    title: "Posting & Platform Compliance",
-    description:
-      "Posted to fit each subreddit's rules and culture, then checked live so nothing sits in a spam filter.",
-    icon: ChatIcon,
-  },
-  {
-    // SOP-U01 §4 — the four UGC product lines, detailed in the section below.
-    title: "UGC Visual Content",
-    description:
-      "Product imagery, AI models, brand ambassadors and sponsored creator posts. No photoshoot required.",
-    icon: SparkIcon,
-  },
-];
+const ICONS = [EditIcon, DocIcon, CalendarIcon, ChartIcon, ChatIcon, SparkIcon];
+
+const services: Service[] = siteContent.services.items.map((item, i) => ({
+  ...item,
+  icon: ICONS[i % ICONS.length],
+}));
 
 export function Services() {
   return (
@@ -71,13 +33,13 @@ export function Services() {
       <div className="relative mx-auto max-w-6xl px-6">
       <Reveal className="mx-auto max-w-2xl text-center">
         <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal-ink">
-          What we do
+          {siteContent.services.eyebrow}
         </p>
         <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
-          Everything, handled.
+          {siteContent.services.heading}
         </h2>
         <p className="mt-3 text-stone dark:text-white/60">
-          Six services. Each one a written process, run the same way every time.
+          {siteContent.services.intro}
         </p>
       </Reveal>
       <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

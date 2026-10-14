@@ -1,6 +1,7 @@
 import { absoluteUrl, site, siteUrl, socialLinks } from "@/lib/site";
 import type { FaqItem } from "@/lib/faq";
 import type { PostMeta } from "@/lib/blog";
+import { siteContent } from "@/lib/site-content";
 
 /**
  * Structured data.
@@ -143,24 +144,13 @@ export const serviceSchema = {
   hasOfferCatalog: {
     "@type": "OfferCatalog",
     name: "Sublime Plus packages",
-    itemListElement: [
-      {
-        "@type": "Offer",
-        name: "Starter",
-        description: "10 posts per month with supporting comments included. Billed monthly, upfront.",
-      },
-      {
-        "@type": "Offer",
-        name: "Growth",
-        description: "25 posts per month with supporting comments included. Billed monthly, upfront.",
-      },
-      {
-        "@type": "Offer",
-        name: "Pro",
-        description:
-          "30 posts per month with supporting comments included, AI-generated plus a human proofread. Billed monthly, upfront.",
-      },
-    ],
+    // Generated from the plans on the page (content/site.json), so editing a
+    // plan in /admin keeps the structured data in step with what is shown.
+    itemListElement: siteContent.plans.items.map((plan) => ({
+      "@type": "Offer",
+      name: plan.name,
+      description: [plan.tagline, ...plan.deliverables].join(". ").replace(/\.\./g, "."),
+    })),
   },
 };
 

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { TONES, type PostTone } from "@/lib/blog";
 import { slugify } from "@/lib/admin/posts";
+import { compressImage, uploadImage, uploadImageData } from "./image-upload";
 
 type Draft = {
   slug: string;
@@ -30,78 +31,6 @@ const BLANK: Draft = {
   body: "",
 };
 
-/**
- * Reads a file as base64 and commits it through /api/admin/images. Returns the
- * public path. The file only exists on the live site after the deploy that
- * commit triggers, so callers preview it from the local file meanwhile.
- */
-/** Covers display at most ~1200px wide; 1600 leaves room for sharp screens. */
-const MAX_IMAGE_WIDTH = 1600;
-
-function blobToBase64(blob: Blob) {
-  return new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result).replace(/^data:[^,]*,/, ""));
-    reader.onerror = () => reject(new Error("Could not read that file."));
-    reader.readAsDataURL(blob);
-  });
-}
-
-/**
- * Shrinks an image in the browser before it is uploaded: scaled to at most
- * MAX_IMAGE_WIDTH and re-encoded as WebP (JPEG where WebP encoding is missing).
- *
- * This matters twice over. Uploads travel as base64 JSON, and parsing a
- * multi-megabyte body can exceed the Worker's per-request CPU limit (error
- * 1102). And every visitor downloads the cover, so a 2 MB PNG is a slow page.
- * GIFs are left alone so animations survive.
- */
-async function compressImage(blob: Blob): Promise<{ type: string; data: string }> {
-  if (blob.type === "image/gif") return { type: blob.type, data: await blobToBase64(blob) };
-
-  try {
-    const bitmap = await createImageBitmap(blob);
-    const scale = Math.min(1, MAX_IMAGE_WIDTH / bitmap.width);
-    const canvas = document.createElement("canvas");
-    canvas.width = Math.round(bitmap.width * scale);
-    canvas.height = Math.round(bitmap.height * scale);
-    canvas.getContext("2d")?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-    bitmap.close();
-
-    const encode = (type: string) =>
-      new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, 0.82));
-    let out = await encode("image/webp");
-    // Browsers that cannot encode WebP silently hand back a PNG instead.
-    if (!out || out.type !== "image/webp") out = await encode("image/jpeg");
-    // Keep the original if re-encoding somehow made it bigger.
-    if (out && out.size < blob.size) return { type: out.type, data: await blobToBase64(out) };
-  } catch {
-    // Undecodable here (rare); fall through and let the server validate it.
-  }
-  return { type: blob.type, data: await blobToBase64(blob) };
-}
-
-async function uploadImage(file: File): Promise<string> {
-  const { type, data } = await compressImage(file);
-  return uploadImageData(file.name, type, data);
-}
-
-/** Same as `uploadImage`, for bytes already in base64 (a generated suggestion). */
-async function uploadImageData(name: string, type: string, data: string): Promise<string> {
-  const response = await fetch("/api/admin/images", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, type, data }),
-  });
-  const result = (await response.json().catch(() => ({}))) as { path?: string; error?: string };
-  if (!response.ok || !result.path) throw new Error(result.error ?? "Could not upload the image.");
-  return result.path;
-}
-
-/**
- * A suggested cover. Synchronous providers return the bytes (`data`); Kie
- * returns a hosted `url` plus the `taskId` the server downloads it through.
- */
 type Suggestion = {
   provider: string;
   type?: string;
@@ -110,10 +39,12 @@ type Suggestion = {
   taskId?: string;
   prompt?: string;
   note?: string;
+  /** Which Kie model made it, when Kie did. */
+  modelLabel?: string;
 };
 
 const PROVIDER_NAMES: Record<string, string> = {
-  kie: "Kie.ai (nano-banana)",
+  kie: "Kie.ai",
   gemini: "Google Gemini",
   openai: "ChatGPT (OpenAI)",
   cloudflare: "Cloudflare Workers AI",
@@ -142,17 +73,21 @@ function extractImage(provider: string, json: unknown): { type: string; data: st
   return flat.data && flat.type ? { type: flat.type, data: flat.data } : null;
 }
 
+type ImageModel = "gpt" | "nano";
+
 /** Asks the server for a cover. Pure fetch, so effects can call it directly. */
 async function fetchSuggestion(
   title: string,
   excerpt: string,
-  body: string
+  body: string,
+  imagePrompt = "",
+  model: ImageModel = "gpt"
 ): Promise<{ suggestion: Suggestion } | { error: string }> {
   try {
     const response = await fetch("/api/admin/images/suggest", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, excerpt, body }),
+      body: JSON.stringify({ title, excerpt, body, imagePrompt, model }),
     });
     const json = (await response.json().catch(() => ({}))) as { error?: string };
     if (!response.ok) return { error: json.error ?? "Could not generate an image." };
@@ -161,7 +96,11 @@ async function fetchSuggestion(
     const rawNote = response.headers.get("X-Image-Note");
 
     if (provider === "kie") {
-      const { taskId, prompt } = json as { taskId?: string; prompt?: string };
+      const { taskId, prompt, modelLabel } = json as {
+        taskId?: string;
+        prompt?: string;
+        modelLabel?: string;
+      };
       if (!taskId) return { error: "Kie did not start the image." };
       // Kie works asynchronously. Polling is free; only the task costs credits.
       for (let attempt = 0; attempt < 60; attempt++) {
@@ -178,7 +117,16 @@ async function fetchSuggestion(
           return { error: status.error ?? "Kie could not make this image." };
         }
         if (status.state === "success" && status.url) {
-          return { suggestion: { provider, url: status.url, taskId, prompt } };
+          return {
+            suggestion: {
+              provider,
+              url: status.url,
+              taskId,
+              prompt,
+              modelLabel,
+              note: rawNote ? decodeURIComponent(rawNote) : undefined,
+            },
+          };
         }
       }
       return { error: "Kie is taking too long. Try again in a minute." };
@@ -223,6 +171,10 @@ export function PostEditor({ slug }: { slug?: string }) {
   const [suggestion, setSuggestion] = useState<Suggestion | null>(null);
   const [suggesting, setSuggesting] = useState(false);
   const [suggestError, setSuggestError] = useState<string | null>(null);
+  // Optional prompt typed by the admin; when set it is sent as-is instead of
+  // one written from the post. Not saved with the post.
+  const [imagePrompt, setImagePrompt] = useState("");
+  const [imageModel, setImageModel] = useState<ImageModel>("gpt");
   // Images are only generated on an explicit click: a paid provider spends
   // credits per image, so nothing runs just because the editor opened.
 
@@ -265,13 +217,13 @@ export function PostEditor({ slug }: { slug?: string }) {
   }
 
   async function suggestCover(title = draft.title, excerpt = draft.excerpt, body = draft.body) {
-    if (!title.trim()) {
-      setSuggestError("Write a title first; the image is generated from it.");
+    if (!title.trim() && !imagePrompt.trim()) {
+      setSuggestError("Write a title or an image prompt first.");
       return;
     }
     setSuggesting(true);
     setSuggestError(null);
-    const result = await fetchSuggestion(title, excerpt, body);
+    const result = await fetchSuggestion(title, excerpt, body, imagePrompt, imageModel);
     setSuggesting(false);
     if ("error" in result) setSuggestError(result.error);
     else setSuggestion(result.suggestion);
@@ -486,11 +438,32 @@ export function PostEditor({ slug }: { slug?: string }) {
           </span>
           <FieldError message={fieldErrors.cover} />
 
-          {!draft.cover && (
+          {(
             <div className="mt-4 rounded-xl border border-dashed border-teal/50 p-4 font-normal">
               <p className="text-sm font-medium text-pine dark:text-white">
-                Suggested cover (AI-generated from the post)
+                {draft.cover ? "Generate a new cover with AI" : "Suggested cover (AI-generated)"}
               </p>
+              <label className="mt-3 block text-sm font-medium text-pine dark:text-white">
+                Image prompt (optional)
+                <textarea
+                  value={imagePrompt}
+                  onChange={(event) => setImagePrompt(event.target.value)}
+                  rows={3}
+                  placeholder="Describe the image you want. Leave empty and we write a prompt from the post for you."
+                  className={`${FIELD} text-sm`}
+                />
+              </label>
+              <label className="mt-3 block text-sm font-medium text-pine dark:text-white">
+                Image model
+                <select
+                  value={imageModel}
+                  onChange={(event) => setImageModel(event.target.value as ImageModel)}
+                  className={`${FIELD} text-sm`}
+                >
+                  <option value="gpt">ChatGPT image (GPT Image)</option>
+                  <option value="nano">Nano Banana (cheaper)</option>
+                </select>
+              </label>
               {suggesting && (
                 <p className="mt-2 text-sm text-stone dark:text-white/60">
                   Generating an image for this post… this can take up to a minute.
@@ -509,13 +482,14 @@ export function PostEditor({ slug }: { slug?: string }) {
               )}
               {suggestion && !suggesting && (
                 <p className="mt-1 text-xs text-stone dark:text-white/50">
-                  Made with {PROVIDER_NAMES[suggestion.provider] ?? suggestion.provider}.
+                  Made with {PROVIDER_NAMES[suggestion.provider] ?? suggestion.provider}
+                  {suggestion.modelLabel && <> ({suggestion.modelLabel})</>}.
                   {suggestion.note && <> {suggestion.note}</>}
                 </p>
               )}
               {suggestion?.prompt && !suggesting && (
                 <details className="mt-1 text-xs text-stone dark:text-white/50">
-                  <summary className="cursor-pointer">Prompt written from the post</summary>
+                  <summary className="cursor-pointer">Prompt used</summary>
                   <p className="mt-1">{suggestion.prompt}</p>
                 </details>
               )}

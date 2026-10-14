@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Logo } from "../PlusMark";
 import { Magnetic } from "../CursorReactive";
 import { site, socialLinks } from "@/lib/site";
+import { siteContent } from "@/lib/site-content";
 
 /**
  * Compact footer.
@@ -14,14 +15,8 @@ import { site, socialLinks } from "@/lib/site";
  * and contact, then a bottom bar. It keeps the dark treatment, the glass pills
  * and the breathing glow, without the dead space.
  */
-const MARQUEE_PHRASES = [
-  // Each phrase restates something the page already commits to, all SOP-backed.
-  "Your approval before anything posts",
-  "One Customer Manager, start to finish",
-  "Every AI draft read by a human",
-  "No fabricated stats or testimonials",
-  "Live in 7 to 10 business days",
-];
+/** Editable in /admin (`content/site.json` → footer.marquee). */
+const MARQUEE_PHRASES = siteContent.footer.marquee;
 
 /** Same order as the nav and the page sections. */
 const QUICK_LINKS = [

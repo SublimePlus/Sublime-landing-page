@@ -6,6 +6,7 @@ import { PlusMark } from "../PlusMark";
 import { PlusField } from "../PlusField";
 import { Magnetic } from "../CursorReactive";
 import { BookMeetingButton } from "../booking/BookMeetingButton";
+import { siteContent } from "@/lib/site-content";
 
 /**
  * The hero leads with the hook rather than the service description.
@@ -17,6 +18,7 @@ import { BookMeetingButton } from "../booking/BookMeetingButton";
  * the hero only has to earn the scroll.
  */
 export function Hero() {
+  const hero = siteContent.hero;
   return (
     <section className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-night via-pine to-pine px-6 pb-20 pt-28 text-white">
       <AmbientGlow />
@@ -31,13 +33,13 @@ export function Hero() {
           className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium text-lime"
         >
           <PlusMark className="h-3.5 w-3.5" strokeWidth={3} />
-          Content &amp; social marketing, done with a little extra
+          {hero.badge}
         </motion.p>
 
         <h1 className="text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">
-          <WordReveal text="Be the brand" startDelay={0.15} />
+          <WordReveal text={hero.headlineLine1} startDelay={0.15} />
           <br />
-          <WordReveal text="AI recommends." startDelay={0.4} className="text-lime" />
+          <WordReveal text={hero.headlineLine2} startDelay={0.4} className="text-lime" />
         </h1>
 
         <motion.p
@@ -46,8 +48,7 @@ export function Hero() {
           transition={{ duration: 0.7, delay: 0.85 }}
           className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg"
         >
-          We plan, write and create content that shapes how AI describes you,
-          and moves you up in search.
+          {hero.subheading}
         </motion.p>
 
         <motion.div
@@ -58,14 +59,14 @@ export function Hero() {
         >
           <Magnetic strength={14}>
             <BookMeetingButton className="neon-lime-btn inline-flex items-center gap-2 rounded-full bg-lime px-8 py-4 font-semibold text-pine transition-transform hover:scale-[1.03]">
-              See what AI says about you
+              {hero.primaryButton}
               <PlusMark className="h-4 w-4" strokeWidth={3} />
             </BookMeetingButton>
           </Magnetic>
           {/* Secondary CTA. Every button on the page routes to the booking
               modal, so this opens it too, styled as an outline pair. */}
           <BookMeetingButton className="inline-flex items-center gap-2 rounded-full border border-white/30 px-8 py-4 text-sm font-semibold text-white transition-colors hover:border-lime hover:text-lime">
-            Book a call
+            {hero.secondaryButton}
           </BookMeetingButton>
         </motion.div>
 
@@ -75,7 +76,7 @@ export function Hero() {
           transition={{ duration: 0.7, delay: 1.5 }}
           className="mt-5 text-sm text-white/50"
         >
-          Free 30–45 minute call. Nothing gets published without your approval.
+          {hero.footnote}
         </motion.p>
       </div>
     </section>
