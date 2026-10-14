@@ -1,6 +1,7 @@
 import { absoluteUrl, site, siteUrl, socialLinks } from "@/lib/site";
 import type { FaqItem } from "@/lib/faq";
 import type { PostMeta } from "@/lib/blog";
+import { siteContent } from "@/lib/site-content";
 
 /**
  * Structured data.
@@ -39,7 +40,7 @@ export const organizationSchema = {
   // The brand is written "Sublime Plus", but the symbol form is what existing
   // citations and social handles use. Listing both ties them to one entity, so
   // a search engine does not read them as two different companies.
-  alternateName: ["Sublime+", "SublimePlus"],
+  alternateName: ["Sublime+", "SublimePlus", "Sublime", "Sublime Plus Marketing", "Sublime-Plus"],
   url: siteUrl,
   description: site.description,
   email: site.email,
@@ -84,9 +85,9 @@ export function faqSchema(items: FaqItem[]) {
 }
 
 /**
- * A blog article. `author` and `publisher` both resolve to the organization:
- * posts are written as the company rather than bylined, and inventing a person
- * to fill the slot would be asserting an author who does not exist.
+ * A blog article. A post with a named author in /admin gets that Person as
+ * `author`; otherwise the author resolves to the organization, matching the
+ * default "Sublime Plus Cofounder" byline, so no unnamed person is asserted.
  *
  * `image` points at the post's generated Open Graph card — a real, resolvable
  * image for this specific article, not the shared homepage one.
@@ -143,24 +144,13 @@ export const serviceSchema = {
   hasOfferCatalog: {
     "@type": "OfferCatalog",
     name: "Sublime Plus packages",
-    itemListElement: [
-      {
-        "@type": "Offer",
-        name: "Starter",
-        description: "10 posts per month with supporting comments included. Billed monthly, upfront.",
-      },
-      {
-        "@type": "Offer",
-        name: "Growth",
-        description: "25 posts per month with supporting comments included. Billed monthly, upfront.",
-      },
-      {
-        "@type": "Offer",
-        name: "Pro",
-        description:
-          "30 posts per month with supporting comments included, AI-generated plus a human proofread. Billed monthly, upfront.",
-      },
-    ],
+    // Generated from the plans on the page (content/site.json), so editing a
+    // plan in /admin keeps the structured data in step with what is shown.
+    itemListElement: siteContent.plans.items.map((plan) => ({
+      "@type": "Offer",
+      name: plan.name,
+      description: [plan.tagline, ...plan.deliverables].join(". ").replace(/\.\./g, "."),
+    })),
   },
 };
 

@@ -5,18 +5,23 @@ import { PlusField } from "@/components/PlusField";
 import { BlogCard } from "@/components/blog/BlogCard";
 import { getAllPosts } from "@/lib/blog";
 
+const TITLE = "Blog | Sublime Plus: LLM Marketing, SEO and Reddit Insights";
+const DESCRIPTION =
+  "The Sublime Plus blog on LLM marketing, SEO and Reddit. How brands get found on Google and named in ChatGPT, Gemini and Perplexity answers.";
+
 export const metadata: Metadata = {
-  title: "Blog",
-  description:
-    "How Sublime Plus works: our research, approval and AI-usage processes, written up from the SOPs we run on.",
+  // Absolute, so the layout's "%s | Sublime Plus" template does not append
+  // the brand a second time.
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
   alternates: { canonical: "/blog" },
   openGraph: {
     type: "website",
-    title: "Blog",
-    description:
-      "How Sublime Plus works: our research, approval and AI-usage processes, written up from the SOPs we run on.",
+    title: TITLE,
+    description: DESCRIPTION,
     url: "/blog",
   },
+  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION },
 };
 
 export default function BlogIndex() {
@@ -33,12 +38,12 @@ export default function BlogIndex() {
             Sublime Plus Blog
           </p>
           <h1 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
-            How we actually work.
+            LLM marketing and SEO, explained plainly.
           </h1>
           <p className="mt-4 text-stone dark:text-white/60">
-            Written up from the standard operating procedures we run on — the
-            research we do before a first meeting, where AI sits in the work,
-            and what has to happen before anything goes live.
+            Notes from the Sublime+ team on getting your brand found on Google,
+            discussed on Reddit and recommended by AI tools like ChatGPT and
+            Gemini.
           </p>
         </Reveal>
 

@@ -8,57 +8,17 @@ import { BookMeetingButton } from "../booking/BookMeetingButton";
 import { TopoBackground } from "../TopoBackground";
 import { AnimatedSection } from "../AnimatedSection";
 import { PlusField } from "../PlusField";
+import { siteContent } from "@/lib/site-content";
 
-type Plan = {
-  name: string;
-  tagline: string;
-  deliverables: string[];
-  highlighted?: boolean;
-};
+type Plan = (typeof siteContent.plans.items)[number];
+const copy = siteContent.plans;
 
 /**
- * The three standardised packages from SOP-S01 §10.5, with the SOP's own names
- * and post volumes. Prices are held back from the page by decision, and are
- * presented transparently on the call — SOP-S01 §10.4 requires exactly that:
- * no hidden costs, no ambiguity about what is being paid for.
- *
- * Deliberately not listed: blog counts, platform counts and report cadences
- * per tier. SOP-S01 §10.5 does not break those down by package, and inventing
- * a breakdown is the same failure as inventing a price.
+ * Plans, comparison rows and copy come from `content/site.json` (editable in
+ * /admin). A plan's price shows only when it is filled in; until then prices
+ * stay on the call, as before.
  */
-const plans: Plan[] = [
-  {
-    name: "Starter",
-    tagline: "Finding your footing.",
-    deliverables: [
-      "10 posts per month",
-      "Supporting comments included",
-      "AI-generated, CM-reviewed",
-      "Billed monthly, upfront",
-    ],
-  },
-  {
-    name: "Growth",
-    tagline: "Building real momentum.",
-    deliverables: [
-      "25 posts per month",
-      "Supporting comments included",
-      "AI-generated, CM-reviewed",
-      "Billed monthly, upfront",
-    ],
-    highlighted: true,
-  },
-  {
-    name: "Pro",
-    tagline: "Maximum volume, extra polish.",
-    deliverables: [
-      "30 posts per month",
-      "Supporting comments included",
-      "AI-generated plus human proofread",
-      "Billed monthly, upfront",
-    ],
-  },
-];
+const plans: Plan[] = copy.items;
 
 export function Pricing() {
   return (
@@ -68,14 +28,13 @@ export function Pricing() {
       <div className="relative mx-auto max-w-6xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal-ink">
-            Plans
+            {copy.eyebrow}
           </p>
           <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
-            Pick your volume.
+            {copy.heading}
           </h2>
           <p className="mt-4 text-stone dark:text-white/60">
-            Three packages, billed monthly and upfront. We walk you through
-            every price on the call. Nothing hidden, nothing vague.
+            {copy.intro}
           </p>
         </Reveal>
 
@@ -93,17 +52,16 @@ export function Pricing() {
           <div className="neon-teal glass-panel flex flex-col items-center justify-between gap-6 rounded-2xl p-8 sm:flex-row">
             <div className="text-center sm:text-left">
               {/* SOP-S01 §10.5 — "Custom add-ons can be discussed." */}
-              <h3 className="text-lg font-semibold text-pine dark:text-white">Custom add-ons</h3>
+              <h3 className="text-lg font-semibold text-pine dark:text-white">{copy.addonsHeading}</h3>
               <p className="mt-1 text-sm text-stone dark:text-white/60">
-                Something outside the three? Bring it to the call and we will
-                scope it with you.
+                {copy.addonsText}
               </p>
             </div>
             <BookMeetingButton
               planName="Custom"
               className="neon-teal-btn inline-flex flex-shrink-0 items-center gap-2 rounded-full bg-pine px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-teal"
             >
-              Book Now
+              {copy.addonsButton}
               <PlusMark className="h-4 w-4" strokeWidth={3} />
             </BookMeetingButton>
           </div>
@@ -113,23 +71,7 @@ export function Pricing() {
   );
 }
 
-/**
- * Side-by-side comparison of the three packages.
- *
- * Every row is a dimension SOP-S01 §10.5 actually varies or states. Rows that
- * would be conventional here — platforms covered, blog volume, reporting
- * cadence, support tier — are absent because that clause does not break them
- * down by package, and a table is the easiest place in the world for an
- * invented number to look authoritative.
- */
-const comparisonRows: Array<{ label: string; values: [string, string, string] }> = [
-  { label: "Posts per month", values: ["10", "25", "30"] },
-  { label: "Supporting comments", values: ["Included", "Included", "Included"] },
-  { label: "Quality layer", values: ["AI-generated", "AI-generated", "AI + human proofread"] },
-  { label: "Human review before you see it", values: ["Yes", "Yes", "Yes"] },
-  { label: "Your written approval before posting", values: ["Required", "Required", "Required"] },
-  { label: "Billing", values: ["Monthly, upfront", "Monthly, upfront", "Monthly, upfront"] },
-];
+const comparisonRows = copy.compareRows;
 
 function ComparisonTable() {
   return (
@@ -142,7 +84,7 @@ function ComparisonTable() {
           <thead>
             <tr className="border-b border-pine/10 dark:border-white/10">
               <th scope="col" className="px-6 py-4 font-semibold text-pine dark:text-white">
-                Compare
+                {copy.compareHeading}
               </th>
               {plans.map((plan) => (
                 <th
@@ -175,7 +117,7 @@ function ComparisonTable() {
                   <td
                     key={i}
                     className={`px-6 py-4 ${
-                      plans[i].highlighted
+                      plans[i]?.highlighted
                         ? "font-semibold text-pine dark:text-white"
                         : "text-stone dark:text-white/60"
                     }`}
@@ -189,7 +131,7 @@ function ComparisonTable() {
         </table>
       </div>
       <p className="mt-3 px-1 text-xs text-stone dark:text-white/50">
-        Package prices are walked through in full on the call.
+        {copy.compareNote}
       </p>
     </Reveal>
   );
@@ -243,13 +185,18 @@ function PlanCard({ plan }: { plan: Plan }) {
           }}
           transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
         >
-          Suggested
+          {copy.highlightBadge}
         </motion.span>
       )}
       <h3 className="text-xl font-bold">{plan.name}</h3>
       <p className={`mt-1 text-sm ${plan.highlighted ? "text-white/70" : "text-stone dark:text-white/60"}`}>
         {plan.tagline}
       </p>
+      {plan.price && (
+        <p className={`mt-4 text-3xl font-bold ${plan.highlighted ? "text-lime" : "text-pine dark:text-white"}`}>
+          {plan.price}
+        </p>
+      )}
 
       <ul className="mt-6 flex-1 space-y-3">
         {plan.deliverables.map((item) => (
@@ -272,7 +219,7 @@ function PlanCard({ plan }: { plan: Plan }) {
           plan.highlighted ? "neon-lime-btn bg-lime text-pine" : "neon-teal-btn bg-pine text-white dark:bg-teal"
         }`}
       >
-        Book Now
+        {copy.button}
         <PlusMark className="h-4 w-4" strokeWidth={3} />
       </BookMeetingButton>
       </motion.div>

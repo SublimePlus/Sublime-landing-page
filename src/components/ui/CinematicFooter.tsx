@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Logo } from "../PlusMark";
 import { Magnetic } from "../CursorReactive";
 import { site, socialLinks } from "@/lib/site";
+import { siteContent } from "@/lib/site-content";
 
 /**
  * Compact footer.
@@ -14,14 +15,11 @@ import { site, socialLinks } from "@/lib/site";
  * and contact, then a bottom bar. It keeps the dark treatment, the glass pills
  * and the breathing glow, without the dead space.
  */
-const MARQUEE_PHRASES = [
-  // Each phrase restates something the page already commits to, all SOP-backed.
-  "Your approval before anything posts",
-  "One Customer Manager, start to finish",
-  "Every AI draft read by a human",
-  "No fabricated stats or testimonials",
-  "Live in 7 to 10 business days",
-];
+/** Editable in /admin (`content/site.json` → footer.marquee). */
+const MARQUEE_PHRASES = siteContent.footer.marquee;
+/** Editable in /admin (footer.emails); falls back to the main address. */
+const listedEmails = siteContent.footer.emails.filter((email) => email.trim());
+const EMAILS = listedEmails.length ? listedEmails : [site.email];
 
 /** Same order as the nav and the page sections. */
 const QUICK_LINKS = [
@@ -72,18 +70,22 @@ export function CinematicFooter() {
           ))}
         </div>
 
-        <Magnetic strength={10}>
-          <a
-            href={`mailto:${site.email}?subject=${encodeURIComponent(
-              "Enquiry for Sublime Plus"
-            )}&body=${encodeURIComponent(
-              "Hi Sublime Plus,\n\nI'd like to know more about working with you.\n\n"
-            )}`}
-            className="glass-pill mt-5 inline-flex px-6 py-3 text-sm font-bold text-lime"
-          >
-            {site.email}
-          </a>
-        </Magnetic>
+        <div className="mt-5 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
+          {EMAILS.map((email) => (
+            <Magnetic key={email} strength={10}>
+              <a
+                href={`mailto:${email}?subject=${encodeURIComponent(
+                  "Enquiry for Sublime Plus"
+                )}&body=${encodeURIComponent(
+                  "Hi Sublime Plus,\n\nI'd like to know more about working with you.\n\n"
+                )}`}
+                className="glass-pill inline-flex px-6 py-3 text-sm font-bold text-lime"
+              >
+                {email}
+              </a>
+            </Magnetic>
+          ))}
+        </div>
 
         {/* Centred back-to-top, then a balanced credit row underneath. */}
         <div className="mt-10 flex w-full flex-col items-center gap-6 border-t border-white/10 pt-8">

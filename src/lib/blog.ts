@@ -1,4 +1,5 @@
 import { RAW_POSTS } from "./blog-data";
+import { site } from "./site";
 
 /**
  * Posts are authored as Markdown in `content/blog/` and compiled into
@@ -66,6 +67,11 @@ export function getOtherPosts(slug: string, limit = 15): PostMeta[] {
   return getAllPosts()
     .filter((post) => post.slug !== slug)
     .slice(0, limit);
+}
+
+/** The byline to show: the post's own author, else the site-wide default. */
+export function postAuthor(post: { author?: string }) {
+  return post.author || site.defaultAuthor;
 }
 
 export function formatPostDate(date: string, month: "short" | "long" = "short") {

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { BlogCover } from "./BlogCover";
-import { formatPostDate, type PostMeta } from "@/lib/blog";
+import { formatPostDate, postAuthor, type PostMeta } from "@/lib/blog";
 
 /**
  * Card styling tracks the FAQ rows and plan cards: `neon-teal` glow, the same
@@ -20,7 +20,7 @@ export function BlogCard({ post }: { post: PostMeta }) {
       <div className="flex flex-1 flex-col p-5">
         <p className="text-xs font-medium text-stone dark:text-white/50">
           {formatPostDate(post.date)} · {post.readingTime}
-          {post.author && <> · {post.author}</>}
+          · {postAuthor(post)}
         </p>
         <h3 className="mt-2 text-lg font-semibold text-pine group-hover:text-teal-ink dark:text-white dark:group-hover:text-lime">
           {post.title}

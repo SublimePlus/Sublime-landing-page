@@ -46,6 +46,7 @@ export async function GET() {
           title: parsed?.title ?? file.slug,
           date: parsed?.date ?? "",
           author: parsed?.author ?? "",
+          cover: parsed?.cover ?? "",
           archived: parsed?.archived ?? false,
         };
       })

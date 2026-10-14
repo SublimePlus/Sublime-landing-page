@@ -8,6 +8,7 @@ import { TopoBackground } from "../TopoBackground";
 import { AnimatedSection } from "../AnimatedSection";
 import { PlusField } from "../PlusField";
 import { faqs, type FaqItem } from "@/lib/faq";
+import { siteContent } from "@/lib/site-content";
 
 export function Faq() {
   return (
@@ -20,13 +21,13 @@ export function Faq() {
       <div className="relative mx-auto max-w-3xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal-ink">
-            Questions
+            {siteContent.faq.eyebrow}
           </p>
           <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
-            What people ask before they book.
+            {siteContent.faq.heading}
           </h2>
           <p className="mt-4 text-stone dark:text-white/60">
-            Straight answers, taken from the processes we actually follow.
+            {siteContent.faq.intro}
           </p>
         </Reveal>
 

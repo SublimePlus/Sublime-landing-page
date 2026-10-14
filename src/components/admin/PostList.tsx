@@ -5,7 +5,17 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { formatPostDate } from "@/lib/blog";
 
-type Row = { slug: string; title: string; date: string; author: string; archived: boolean };
+type Row = {
+  slug: string;
+  title: string;
+  date: string;
+  author: string;
+  cover: string;
+  archived: boolean;
+};
+
+type View = "list" | "grid";
+const VIEW_KEY = "sublime-admin-post-view";
 
 /** Unauthorised is signalled rather than thrown: it means "re-render the gate". */
 type FetchResult =
@@ -46,6 +56,27 @@ export function PostList() {
   const [savedOrder, setSavedOrder] = useState<string[]>([]);
   const [savingOrder, setSavingOrder] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  // List shows the re-order arrows; grid shows covers. Remembered per browser.
+  // Read lazily on the client: the first render is "Loading posts…", which
+  // does not depend on the view, so server and client markup still match.
+  const [view, setView] = useState<View>(() => {
+    try {
+      return typeof window !== "undefined" && window.localStorage.getItem(VIEW_KEY) === "grid"
+        ? "grid"
+        : "list";
+    } catch {
+      return "list";
+    }
+  });
+
+  function chooseView(next: View) {
+    setView(next);
+    try {
+      window.localStorage.setItem(VIEW_KEY, next);
+    } catch {
+      // Not remembered; the choice still applies now.
+    }
+  }
   const [reloadToken, setReloadToken] = useState(0);
 
   useEffect(() => {
@@ -207,9 +238,29 @@ export function PostList() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-stone dark:text-white/60">
-          Use ↑ ↓ to set the order posts appear in on the site, then save.
-        </p>
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="inline-flex rounded-full border border-pine/15 p-1 dark:border-white/15">
+            {(["list", "grid"] as const).map((option) => (
+              <button
+                key={option}
+                onClick={() => chooseView(option)}
+                aria-pressed={view === option}
+                className={`rounded-full px-4 py-1.5 text-sm font-semibold capitalize ${
+                  view === option
+                    ? "bg-pine text-white dark:bg-teal"
+                    : "text-pine hover:text-teal-ink dark:text-white"
+                }`}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+          <p className="text-sm text-stone dark:text-white/60">
+            {view === "list"
+              ? "Use ↑ ↓ to set the order posts appear in on the site, then save."
+              : "Switch to List to change the order."}
+          </p>
+        </div>
         {orderChanged && (
           <div className="flex items-center gap-2">
             <button
@@ -236,6 +287,63 @@ export function PostList() {
         </p>
       )}
 
+      {view === "grid" ? (
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <li
+              key={post.slug}
+              className={`glass-panel flex flex-col overflow-hidden rounded-2xl ${
+                post.archived ? "opacity-60" : ""
+              }`}
+            >
+              <div className="relative aspect-[16/10] bg-gradient-to-br from-pine via-teal to-teal-dark">
+                {post.cover && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={post.cover}
+                    alt=""
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                )}
+                {post.archived && (
+                  <span className="absolute left-3 top-3 rounded-full bg-amber-400 px-2 py-0.5 text-xs font-semibold text-pine">
+                    Archived
+                  </span>
+                )}
+              </div>
+              <div className="flex flex-1 flex-col p-4">
+                <p className="text-xs font-medium text-stone dark:text-white/50">
+                  {post.date ? formatPostDate(post.date) : "No date"}
+                  {post.author && <> · {post.author}</>}
+                </p>
+                <h2 className="mt-1 line-clamp-2 text-sm font-semibold text-pine dark:text-white">
+                  {post.title || post.slug}
+                </h2>
+                <div className="mt-auto flex flex-wrap gap-2 pt-4">
+                  <Link href={`/admin/edit/${post.slug}`} className={ROW_BUTTON}>
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => void onArchive(post.slug, !post.archived)}
+                    disabled={busy === post.slug}
+                    className={ROW_BUTTON}
+                  >
+                    {post.archived ? "Restore" : "Archive"}
+                  </button>
+                  <button
+                    onClick={() => void onDelete(post.slug, post.title || post.slug)}
+                    disabled={busy === post.slug}
+                    className="rounded-full border border-red-500/30 px-4 py-2 text-sm font-semibold text-red-600 hover:border-red-500 disabled:opacity-50 dark:text-red-400"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
       <ul className="space-y-3">
         {posts.map((post, index) => (
           <li
@@ -300,6 +408,7 @@ export function PostList() {
           </li>
         ))}
       </ul>
+      )}
     </div>
   );
 }

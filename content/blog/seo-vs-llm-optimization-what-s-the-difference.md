@@ -46,4 +46,4 @@ Both. But if you've been doing SEO for years and haven't touched LLM optimizatio
 
 The fix doesn't mean throwing out what already works. Keep your SEO running, then add the pieces it doesn't cover: getting discussed in the communities your buyers trust, building your review presence and checking what AI tools say about you every month.
 
-I covered why that gap gets more expensive over time in [why ranking on ChatGPT matters more every month](/blog/why-ranking-on-chatgpt-matters). If you want help closing it, the Sublime+ team is at [sublime-plus.com](https://sublime-plus.com/).
+I covered why that gap gets more expensive over time in [why ranking on ChatGPT matters more every month](/blog/why-ranking-on-chatgpt-matters-more-every-month). If you want help closing it, the Sublime+ team is at [sublime-plus.com](https://sublime-plus.com/).

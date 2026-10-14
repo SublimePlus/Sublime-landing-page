@@ -48,4 +48,4 @@ The brands that fall behind will be the ones waiting for the channel to "mature.
 
 I'd ask the main AI tools the ten questions my customers ask most and see who gets named. I'd find the communities and review sites where my category is discussed and start showing up there honestly. I'd make my website crystal clear about what I do and who I do it for. And I'd check again every month.
 
-That's the playbook we run for clients at Sublime Plus, and it's the same one we run for Sublime itself. For a closer look at how this differs from classic search, read [SEO vs LLM optimization](/blog/seo-vs-llm-optimization). If you want to see what it looks like for your brand, start at [sublime-plus.com](https://sublime-plus.com/).
+That's the playbook we run for clients at Sublime Plus, and it's the same one we run for Sublime itself. For a closer look at how this differs from classic search, read [SEO vs LLM optimization](/blog/seo-vs-llm-optimization-what-s-the-difference). If you want to see what it looks like for your brand, start at [sublime-plus.com](https://sublime-plus.com/).

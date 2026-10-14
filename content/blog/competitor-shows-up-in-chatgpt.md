@@ -38,7 +38,7 @@ Some competitors have simply been building mentions for longer. That's not a rea
 
 ## How to close the gap
 
-Start by finding out exactly where you stand. I explain why this matters so much in [why ranking on ChatGPT matters more every month](/blog/why-ranking-on-chatgpt-matters).
+Start by finding out exactly where you stand. I explain why this matters so much in [why ranking on ChatGPT matters more every month](/blog/why-ranking-on-chatgpt-matters-more-every-month).
 
 Then go where your competitor is getting mentioned. Look at the threads, review sites and comparison articles that come up for your category. Your goal is to be part of those conversations in an honest, useful way, not to flood them with promotion.
 

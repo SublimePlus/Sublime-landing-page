@@ -29,6 +29,7 @@ type Env = {
   AI?: AiBinding;
   KIE_API_KEY?: string;
   KIE_IMAGE_MODEL?: string;
+  KIE_GPT_IMAGE_MODEL?: string;
   GEMINI_API_KEY?: string;
   GEMINI_IMAGE_MODEL?: string;
   OPENAI_API_KEY?: string;
@@ -99,6 +100,43 @@ async function writePrompt(env: Env, title: string, excerpt: string, body: strin
 }
 
 const KIE_API = "https://api.kie.ai/api/v1/jobs";
+
+/**
+ * The two Kie models offered in the editor. Each model takes its own input
+ * shape, so the shape lives with the model. IDs can be overridden with the
+ * KIE_GPT_IMAGE_MODEL / KIE_IMAGE_MODEL vars if Kie renames them.
+ */
+const KIE_MODELS = {
+  gpt: {
+    label: "ChatGPT image (GPT Image)",
+    id: (env: Env) => env.KIE_GPT_IMAGE_MODEL || "gpt-image/1.5-text-to-image",
+    input: (prompt: string) => ({ prompt, aspect_ratio: "3:2", quality: "medium" }),
+  },
+  nano: {
+    label: "Nano Banana",
+    id: (env: Env) => env.KIE_IMAGE_MODEL || "google/nano-banana",
+    input: (prompt: string) => ({ prompt, output_format: "jpeg", image_size: "16:9" }),
+  },
+} as const;
+type KieModel = keyof typeof KIE_MODELS;
+
+/** Starts one Kie task. A rejected task costs no credits. */
+async function kieCreateTask(env: Env, model: KieModel, prompt: string) {
+  const response = await fetch(`${KIE_API}/createTask`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${env.KIE_API_KEY}` },
+    body: JSON.stringify({ model: KIE_MODELS[model].id(env), input: KIE_MODELS[model].input(prompt) }),
+  });
+  const data = (await response.json().catch(() => ({}))) as {
+    code?: number;
+    msg?: string;
+    data?: { taskId?: string };
+  };
+  const taskId = data.data?.taskId;
+  if (response.ok && data.code === 200 && taskId) return { taskId };
+  // Kie answers 200 with an error code in the body (e.g. 402: no credits).
+  return { error: data.msg || `code ${data.code ?? response.status}` };
+}
 
 type KieRecord = {
   code?: number;
@@ -206,13 +244,19 @@ export async function POST(request: Request) {
     title?: unknown;
     excerpt?: unknown;
     body?: unknown;
+    imagePrompt?: unknown;
+    model?: unknown;
   };
+  // A prompt typed by the admin is used as-is instead of one written from the post.
+  const customPrompt =
+    typeof input.imagePrompt === "string" ? input.imagePrompt.trim().slice(0, 2000) : "";
+  const kieModel: KieModel = input.model === "nano" ? "nano" : "gpt";
   const title = typeof input.title === "string" ? input.title.trim().slice(0, 200) : "";
   const excerpt = typeof input.excerpt === "string" ? input.excerpt.trim().slice(0, 500) : "";
   const body = typeof input.body === "string" ? plainText(input.body) : "";
-  if (!title) {
+  if (!title && !customPrompt) {
     return NextResponse.json(
-      { error: "Write a title first — the image is generated from it." },
+      { error: "Write a title or an image prompt first." },
       { status: 400 }
     );
   }
@@ -222,39 +266,35 @@ export async function POST(request: Request) {
   const note: string[] = [];
 
   if (env.KIE_API_KEY) {
-    const kiePrompt = await writePrompt(env, title, excerpt, body);
+    const kiePrompt = customPrompt || (await writePrompt(env, title, excerpt, body));
     try {
-      const response = await fetch(`${KIE_API}/createTask`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${env.KIE_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: env.KIE_IMAGE_MODEL || "google/nano-banana",
-          input: { prompt: kiePrompt, output_format: "jpeg", image_size: "16:9" },
-        }),
-      });
-      const data = (await response.json().catch(() => ({}))) as {
-        code?: number;
-        msg?: string;
-        data?: { taskId?: string };
-      };
-      const taskId = data.data?.taskId;
-      if (response.ok && data.code === 200 && taskId) {
+      let used: KieModel = kieModel;
+      let result = await kieCreateTask(env, used, kiePrompt);
+      // If the chosen model is rejected (renamed, unavailable), try the other
+      // one once. Rejected tasks are not charged, so this never double-bills.
+      if ("error" in result) {
+        note.push(`${KIE_MODELS[used].label} failed (${result.error}).`);
+        used = used === "gpt" ? "nano" : "gpt";
+        result = await kieCreateTask(env, used, kiePrompt);
+      }
+      if ("taskId" in result) {
         return NextResponse.json(
-          { taskId, prompt: kiePrompt },
-          { headers: { "X-Image-Provider": "kie" } }
+          { taskId: result.taskId, prompt: kiePrompt, modelLabel: KIE_MODELS[used].label },
+          {
+            headers: {
+              "X-Image-Provider": "kie",
+              ...(note.length ? { "X-Image-Note": encodeURIComponent(note.join(" ")) } : {}),
+            },
+          }
         );
       }
-      // Kie answers 200 with an error code in the body (e.g. 402: no credits).
-      note.push(`Kie failed (${data.msg || `code ${data.code ?? response.status}`}).`);
+      note.push(`${KIE_MODELS[used].label} failed (${result.error}).`);
     } catch {
       note.push("Kie could not be reached.");
     }
   }
 
-  const prompt = buildPrompt(title, excerpt, body);
+  const prompt = customPrompt || buildPrompt(title, excerpt, body);
 
   if (env.GEMINI_API_KEY) {
     const model = env.GEMINI_IMAGE_MODEL || "gemini-2.5-flash-image";

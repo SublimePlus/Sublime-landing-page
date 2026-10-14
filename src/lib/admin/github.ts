@@ -241,3 +241,35 @@ export async function saveImageFile(fileName: string, base64: string) {
     }),
   });
 }
+
+/** The editable website copy (see src/lib/site-content.ts). */
+const SITE_FILE = "content/site.json";
+
+export async function getSiteFile(): Promise<{ json: string; sha: string } | null> {
+  const { repo, branch } = config();
+
+  try {
+    const response = await request(
+      `/repos/${repo}/contents/${SITE_FILE}?ref=${encodeURIComponent(branch)}`
+    );
+    const file = (await response.json()) as { content: string; sha: string };
+    return { json: decodeContent(file.content), sha: file.sha };
+  } catch (error) {
+    if (error instanceof GitHubError && error.status === 404) return null;
+    throw error;
+  }
+}
+
+export async function saveSiteFile(json: string, sha: string | undefined) {
+  const { repo, branch } = config();
+
+  await request(`/repos/${repo}/contents/${SITE_FILE}`, {
+    method: "PUT",
+    body: JSON.stringify({
+      message: "Update website content",
+      content: encodeContent(json),
+      branch,
+      ...(sha ? { sha } : {}),
+    }),
+  });
+}

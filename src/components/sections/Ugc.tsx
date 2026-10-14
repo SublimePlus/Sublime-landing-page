@@ -7,6 +7,7 @@ import { BookMeetingButton } from "../booking/BookMeetingButton";
 import { TopoBackground } from "../TopoBackground";
 import { AnimatedSection } from "../AnimatedSection";
 import { FeatureCarousel } from "../ui/FeatureCarousel";
+import { siteContent } from "@/lib/site-content";
 
 type Product = {
   title: string;
@@ -17,38 +18,14 @@ type Product = {
   icon: (props: { className?: string }) => React.ReactElement;
 };
 
-/** The four product lines from SOP-U01 §4, said plainly. Images are the
- *  client-supplied examples in `public/showcase`, one per line, in order. */
-const products: Product[] = [
-  {
-    // SOP-U01 §4.1
-    title: "Faceless Content",
-    blurb: "Your product in any setting, with nobody in the frame.",
-    image: "/showcase/faceless.jpg",
-    icon: ImageIcon,
-  },
-  {
-    // SOP-U01 §4.2
-    title: "AI Avatar Models",
-    blurb: "One AI model you approve, reused across every post.",
-    image: "/showcase/ai-model.webp",
-    icon: PersonIcon,
-  },
-  {
-    // SOP-U01 §4.3 — the likeness release is mandatory, so it is stated here.
-    title: "Brand Ambassadors",
-    blurb: "A recurring face for your brand, yours or one we build.",
-    image: "/showcase/ambassador.webp",
-    icon: BadgeIcon,
-  },
-  {
-    // SOP-U01 §4.4 — AI disclosure is not optional, so it is stated here.
-    title: "AI Influencers",
-    blurb: "Sponsored posts on our creator accounts, always AI labelled.",
-    image: "/showcase/ai-influencer.webp",
-    icon: MegaphoneIcon,
-  },
-];
+/** Copy and images come from `content/site.json` (editable in /admin). Icons
+ *  are matched by position and cycle if more lines are added. */
+const ICONS = [ImageIcon, PersonIcon, BadgeIcon, MegaphoneIcon];
+
+const products: Product[] = siteContent.ugc.items.map((item, i) => ({
+  ...item,
+  icon: ICONS[i % ICONS.length],
+}));
 
 export function Ugc() {
   return (
@@ -58,14 +35,13 @@ export function Ugc() {
       <div className="relative mx-auto max-w-6xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-teal-ink">
-            Visual content
+            {siteContent.ugc.eyebrow}
           </p>
           <h2 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">
-            A photoshoot you never have to book.
+            {siteContent.ugc.heading}
           </h2>
           <p className="mt-4 text-stone dark:text-white/60">
-            Four AI product lines. Every image is reviewed internally before it
-            reaches you, and waits for your approval before it goes anywhere.
+            {siteContent.ugc.intro}
           </p>
         </Reveal>
 
@@ -83,7 +59,7 @@ export function Ugc() {
 
         <Reveal delay={0.3} className="mt-10 text-center">
           <BookMeetingButton className="neon-teal-btn inline-flex items-center gap-2 rounded-full bg-pine px-7 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.03] dark:bg-teal">
-            Talk through your product
+            {siteContent.ugc.button}
             <PlusMark className="h-4 w-4" strokeWidth={3} />
           </BookMeetingButton>
         </Reveal>

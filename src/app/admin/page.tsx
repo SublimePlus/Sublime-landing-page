@@ -27,6 +27,12 @@ export default async function AdminPage() {
         </div>
         <div className="flex items-center gap-2">
           <Link
+            href="/admin/site"
+            className="rounded-full border border-pine/15 px-5 py-2.5 text-sm font-semibold text-pine hover:border-teal dark:border-white/15 dark:text-white"
+          >
+            Edit website
+          </Link>
+          <Link
             href="/admin/new"
             className="neon-teal-btn rounded-full bg-pine px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal dark:bg-teal dark:hover:bg-teal-dark"
           >
