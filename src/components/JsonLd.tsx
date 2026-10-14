@@ -39,7 +39,7 @@ export const organizationSchema = {
   // The brand is written "Sublime Plus", but the symbol form is what existing
   // citations and social handles use. Listing both ties them to one entity, so
   // a search engine does not read them as two different companies.
-  alternateName: ["Sublime+", "SublimePlus"],
+  alternateName: ["Sublime+", "SublimePlus", "Sublime", "Sublime Plus Marketing", "Sublime-Plus"],
   url: siteUrl,
   description: site.description,
   email: site.email,
@@ -84,9 +84,9 @@ export function faqSchema(items: FaqItem[]) {
 }
 
 /**
- * A blog article. `author` and `publisher` both resolve to the organization:
- * posts are written as the company rather than bylined, and inventing a person
- * to fill the slot would be asserting an author who does not exist.
+ * A blog article. A post with a named author in /admin gets that Person as
+ * `author`; otherwise the author resolves to the organization, matching the
+ * default "Sublime Plus Cofounder" byline, so no unnamed person is asserted.
  *
  * `image` points at the post's generated Open Graph card — a real, resolvable
  * image for this specific article, not the shared homepage one.

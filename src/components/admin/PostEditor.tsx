@@ -434,11 +434,11 @@ export function PostEditor({ slug }: { slug?: string }) {
           <input
             value={draft.author}
             onChange={(event) => update("author", event.target.value)}
-            placeholder="e.g. Mayar"
+            placeholder="Sublime Plus Cofounder (default)"
             className={FIELD}
           />
           <span className="mt-1 block text-xs text-stone dark:text-white/50">
-            Optional. Shown as &ldquo;By …&rdquo; on the post and its card.
+            Leave empty to use the default byline, &ldquo;Sublime Plus Cofounder&rdquo;.
           </span>
           <FieldError message={fieldErrors.author} />
         </label>

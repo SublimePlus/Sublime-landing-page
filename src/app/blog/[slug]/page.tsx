@@ -15,6 +15,7 @@ import {
   getAllPosts,
   getOtherPosts,
   getPostBySlug,
+  postAuthor,
 } from "@/lib/blog";
 
 export function generateStaticParams() {
@@ -52,7 +53,7 @@ export async function generateMetadata({
       description: meta.excerpt,
       url,
       publishedTime: meta.date,
-      ...(meta.author ? { authors: [meta.author] } : {}),
+      authors: [postAuthor(meta)],
     },
     twitter: {
       card: "summary_large_image",
@@ -99,11 +100,7 @@ export default async function BlogPost({
             ← All posts
           </Link>
           <p className="mt-6 mb-3 text-sm font-medium text-stone dark:text-white/60">
-            {meta.author && (
-              <>
-                By <span className="text-pine dark:text-white">{meta.author}</span> ·{" "}
-              </>
-            )}
+            By <span className="text-pine dark:text-white">{postAuthor(meta)}</span> ·{" "}
             {formatPostDate(meta.date, "long")} · {meta.readingTime}
           </p>
           <h1 className="text-3xl font-bold text-pine sm:text-4xl dark:text-white">

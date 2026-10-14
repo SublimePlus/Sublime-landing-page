@@ -1,5 +1,5 @@
 ---
-title: "What Is LLM Visibility? and How Brands Get Mentioned in ChatGPT?"
+title: "What Is LLM Visibility and How Do Brands Get Mentioned in ChatGPT?"
 excerpt: "LLM visibility is how often and how accurately AI tools mention your brand. A plain explanation of what it is, how to measure it and how to improve it."
 date: "2026-10-14"
 tone: "teal"
