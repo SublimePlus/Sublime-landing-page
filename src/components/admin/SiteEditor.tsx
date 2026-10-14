@@ -52,6 +52,7 @@ const LABELS: Record<string, string> = {
   addonsButton: "Add-ons box: button",
   button: "Button text",
   marquee: "Scrolling phrases",
+  emails: "Email addresses",
 };
 
 const LONG_FIELDS = new Set(["subheading", "description", "intro", "answer", "text", "blurb"]);

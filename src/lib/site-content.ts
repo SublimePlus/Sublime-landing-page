@@ -67,7 +67,7 @@ export type SiteContent = {
     items: { question: string; answer: string }[];
   };
   finalCta: { heading: string; text: string; button: string };
-  footer: { marquee: string[] };
+  footer: { emails: string[]; marquee: string[] };
 };
 
 export const siteContent = raw as SiteContent;

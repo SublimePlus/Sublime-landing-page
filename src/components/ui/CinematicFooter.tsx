@@ -17,6 +17,9 @@ import { siteContent } from "@/lib/site-content";
  */
 /** Editable in /admin (`content/site.json` → footer.marquee). */
 const MARQUEE_PHRASES = siteContent.footer.marquee;
+/** Editable in /admin (footer.emails); falls back to the main address. */
+const listedEmails = siteContent.footer.emails.filter((email) => email.trim());
+const EMAILS = listedEmails.length ? listedEmails : [site.email];
 
 /** Same order as the nav and the page sections. */
 const QUICK_LINKS = [
@@ -67,18 +70,22 @@ export function CinematicFooter() {
           ))}
         </div>
 
-        <Magnetic strength={10}>
-          <a
-            href={`mailto:${site.email}?subject=${encodeURIComponent(
-              "Enquiry for Sublime Plus"
-            )}&body=${encodeURIComponent(
-              "Hi Sublime Plus,\n\nI'd like to know more about working with you.\n\n"
-            )}`}
-            className="glass-pill mt-5 inline-flex px-6 py-3 text-sm font-bold text-lime"
-          >
-            {site.email}
-          </a>
-        </Magnetic>
+        <div className="mt-5 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
+          {EMAILS.map((email) => (
+            <Magnetic key={email} strength={10}>
+              <a
+                href={`mailto:${email}?subject=${encodeURIComponent(
+                  "Enquiry for Sublime Plus"
+                )}&body=${encodeURIComponent(
+                  "Hi Sublime Plus,\n\nI'd like to know more about working with you.\n\n"
+                )}`}
+                className="glass-pill inline-flex px-6 py-3 text-sm font-bold text-lime"
+              >
+                {email}
+              </a>
+            </Magnetic>
+          ))}
+        </div>
 
         {/* Centred back-to-top, then a balanced credit row underneath. */}
         <div className="mt-10 flex w-full flex-col items-center gap-6 border-t border-white/10 pt-8">

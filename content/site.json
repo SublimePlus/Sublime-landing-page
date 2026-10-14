@@ -85,6 +85,7 @@
     "button": "Book a discovery call"
   },
   "footer": {
+    "emails": ["try.sublime.plus@gmail.com", "marketing@sublime-plus.com", "sales@sublime-plus.com"],
     "marquee": [
       "Your approval before anything posts",
       "One Customer Manager, start to finish",
