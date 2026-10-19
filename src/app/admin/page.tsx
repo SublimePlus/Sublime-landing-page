@@ -25,7 +25,13 @@ export default async function AdminPage() {
             Posts are committed to the repository; each save triggers a deploy.
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href="/admin/schedule"
+            className="rounded-full border border-pine/15 px-5 py-2.5 text-sm font-semibold text-pine hover:border-teal dark:border-white/15 dark:text-white"
+          >
+            Schedule posts
+          </Link>
           <Link
             href="/admin/site"
             className="rounded-full border border-pine/15 px-5 py-2.5 text-sm font-semibold text-pine hover:border-teal dark:border-white/15 dark:text-white"
