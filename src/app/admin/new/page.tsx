@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { isLoggedIn } from "@/lib/admin/auth";
+import { BackLink } from "@/components/admin/BackLink";
 import { PostEditor } from "@/components/admin/PostEditor";
 
 export const dynamic = "force-dynamic";
@@ -9,6 +10,7 @@ export default async function NewPostPage() {
 
   return (
     <>
+      <BackLink />
       <h1 className="text-2xl font-bold text-pine dark:text-white">New post</h1>
       <p className="mb-8 mt-1 text-sm text-stone dark:text-white/60">
         Publishing commits a Markdown file to the repository.

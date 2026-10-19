@@ -4,6 +4,7 @@ import { isPublishingConfigured } from "@/lib/admin/github";
 import { LoginForm } from "@/components/admin/LoginForm";
 import { PostList } from "@/components/admin/PostList";
 import { SignOutButton } from "@/components/admin/SignOutButton";
+import { BackLink } from "@/components/admin/BackLink";
 
 /**
  * Reads the session cookie, so it can never be prerendered — and must not be,
@@ -18,6 +19,7 @@ export default async function AdminPage() {
 
   return (
     <>
+      <BackLink href="/" label="Back to website" />
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-pine dark:text-white">Blog admin</h1>
