@@ -1,0 +1,74 @@
+# Publishes posts scheduled from /admin → Schedule posts.
+# Every 10 minutes (GitHub may run it a few minutes late at busy times), and
+# right after new posts are scheduled so their covers are made straight away.
+# See scripts/publish-scheduled.mjs.
+name: Scheduled posts
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  push:
+    branches: [main]
+    paths: ["content/scheduled/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Never two runs at once: they would make the same cover twice.
+concurrency:
+  group: scheduled-posts
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Anything scheduled?
+        id: check
+        run: |
+          if ls content/scheduled/*.md >/dev/null 2>&1; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Nothing scheduled."
+          fi
+
+      - uses: actions/setup-node@v4
+        if: steps.check.outputs.found == 'true'
+        with:
+          node-version: 22
+
+      - name: Install image tools
+        if: steps.check.outputs.found == 'true'
+        # Only sharp is needed; installed outside the project so the lockfile is untouched.
+        run: npm install --prefix "$RUNNER_TEMP/tools" --no-audit --no-fund sharp@0.34
+
+      - name: Make covers and publish due posts
+        id: publish
+        if: steps.check.outputs.found == 'true'
+        env:
+          KIE_API_KEY: ${{ secrets.KIE_API_KEY }}
+          KIE_GPT_IMAGE_MODEL: ${{ vars.KIE_GPT_IMAGE_MODEL }}
+          KIE_IMAGE_MODEL: ${{ vars.KIE_IMAGE_MODEL }}
+          NODE_PATH: ${{ runner.temp }}/tools/node_modules
+        run: node scripts/publish-scheduled.mjs
+
+      - name: Commit
+        if: steps.check.outputs.found == 'true'
+        env:
+          MESSAGE: ${{ steps.publish.outputs.message }}
+        run: |
+          if [ -z "$(git status --porcelain content public)" ]; then exit 0; fi
+          git config user.name "SublimePlus"
+          git config user.email "try.sublime.plus@gmail.com"
+          git add content public
+          git commit -m "${MESSAGE:-Update scheduled posts}"
+          # Someone may have saved from /admin meanwhile; rebase and retry.
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep 5
+          done
+          exit 1

@@ -273,3 +273,106 @@ export async function saveSiteFile(json: string, sha: string | undefined) {
     }),
   });
 }
+
+/**
+ * Posts waiting for their publish time. They live outside `content/blog/` so
+ * the build never sees them; `scripts/publish-scheduled.mjs` (run by the
+ * "Scheduled posts" GitHub workflow) moves each one into `content/blog/` once
+ * its time has come, generating a cover first if it has none.
+ */
+const SCHEDULED_DIR = "content/scheduled";
+
+export async function listScheduled(): Promise<RemotePost[]> {
+  const { repo, branch } = config();
+
+  let response: Response;
+  try {
+    response = await request(
+      `/repos/${repo}/contents/${SCHEDULED_DIR}?ref=${encodeURIComponent(branch)}`
+    );
+  } catch (error) {
+    if (error instanceof GitHubError && error.status === 404) return [];
+    throw error;
+  }
+
+  const entries = (await response.json()) as { name: string; sha: string; type: string }[];
+  return entries
+    .filter((entry) => entry.type === "file" && entry.name.endsWith(".md"))
+    .map((entry) => ({ slug: entry.name.replace(/\.md$/, ""), sha: entry.sha }));
+}
+
+export async function getScheduledFile(slug: string): Promise<RemotePostFile | null> {
+  const { repo, branch } = config();
+
+  try {
+    const response = await request(
+      `/repos/${repo}/contents/${SCHEDULED_DIR}/${slug}.md?ref=${encodeURIComponent(branch)}`
+    );
+    const file = (await response.json()) as { content: string; sha: string };
+    return { markdown: decodeContent(file.content), sha: file.sha };
+  } catch (error) {
+    if (error instanceof GitHubError && error.status === 404) return null;
+    throw error;
+  }
+}
+
+export async function saveScheduledFile(slug: string, markdown: string, sha: string, message: string) {
+  const { repo, branch } = config();
+
+  await request(`/repos/${repo}/contents/${SCHEDULED_DIR}/${slug}.md`, {
+    method: "PUT",
+    body: JSON.stringify({ message, content: encodeContent(markdown), branch, sha }),
+  });
+}
+
+export async function deleteScheduledFile(slug: string, sha: string, message: string) {
+  const { repo, branch } = config();
+
+  await request(`/repos/${repo}/contents/${SCHEDULED_DIR}/${slug}.md`, {
+    method: "DELETE",
+    body: JSON.stringify({ message, sha, branch }),
+  });
+}
+
+/**
+ * Commits several new scheduled posts at once through the Git data API, so a
+ * batch of twenty posts is one commit and one deploy rather than twenty.
+ */
+export async function addScheduledFiles(files: { slug: string; markdown: string }[], message: string) {
+  const { repo, branch } = config();
+  const refPath = `/repos/${repo}/git/ref/heads/${encodeURIComponent(branch)}`;
+
+  const ref = (await (await request(refPath)).json()) as { object: { sha: string } };
+  const parent = (await (
+    await request(`/repos/${repo}/git/commits/${ref.object.sha}`)
+  ).json()) as { tree: { sha: string } };
+
+  const tree = (await (
+    await request(`/repos/${repo}/git/trees`, {
+      method: "POST",
+      body: JSON.stringify({
+        base_tree: parent.tree.sha,
+        tree: files.map((file) => ({
+          path: `${SCHEDULED_DIR}/${file.slug}.md`,
+          mode: "100644",
+          type: "blob",
+          content: file.markdown,
+        })),
+      }),
+    })
+  ).json()) as { sha: string };
+
+  const commit = (await (
+    await request(`/repos/${repo}/git/commits`, {
+      method: "POST",
+      body: JSON.stringify({ message, tree: tree.sha, parents: [ref.object.sha] }),
+    })
+  ).json()) as { sha: string };
+
+  // Not forced: if someone else committed in between, GitHub rejects this and
+  // the admin is asked to try again rather than their commit being lost.
+  await request(`/repos/${repo}/git/refs/heads/${encodeURIComponent(branch)}`, {
+    method: "PATCH",
+    body: JSON.stringify({ sha: commit.sha }),
+  });
+}
