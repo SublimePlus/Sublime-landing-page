@@ -7,6 +7,7 @@ import {
   listPosts,
   listScheduled,
 } from "@/lib/admin/github";
+import { COVER_RE } from "@/lib/admin/posts";
 import {
   parseScheduled,
   serializeScheduled,
@@ -71,7 +72,19 @@ export async function GET() {
 export async function POST(request: Request) {
   if (!(await isLoggedIn())) return unauthorized();
 
-  const body = (await request.json().catch(() => ({}))) as { posts?: Partial<ScheduledInput>[] };
+  const body = (await request.json().catch(() => ({}))) as {
+    posts?: Partial<ScheduledInput>[];
+    images?: { path?: unknown; sha?: unknown }[];
+  };
+  // Covers staged by /api/admin/images with `stage: true`.
+  const images = (Array.isArray(body.images) ? body.images : []).flatMap((image) =>
+    typeof image.path === "string" &&
+    COVER_RE.test(image.path) &&
+    typeof image.sha === "string" &&
+    /^[0-9a-f]{40}$/.test(image.sha)
+      ? [{ path: image.path, sha: image.sha }]
+      : []
+  );
   const incoming = Array.isArray(body.posts) ? body.posts : [];
   if (incoming.length === 0) {
     return NextResponse.json({ error: "Add at least one post." }, { status: 400 });
@@ -115,6 +128,7 @@ export async function POST(request: Request) {
 
     await addScheduledFiles(
       files,
+      images,
       files.length === 1 ? `Schedule blog post: ${incoming[0].title}` : `Schedule ${files.length} blog posts`
     );
     return NextResponse.json({ scheduled: files.map((file) => file.slug) });
