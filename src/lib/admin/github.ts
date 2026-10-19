@@ -242,6 +242,20 @@ export async function saveImageFile(fileName: string, base64: string) {
   });
 }
 
+/**
+ * Stores an image's bytes in the repository without committing them, so a
+ * batch of scheduled posts can commit all its covers together. Returns the
+ * blob sha that `addScheduledFiles` places at the image's path.
+ */
+export async function createImageBlob(base64: string) {
+  const { repo } = config();
+  const response = await request(`/repos/${repo}/git/blobs`, {
+    method: "POST",
+    body: JSON.stringify({ content: base64, encoding: "base64" }),
+  });
+  return ((await response.json()) as { sha: string }).sha;
+}
+
 /** The editable website copy (see src/lib/site-content.ts). */
 const SITE_FILE = "content/site.json";
 
@@ -335,10 +349,15 @@ export async function deleteScheduledFile(slug: string, sha: string, message: st
 }
 
 /**
- * Commits several new scheduled posts at once through the Git data API, so a
- * batch of twenty posts is one commit and one deploy rather than twenty.
+ * Commits several new scheduled posts, and their covers, at once through the
+ * Git data API, so a batch of twenty posts is one commit and one deploy
+ * rather than forty.
  */
-export async function addScheduledFiles(files: { slug: string; markdown: string }[], message: string) {
+export async function addScheduledFiles(
+  files: { slug: string; markdown: string }[],
+  images: { path: string; sha: string }[],
+  message: string
+) {
   const { repo, branch } = config();
   const refPath = `/repos/${repo}/git/ref/heads/${encodeURIComponent(branch)}`;
 
@@ -352,12 +371,21 @@ export async function addScheduledFiles(files: { slug: string; markdown: string 
       method: "POST",
       body: JSON.stringify({
         base_tree: parent.tree.sha,
-        tree: files.map((file) => ({
-          path: `${SCHEDULED_DIR}/${file.slug}.md`,
-          mode: "100644",
-          type: "blob",
-          content: file.markdown,
-        })),
+        tree: [
+          ...files.map((file) => ({
+            path: `${SCHEDULED_DIR}/${file.slug}.md`,
+            mode: "100644",
+            type: "blob",
+            content: file.markdown,
+          })),
+          // Covers uploaded on the schedule page, stored earlier as blobs.
+          ...images.map((image) => ({
+            path: `public${image.path}`,
+            mode: "100644",
+            type: "blob",
+            sha: image.sha,
+          })),
+        ],
       }),
     })
   ).json()) as { sha: string };

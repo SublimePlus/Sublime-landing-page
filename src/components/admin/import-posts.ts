@@ -4,9 +4,11 @@
  * Turns uploaded files into draft posts for the schedule page.
  *
  *   .md / .txt — one post, or several when the file has more than one "# " title.
- *                Optional frontmatter: title, excerpt, date, time, author,
- *                image (a URL), imagePrompt.
- *   .docx      — same as Markdown; headings, bold, italics, links and lists survive.
+ *                Under each title, optional "Key: value" lines set that post's
+ *                Date, Time, Author, Excerpt, Image (a link) and Image prompt.
+ *                Frontmatter (same keys) applies to every post in the file.
+ *   .docx      — same as Markdown, with Word's Title or Heading 1 style for each
+ *                post title; headings, bold, italics, links and lists survive.
  *   .csv       — one post per row. Columns (any order, any case): title, excerpt,
  *                body, date, time, author, image, image_prompt.
  *
@@ -133,23 +135,89 @@ function draft(fields: Partial<DraftPost> & { body: string; source: string }): D
 
 // ---------------------------------------------------------------- markdown
 
+const META_KEYS: Record<string, keyof PostMeta> = {
+  date: "date",
+  day: "date",
+  publish: "date",
+  "publish date": "date",
+  "publish at": "date",
+  "publish on": "date",
+  time: "time",
+  "publish time": "time",
+  author: "author",
+  by: "author",
+  excerpt: "excerpt",
+  summary: "excerpt",
+  description: "excerpt",
+  "meta description": "excerpt",
+  image: "image",
+  cover: "image",
+  "image url": "image",
+  "cover image": "image",
+  "image prompt": "imagePrompt",
+  prompt: "imagePrompt",
+};
+
+type PostMeta = {
+  date: string;
+  time: string;
+  author: string;
+  excerpt: string;
+  image: string;
+  imagePrompt: string;
+};
+
+/**
+ * Reads the "Key: value" lines right under a post's title (Date, Time, Author,
+ * Excerpt, Image, Image prompt) and returns them with the rest of the text.
+ * Blank lines between them are fine; the first other line starts the body.
+ */
+function readMetaLines(text: string): { meta: Partial<PostMeta>; body: string } {
+  const lines = text.split("\n");
+  const meta: Partial<PostMeta> = {};
+  let i = 0;
+  for (; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+    // Word bolds the labels sometimes: "**Date:** 1 Nov".
+    const match = /^([A-Za-z][A-Za-z ]{0,20}?)\s*:\s*(.+)$/.exec(line.replace(/\*\*/g, ""));
+    const key = match && META_KEYS[match[1].trim().toLowerCase()];
+    if (!match || !key) break;
+    let value = match[2].trim();
+    // A link pasted into Word arrives as [text](url).
+    const link = /\]\((https?:[^)]+)\)/.exec(value);
+    if (link) value = link[1];
+    meta[key] = value;
+  }
+  return { meta, body: lines.slice(i).join("\n") };
+}
+
 export function postsFromMarkdown(text: string, fileName: string): DraftPost[] {
-  const { data, content } = readFrontmatter(text.replace(/^﻿/, ""));
-  const when = parseWhen(data.publishat || data.date || "", data.publishat ? "" : data.time || "");
-  const shared = {
-    author: data.author,
-    imagePrompt: data.imageprompt,
-    imageUrl: data.image || data.cover || data.imageurl,
-    source: fileName,
+  const { data, content } = readFrontmatter(text.replace(/^\uFEFF/, ""));
+
+  /** Builds one post; values under its title win over the file's frontmatter. */
+  const make = (title: string, rawBody: string) => {
+    const { meta, body } = readMetaLines(rawBody);
+    const date = meta.date || data.publishat || data.date || "";
+    const time = meta.time || (data.publishat && !meta.date ? "" : data.time || "");
+    return draft({
+      title,
+      excerpt: meta.excerpt || data.excerpt || data.description || data.summary,
+      body,
+      author: meta.author || data.author,
+      imagePrompt: meta.imagePrompt || data.imageprompt,
+      imageUrl: meta.image || data.image || data.cover || data.imageurl,
+      when: parseWhen(date, time),
+      source: fileName,
+    });
   };
 
   // Several "# Title" headings means several posts in one file.
-  const sections = content.split(/^(?=# (?!#))/m).filter((part) => part.trim());
-  const titled = sections.filter((part) => /^# /.test(part));
+  const titled = content.split(/^(?=# (?!#))/m).filter((part) => /^# /.test(part));
   if (titled.length > 1) {
     return titled.map((part) => {
       const [first, ...rest] = part.split("\n");
-      return draft({ ...shared, title: first.replace(/^#\s+/, ""), body: rest.join("\n"), when });
+      return make(first.replace(/^#\s+/, "").trim(), rest.join("\n"));
     });
   }
 
@@ -160,15 +228,7 @@ export function postsFromMarkdown(text: string, fileName: string): DraftPost[] {
     title ||= heading[1];
     body = body.slice(heading[0].length);
   }
-  return [
-    draft({
-      ...shared,
-      title: title || titleFromFileName(fileName),
-      excerpt: data.excerpt || data.description || data.summary,
-      body,
-      when,
-    }),
-  ];
+  return [make(title || titleFromFileName(fileName), body)];
 }
 
 // ---------------------------------------------------------------- docx

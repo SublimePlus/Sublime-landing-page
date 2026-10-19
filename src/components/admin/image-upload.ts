@@ -73,3 +73,26 @@ export async function uploadImageData(name: string, type: string, data: string):
  * A suggested cover. Synchronous providers return the bytes (`data`); Kie
  * returns a hosted `url` plus the `taskId` the server downloads it through.
  */
+
+/**
+ * Shrinks and stores an image without committing it; the schedule page
+ * commits staged covers together with its posts. Returns the future public
+ * path, the blob sha, and a data URL to preview it with meanwhile.
+ */
+export async function stageImage(name: string, blob: Blob) {
+  const { type, data } = await compressImage(blob);
+  const response = await fetch("/api/admin/images", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, type, data, stage: true }),
+  });
+  const result = (await response.json().catch(() => ({}))) as {
+    path?: string;
+    sha?: string;
+    error?: string;
+  };
+  if (!response.ok || !result.path || !result.sha) {
+    throw new Error(result.error ?? "Could not upload the image.");
+  }
+  return { path: result.path, sha: result.sha, preview: `data:${type};base64,${data}` };
+}

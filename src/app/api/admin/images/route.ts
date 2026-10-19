@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isLoggedIn } from "@/lib/admin/auth";
-import { GitHubError, saveImageFile } from "@/lib/admin/github";
+import { GitHubError, createImageBlob, saveImageFile } from "@/lib/admin/github";
 import { slugify } from "@/lib/admin/posts";
 
 export const dynamic = "force-dynamic";
@@ -23,6 +23,10 @@ const MAX_BYTES = 3 * 1024 * 1024;
  * Uploads an image: `{ name, type, data }`, where `data` is the file as base64.
  * Returns the public path, e.g. `/blog-images/team-photo-k3x9.webp`. The file
  * is live once the deploy its commit triggers finishes.
+ *
+ * With `stage: true` nothing is committed: the bytes are stored as a git blob
+ * and `{ path, sha }` comes back for the schedule page to commit together
+ * with its posts.
  */
 export async function POST(request: Request) {
   if (!(await isLoggedIn())) {
@@ -33,6 +37,7 @@ export async function POST(request: Request) {
     name?: unknown;
     type?: unknown;
     data?: unknown;
+    stage?: unknown;
   };
 
   const ext = typeof body.type === "string" ? TYPES[body.type] : undefined;
@@ -56,6 +61,10 @@ export async function POST(request: Request) {
   const fileName = `${base || "image"}-${suffix}.${ext}`;
 
   try {
+    if (body.stage === true) {
+      const sha = await createImageBlob(body.data);
+      return NextResponse.json({ path: `/blog-images/${fileName}`, sha });
+    }
     await saveImageFile(fileName, body.data);
     return NextResponse.json({ path: `/blog-images/${fileName}` });
   } catch (error) {
