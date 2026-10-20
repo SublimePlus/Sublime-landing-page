@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-20T15:00:00.000Z"
 title: "Google AI Overviews: How to Get Your Brand Cited"
 excerpt: "AI Overviews now sit above Google's regular results. How they choose which sources to cite, and what makes your pages and your brand more likely to appear."
 date: "2026-10-20"
