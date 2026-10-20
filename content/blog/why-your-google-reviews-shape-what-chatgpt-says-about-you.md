@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-20T06:00:00.000Z"
 title: "Why Your Google Reviews Shape What ChatGPT Says About You"
 excerpt: "Your Google reviews now feed what ChatGPT, Gemini and AI Overviews say about your business. What AI tools pick up from reviews and how to make them work for you."
 date: "2026-10-20"
