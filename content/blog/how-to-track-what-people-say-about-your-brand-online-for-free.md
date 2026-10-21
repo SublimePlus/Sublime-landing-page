@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-21T06:00:00.000Z"
 title: "How to Track What People Say About Your Brand Online for Free"
 excerpt: "Stop finding out about your reputation by accident. A free setup to track your brand on Google, Reddit, review sites, social media and ChatGPT in 30 minutes a week."
 date: "2026-10-21"
