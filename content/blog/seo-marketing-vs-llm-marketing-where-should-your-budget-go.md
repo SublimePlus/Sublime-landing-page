@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-21T15:00:00.000Z"
 title: "SEO Marketing vs LLM Marketing: Where Should Your Budget Go?"
 excerpt: "Should your budget go to SEO marketing or LLM marketing for ChatGPT, Gemini and AI Overviews? A simple way to decide based on where your brand stands today."
 date: "2026-10-21"
