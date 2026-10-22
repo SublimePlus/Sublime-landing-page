@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-22T15:00:00.000Z"
 title: "Why Everyone Adds \"Reddit\" to Their Google Searches Now"
 excerpt: "Typing \"reddit\" at the end of a Google search has become one of the internet's most common habits. Why we do it, and what it says about trust online."
 date: "2026-10-22"
