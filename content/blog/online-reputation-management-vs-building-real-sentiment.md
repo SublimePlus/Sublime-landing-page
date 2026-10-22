@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-22T06:00:00.000Z"
 title: "Online Reputation Management vs Building Real Sentiment"
 excerpt: "Burying bad results on Google worked until AI tools started reading everything. The difference between hiding a reputation problem and actually fixing it."
 date: "2026-10-22"
