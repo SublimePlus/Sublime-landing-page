@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-23T06:00:00.000Z"
 title: "Word of Mouth Never Died. It Just Moved Online"
 excerpt: "The neighbor's recommendation became a Reddit thread, a Google review and now a ChatGPT answer. Why word of mouth is stronger than ever, just in new places."
 date: "2026-10-23"
