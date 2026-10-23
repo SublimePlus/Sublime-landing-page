@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-23T15:00:00.000Z"
 title: "Why We Trust Strangers on Reddit More Than Brands"
 excerpt: "A polished product page loses to three sentences from a stranger on Reddit. The psychology behind why we trust anonymous advice, and what it means for brands."
 date: "2026-10-23"
