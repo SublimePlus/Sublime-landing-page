@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-24T06:00:00.000Z"
 title: "From the Mall to ChatGPT: How We Decide What to Buy Changed"
 excerpt: "We went from asking the salesperson to comparing ten tabs to just asking ChatGPT. A look at how buying decisions changed, and what stayed exactly the same."
 date: "2026-10-24"
