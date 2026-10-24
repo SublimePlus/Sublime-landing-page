@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-24T15:00:00.000Z"
 title: "The Death of Page Two: What Search Looks Like When AI Answers First"
 excerpt: "Page two of Google was always a ghost town. Now AI answers are shrinking page one too. What search looks like when the answer comes before the links."
 date: "2026-10-24"
