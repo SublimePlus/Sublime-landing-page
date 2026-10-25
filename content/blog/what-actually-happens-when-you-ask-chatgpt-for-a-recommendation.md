@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-25T15:00:00.000Z"
 title: "What Actually Happens When You Ask ChatGPT for a Recommendation"
 excerpt: "You ask ChatGPT for a good coffee grinder and get three names in seconds. What happens behind that answer, and why it decides which brands people ever hear about."
 date: "2026-10-25"
