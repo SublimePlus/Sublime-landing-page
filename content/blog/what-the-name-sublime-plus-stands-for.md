@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-25T06:00:00.000Z"
 title: "What the Name Sublime Plus Stands For"
 excerpt: "Why Sublime? Why the plus? What the name Sublime Plus means to us, why we answer to Sublime+ and sublime-plus too, and what it says about the marketing we believe in."
 date: "2026-10-25"
