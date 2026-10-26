@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-26T06:00:00.000Z"
 title: "Is SEO Dead? No, It Just Moved"
 excerpt: "Every year someone declares SEO dead. It never is. But with AI answers at the top of Google and inside ChatGPT, SEO has moved somewhere new."
 date: "2026-10-26"
