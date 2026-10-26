@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-26T15:00:00.000Z"
 title: "What Reddit Taught Me About Marketing"
 excerpt: "Spend enough time on Reddit and it rewires how you think about marketing. Six lessons Reddit taught me that apply to almost every brand."
 date: "2026-10-26"
