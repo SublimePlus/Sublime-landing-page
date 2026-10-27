@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-27T15:00:00.000Z"
 title: "Faceless Content: Why Some Huge Accounts Never Show a Face"
 excerpt: "Some of the biggest accounts online never show a single face. Why faceless content works so well, when it doesn't, and what it means for brands."
 date: "2026-10-27"
