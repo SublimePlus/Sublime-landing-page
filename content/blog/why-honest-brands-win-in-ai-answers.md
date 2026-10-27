@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-27T06:00:00.000Z"
 title: "Why Honest Brands Win in AI Answers"
 excerpt: "AI tools read everything, including the complaints. Why honesty has become a practical advantage for brands, not just a nice value to have."
 date: "2026-10-27"
