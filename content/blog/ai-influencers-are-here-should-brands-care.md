@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-28T06:00:00.000Z"
 title: "AI Influencers Are Here. Should Brands Care?"
 excerpt: "Virtual creators built with AI are showing up across social media. What AI influencers are, why brands are curious, and the honest questions worth asking first."
 date: "2026-10-28"
