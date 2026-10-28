@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-28T15:00:00.000Z"
 title: "How AI Product Photos Are Changing Online Shopping"
 excerpt: "Online, the product photo does the job of the fitting room. How AI product imagery is changing what shoppers see, and the one rule every brand should follow."
 date: "2026-10-28"
