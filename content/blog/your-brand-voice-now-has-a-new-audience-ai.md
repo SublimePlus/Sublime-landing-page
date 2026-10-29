@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-29T06:00:00.000Z"
 title: "Your Brand Voice Now Has a New Audience: AI"
 excerpt: "Brand voice used to be about how customers hear you. Now ChatGPT and Gemini are listening too, and they repeat what they hear. Why consistency matters more than ever."
 date: "2026-10-29"
