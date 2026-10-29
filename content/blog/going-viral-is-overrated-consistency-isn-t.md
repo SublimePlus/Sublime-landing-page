@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-29T15:00:00.000Z"
 title: "Going Viral Is Overrated. Consistency Isn't"
 excerpt: "One viral post feels amazing for a week. Steady, consistent presence builds a brand for years. Why consistency beats virality, with a little help from psychology."
 date: "2026-10-29"
