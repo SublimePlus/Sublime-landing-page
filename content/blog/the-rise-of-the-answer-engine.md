@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-30T16:00:00.000Z"
 title: "The Rise of the Answer Engine"
 excerpt: "Search engines gave us links. Answer engines give us answers. What the shift to ChatGPT, Perplexity, Gemini and AI Overviews means, and what answer engine optimization really is."
 date: "2026-10-30"
