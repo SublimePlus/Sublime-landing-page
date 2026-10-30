@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-30T07:00:00.000Z"
 title: "Small Businesses Have a Quiet Advantage in AI Search"
 excerpt: "Big brands have big budgets, but AI search rewards things small businesses already have. Why being small can be an advantage when people ask ChatGPT and Gemini."
 date: "2026-10-30"
