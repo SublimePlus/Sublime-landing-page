@@ -1,5 +1,4 @@
 ---
-publishAt: "2026-10-31T07:00:00.000Z"
 title: "What a Good Online Reputation Actually Looks Like Today"
 excerpt: "A good online reputation isn't a perfect 5.0 anymore. What a healthy reputation really looks like now that people and AI tools read everything about your brand."
 date: "2026-10-31"
